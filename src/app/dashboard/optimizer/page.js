@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useI18n } from '@/lib/i18n/context'
 import { marketPlatforms, getMarketFromLocale } from '@/lib/i18n/translations'
 
@@ -15,13 +15,18 @@ function CopyBtn({ text, copiedText }) {
 
 export default function OptimizerPage() {
   const { t, locale, platforms } = useI18n()
-  const [platform, setPlatform] = useState('trendyol')
+  const [platform, setPlatform] = useState(platforms[0]?.id || 'trendyol')
   const [title, setTitle] = useState('')
   const [bullets, setBullets] = useState('')
   const [description, setDescription] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
+
+  // Update platform when platforms change (on locale change)
+  useEffect(() => {
+    setPlatform(platforms[0]?.id || 'trendyol')
+  }, [platforms])
 
   const handleOptimize = async () => {
     if (!title && !description) { setError(t.common.error || 'Başlık veya açıklama girin.'); return }

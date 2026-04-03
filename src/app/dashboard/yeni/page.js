@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { useI18n } from '@/lib/i18n/context'
@@ -111,14 +111,20 @@ export default function YeniListingPage() {
 
   const [form, setForm] = useState({
     name: '', brand: '', category: categories[0] || '',
-    features: '', keywords: '', platforms: ['trendyol']
+    features: '', keywords: '', platforms: [platforms[0]?.id || 'trendyol']
   })
   const [loading, setLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
   const [results, setResults] = useState(null)
-  const [activeTab, setActiveTab] = useState('trendyol')
+  const [activeTab, setActiveTab] = useState(platforms[0]?.id || 'trendyol')
   const [error, setError] = useState('')
   const [quotaExceeded, setQuotaExceeded] = useState(false)
+
+  // Update platforms when they change (on locale change)
+  useEffect(() => {
+    setForm(prev => ({ ...prev, platforms: [platforms[0]?.id || 'trendyol'] }))
+    setActiveTab(platforms[0]?.id || 'trendyol')
+  }, [platforms])
 
   const togglePlatform = (id) => {
     setForm(prev => ({

@@ -18,10 +18,13 @@ export default function DashboardLayout({ children }) {
     { href: '/dashboard/toplu', icon: '◫', label: t.nav.bulkGenerate },
     { href: '/dashboard/optimizer', icon: '◈', label: t.nav.optimizer },
     { href: '/dashboard/anahtar-kelime', icon: '◎', label: t.nav.keywords },
+    { href: '/dashboard/marka-dna', icon: '◇', label: t.nav.brandDna },
+    { href: '/dashboard/rakip-analiz', icon: '◆', label: t.nav.competitorAnalysis },
+    { href: '/dashboard/ab-test', icon: '⬡', label: t.nav.abTest },
     { href: '/dashboard/asistan', icon: '◉', label: t.nav.aiAssistant },
     { href: '/dashboard/gecmis', icon: '◷', label: t.nav.history },
     { href: '/dashboard/analitik', icon: '◑', label: t.nav.analytics },
-    { href: '/dashboard/odeme', icon: '◆', label: t.nav.upgrade },
+    { href: '/dashboard/odeme', icon: '⬟', label: t.nav.upgrade },
   ]
 
   useEffect(() => {

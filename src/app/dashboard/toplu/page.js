@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useI18n } from '@/lib/i18n/context'
 
@@ -15,13 +15,18 @@ function CopyBtn({ text, t }) {
 
 export default function TopluPage() {
   const { t, platforms } = useI18n()
-  const [platform, setPlatform] = useState('trendyol')
+  const [platform, setPlatform] = useState(platforms[0]?.id || 'trendyol')
   const [products, setProducts] = useState([{ name: '', brand: '', features: '' }])
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState({ current: 0, total: 0 })
   const [results, setResults] = useState(null)
   const [error, setError] = useState('')
   const [expandedIdx, setExpandedIdx] = useState(null)
+
+  // Update platform when platforms change (on locale change)
+  useEffect(() => {
+    setPlatform(platforms[0]?.id || 'trendyol')
+  }, [platforms])
 
   const addProduct = () => {
     if (products.length >= 10) return
