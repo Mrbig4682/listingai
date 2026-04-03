@@ -105,7 +105,7 @@ export default function DashboardPage() {
               <div className="text-3xl font-bold text-gray-900 mt-2">{stats.total}</div>
               <div className="text-sm text-gray-500 mt-3 flex items-center gap-1">
                 <span className="text-green-500">+{stats.thisMonth}</span>
-                <span className="text-gray-400">{t?.analytics?.thisMonth || 'This Month'}</span>
+                <span className="text-gray-400">{t?.dashboard?.thisMonthLabel || t?.analytics?.thisMonth || 'Bu Ay'}</span>
               </div>
             </div>
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center text-xl">📊</div>
@@ -121,7 +121,7 @@ export default function DashboardPage() {
                 {stats.avgSeo || '—'}
               </div>
               <div className="text-sm text-gray-500 mt-3">
-                {stats.avgSeo >= 70 ? '🟢 Excellent' : stats.avgSeo >= 50 ? '🟡 Good' : '⚪ Needs Work'} / 100
+                {stats.avgSeo >= 70 ? `🟢 ${t?.analytics?.excellent || 'Excellent'}` : stats.avgSeo >= 50 ? `🟡 ${t?.analytics?.good || 'Good'}` : `⚪ ${t?.analytics?.low || 'Low'}`} / 100
               </div>
             </div>
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-amber-50 flex items-center justify-center text-xl">⚡</div>
@@ -135,7 +135,7 @@ export default function DashboardPage() {
               <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t?.dashboard?.quota || 'Quota Used'}</div>
               <div className="text-3xl font-bold text-gray-900 mt-2">
                 {used}
-                <span className="text-lg text-gray-400 font-normal ml-1">/ {limit === 999 ? '∞' : limit}</span>
+                <span className="text-lg text-gray-400 font-normal ml-1">/ {limit >= 999 ? '∞' : limit}</span>
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2 mt-3 overflow-hidden">
                 <div
@@ -153,7 +153,7 @@ export default function DashboardPage() {
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
               <div className="text-[10px] font-semibold text-indigo-200 uppercase tracking-wide">{t?.analytics?.currentPlan || 'Current Plan'}</div>
-              <div className="text-2xl font-bold text-white mt-1 capitalize truncate">{plan}</div>
+              <div className="text-2xl font-bold text-white mt-1 truncate">{plan === 'business' ? 'Business' : plan === 'pro' ? 'Pro' : t?.common?.free || 'Free'}</div>
               {plan === 'free' && (
                 <Link href="/dashboard/odeme" className="text-xs font-semibold text-indigo-100 hover:text-white mt-2 inline-flex items-center gap-1 transition">
                   {t?.plan?.upgradeToPro || 'Upgrade'} →
@@ -251,8 +251,8 @@ export default function DashboardPage() {
       {recentListings.length === 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-sm">
           <div className="text-4xl mb-3">📝</div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">{t?.dashboard?.noListingsTitle || 'No listings yet'}</h3>
-          <p className="text-sm text-gray-500 mb-6">{t?.dashboard?.noListingsDesc || 'Create your first AI-optimized listing to get started'}</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">{t?.dashboard?.noListings || 'Henüz ilan yok'}</h3>
+          <p className="text-sm text-gray-500 mb-6">{t?.dashboard?.startFirst || 'İlk ilanınızı oluşturun'}</p>
           <Link
             href="/dashboard/yeni"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-lg transition-all"

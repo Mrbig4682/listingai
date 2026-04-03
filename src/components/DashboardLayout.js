@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { useI18n } from '@/lib/i18n/context'
+import Logo from './Logo'
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname()
@@ -82,8 +83,8 @@ export default function DashboardLayout({ children }) {
       {/* Sidebar */}
       <aside className={`fixed md:static z-40 w-60 bg-white border-r border-surface-200 h-screen flex flex-col transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div className="p-6 pb-4">
-          <Link href="/dashboard" className="text-xl font-bold tracking-tight">
-            <span className="gradient-text">listing</span><span className="text-trust-dark">AI</span>
+          <Link href="/dashboard">
+            <Logo size="md" />
           </Link>
         </div>
 
@@ -171,9 +172,7 @@ export default function DashboardLayout({ children }) {
         {/* Mobile header */}
         <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-surface-200">
           <button onClick={() => setSidebarOpen(true)} className="text-trust-medium text-xl">☰</button>
-          <span className="text-lg font-bold tracking-tight">
-            <span className="gradient-text">listing</span><span className="text-trust-dark">AI</span>
-          </span>
+          <Logo size="sm" />
           <div className="w-6" />
         </div>
         <div className="p-5 md:p-8 max-w-4xl mx-auto animate-fade-in">
