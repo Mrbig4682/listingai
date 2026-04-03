@@ -135,8 +135,8 @@ export default function OdemePage() {
     )
   }
 
-  // Bekleyen talep varsa
-  if (pendingRequest) {
+  // Bekleyen talep varsa — iptal edip yeni ödeme yapabilsin
+  if (pendingRequest && !checkoutForm) {
     return (
       <div className="max-w-lg mx-auto text-center py-12">
         <div className="text-5xl mb-4">⏳</div>
@@ -144,11 +144,24 @@ export default function OdemePage() {
         <p className="text-gray-500 mb-6">
           {PLANS[pendingRequest.plan]?.name} plan için ₺{pendingRequest.amount} tutarındaki ödeme talebin inceleniyor.
         </p>
-        <div className="bg-amber-50 text-amber-700 rounded-xl p-4 text-sm">
+        <div className="bg-amber-50 text-amber-700 rounded-xl p-4 text-sm mb-6">
           <strong>Talep Tarihi:</strong> {new Date(pendingRequest.created_at).toLocaleDateString('tr-TR')}
           <br />
           <strong>Durum:</strong> Onay Bekliyor
         </div>
+        <button
+          onClick={async () => {
+            await supabase
+              .from('payment_requests')
+              .update({ status: 'cancelled' })
+              .eq('id', pendingRequest.id)
+            setPendingRequest(null)
+          }}
+          className="px-6 py-3 bg-gradient-to-r from-brand-500 to-purple-500 text-white font-bold rounded-xl hover:shadow-lg transition text-sm"
+        >
+          Kredi Kartı ile Yeni Ödeme Yap
+        </button>
+        <p className="text-xs text-gray-400 mt-2">Eski talep iptal edilip kredi kartı ile ödeme yapabilirsin.</p>
       </div>
     )
   }
