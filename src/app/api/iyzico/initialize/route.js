@@ -150,11 +150,9 @@ export async function POST(request) {
         tokenExpireTime: result.tokenExpireTime,
       })
     } else {
-      // Debug: env var kontrolü
-      const debugInfo = `[key:${apiKey?.substring(0,10)}... secret:${secretKey?.substring(0,10)}... url:${baseUrlApi}]`
-      console.error('iyzico error:', JSON.stringify(result), debugInfo)
+      console.error('iyzico error:', JSON.stringify(result))
       return Response.json({
-        error: (result.errorMessage || 'iyzico ödeme başlatılamadı') + ` (${result.errorCode || 'unknown'}) ${debugInfo}`,
+        error: result.errorMessage || 'iyzico ödeme başlatılamadı',
       }, { status: 400 })
     }
   } catch (error) {
