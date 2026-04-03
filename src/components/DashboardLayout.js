@@ -6,6 +6,10 @@ import { supabase } from '@/lib/supabase'
 
 const navItems = [
   { href: '/dashboard/yeni', icon: '➕', label: 'Yeni Listing' },
+  { href: '/dashboard/toplu', icon: '📦', label: 'Toplu Üretim' },
+  { href: '/dashboard/optimizer', icon: '⚡', label: 'Optimizer' },
+  { href: '/dashboard/anahtar-kelime', icon: '🔑', label: 'Anahtar Kelime' },
+  { href: '/dashboard/asistan', icon: '🤖', label: 'AI Asistan' },
   { href: '/dashboard/gecmis', icon: '📋', label: 'Geçmiş' },
   { href: '/dashboard/analitik', icon: '📊', label: 'Analitik' },
   { href: '/dashboard/odeme', icon: '💎', label: 'Planı Yükselt' },
