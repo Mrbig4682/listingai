@@ -10,8 +10,8 @@ const features = [
 
 const plans = [
   { name: 'Ücretsiz', price: '₺0', period: '/ay', features: ['10 listing/ay', 'Tek platform', 'Temel SEO skoru'], cta: 'Hemen Başla', highlight: false },
-  { name: 'Pro', price: '₺299', period: '/ay', features: ['200 listing/ay', '3 platform', 'Görsel analiz', 'Gelişmiş SEO'], cta: "Pro'ya Geç", highlight: true },
-  { name: 'Business', price: '₺799', period: '/ay', features: ['Sınırsız listing', 'Toplu CSV', 'Rakip analizi', 'Öncelikli destek'], cta: 'İletişime Geç', highlight: false },
+  { name: 'Pro', price: '₺299', period: '/ay', features: ['200 listing/ay', '3 platform', 'Görsel analiz', 'Gelişmiş SEO'], cta: "Pro'ya Geç", highlight: true, href: '/dashboard/odeme' },
+  { name: 'Business', price: '₺799', period: '/ay', features: ['Sınırsız listing', 'Toplu CSV', 'Rakip analizi', 'Öncelikli destek'], cta: 'Business\'a Geç', highlight: false, href: '/dashboard/odeme' },
 ]
 
 export default function LandingPage() {
@@ -103,7 +103,7 @@ export default function LandingPage() {
                   <div key={f} className="text-sm text-gray-600">✓ {f}</div>
                 ))}
               </div>
-              <Link href="/kayit" className={`block text-center mt-6 py-3 rounded-xl font-semibold transition ${p.highlight ? 'bg-brand-500 text-white hover:bg-brand-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+              <Link href={p.href || '/kayit'} className={`block text-center mt-6 py-3 rounded-xl font-semibold transition ${p.highlight ? 'bg-brand-500 text-white hover:bg-brand-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
                 {p.cta}
               </Link>
             </div>

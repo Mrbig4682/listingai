@@ -8,6 +8,7 @@ const navItems = [
   { href: '/dashboard/yeni', icon: '➕', label: 'Yeni Listing' },
   { href: '/dashboard/gecmis', icon: '📋', label: 'Geçmiş' },
   { href: '/dashboard/analitik', icon: '📊', label: 'Analitik' },
+  { href: '/dashboard/odeme', icon: '💎', label: 'Planı Yükselt' },
 ]
 
 export default function DashboardLayout({ children }) {
@@ -67,9 +68,9 @@ export default function DashboardLayout({ children }) {
             <div className="bg-gray-200 rounded-full h-1.5 mt-2 overflow-hidden">
               <div className="bg-brand-500 h-full rounded-full" style={{ width: '30%' }} />
             </div>
-            <button className="w-full mt-3 py-2 bg-brand-500 text-white text-xs font-bold rounded-lg hover:bg-brand-600 transition">
+            <Link href="/dashboard/odeme" className="block w-full mt-3 py-2 bg-brand-500 text-white text-xs font-bold rounded-lg hover:bg-brand-600 transition text-center">
               Pro'ya Geç
-            </button>
+            </Link>
           </div>
           <button onClick={handleLogout} className="w-full mt-3 py-2 text-xs text-gray-400 hover:text-gray-600 transition">
             Çıkış Yap
