@@ -243,7 +243,7 @@ export default function YeniListingPage() {
 
   // Form screen
   return (
-    <div className="max-w-lg mx-auto">
+    <div>
       <h2 className="text-xl font-bold mb-1">📦 {t?.newListing?.title || 'Ürün Bilgilerini Gir'}</h2>
       <p className="text-gray-500 text-sm mb-6">{t?.newListing?.subtitle || 'Ne kadar detay verirsen, listing o kadar güçlü olur.'}</p>
 
@@ -258,7 +258,7 @@ export default function YeniListingPage() {
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.newListing?.productName || 'Ürün Adı'} *</label>
           <input className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
@@ -298,10 +298,13 @@ export default function YeniListingPage() {
 
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.newListing?.platformSelect || 'Platform Seçimi'} *</label>
-          <div className="flex gap-2 mt-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-1">
             {platforms.map(p => (
               <button key={p.id} onClick={() => togglePlatform(p.id)} type="button"
-                className={`flex-1 py-2.5 px-3 rounded-xl text-sm font-semibold border-2 transition ${form.platforms.includes(p.id) ? 'border-brand-500 bg-brand-50 text-brand-500' : 'border-gray-200 text-gray-400'}`}>
+                className={`flex items-center gap-2.5 py-2.5 px-3.5 rounded-xl text-sm font-medium border-2 transition text-left ${form.platforms.includes(p.id) ? 'border-brand-500 bg-brand-50 text-brand-600' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}>
+                <span className={`w-4 h-4 rounded flex-shrink-0 border-2 flex items-center justify-center text-[10px] ${form.platforms.includes(p.id) ? 'border-brand-500 bg-brand-500 text-white' : 'border-gray-300'}`}>
+                  {form.platforms.includes(p.id) && '✓'}
+                </span>
                 {p.name}
               </button>
             ))}

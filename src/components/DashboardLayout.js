@@ -13,18 +13,37 @@ export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { t, locale, setLocale, locales, translations } = useI18n()
 
-  const navItems = [
-    { href: '/dashboard/yeni', icon: '✦', label: t.nav.newListing },
-    { href: '/dashboard/toplu', icon: '◫', label: t.nav.bulkGenerate },
-    { href: '/dashboard/optimizer', icon: '◈', label: t.nav.optimizer },
-    { href: '/dashboard/anahtar-kelime', icon: '◎', label: t.nav.keywords },
-    { href: '/dashboard/marka-dna', icon: '◇', label: t.nav.brandDna },
-    { href: '/dashboard/rakip-analiz', icon: '◆', label: t.nav.competitorAnalysis },
-    { href: '/dashboard/ab-test', icon: '⬡', label: t.nav.abTest },
-    { href: '/dashboard/asistan', icon: '◉', label: t.nav.aiAssistant },
-    { href: '/dashboard/gecmis', icon: '◷', label: t.nav.history },
-    { href: '/dashboard/analitik', icon: '◑', label: t.nav.analytics },
-    { href: '/dashboard/odeme', icon: '⬟', label: t.nav.upgrade },
+  const navSections = [
+    {
+      items: [
+        { href: '/dashboard', icon: '⬡', label: t.nav?.dashboard || 'Dashboard' },
+      ]
+    },
+    {
+      label: t.nav?.createSection || 'Create',
+      items: [
+        { href: '/dashboard/yeni', icon: '✦', label: t.nav.newListing },
+        { href: '/dashboard/toplu', icon: '◫', label: t.nav.bulkGenerate },
+      ]
+    },
+    {
+      label: t.nav?.analyzeSection || 'Analyze',
+      items: [
+        { href: '/dashboard/optimizer', icon: '◈', label: t.nav.optimizer },
+        { href: '/dashboard/anahtar-kelime', icon: '◎', label: t.nav.keywords },
+        { href: '/dashboard/marka-dna', icon: '◇', label: t.nav.brandDna },
+        { href: '/dashboard/rakip-analiz', icon: '◆', label: t.nav.competitorAnalysis },
+        { href: '/dashboard/ab-test', icon: '⬢', label: t.nav.abTest },
+      ]
+    },
+    {
+      label: t.nav?.toolsSection || 'Tools',
+      items: [
+        { href: '/dashboard/asistan', icon: '◉', label: t.nav.aiAssistant },
+        { href: '/dashboard/gecmis', icon: '◷', label: t.nav.history },
+        { href: '/dashboard/analitik', icon: '◑', label: t.nav.analytics },
+      ]
+    },
   ]
 
   useEffect(() => {
@@ -80,21 +99,32 @@ export default function DashboardLayout({ children }) {
           </div>
         </div>
 
-        <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto">
-          {navItems.map(item => {
-            const active = pathname === item.href || pathname.startsWith(item.href + '/')
-            return (
-              <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition duration-200 ${
-                  active
-                    ? 'bg-brand-50 text-brand-600 font-semibold'
-                    : 'text-trust-medium hover:bg-surface-50 hover:text-trust-dark'
-                }`}>
-                <span className={`text-base ${active ? 'text-brand-500' : 'text-trust-light'}`}>{item.icon}</span>
-                {item.label}
-              </Link>
-            )
-          })}
+        <nav className="flex-1 px-3 overflow-y-auto">
+          {navSections.map((section, si) => (
+            <div key={si} className={si > 0 ? 'mt-4' : ''}>
+              {section.label && (
+                <div className="px-3 mb-1.5 text-[10px] font-bold uppercase tracking-widest text-trust-light">
+                  {section.label}
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {section.items.map(item => {
+                  const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href + '/'))
+                  return (
+                    <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition duration-200 ${
+                        active
+                          ? 'bg-brand-50 text-brand-600 font-semibold'
+                          : 'text-trust-medium hover:bg-surface-50 hover:text-trust-dark'
+                      }`}>
+                      <span className={`text-base ${active ? 'text-brand-500' : 'text-trust-light'}`}>{item.icon}</span>
+                      {item.label}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         <div className="p-4">
