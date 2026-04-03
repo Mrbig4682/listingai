@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import Iyzipay from 'iyzipay'
+import crypto from 'crypto'
 
 function getSupabase() {
   return createClient(
@@ -8,12 +8,18 @@ function getSupabase() {
   )
 }
 
-function getIyzipay() {
-  return new Iyzipay({
-    apiKey: process.env.IYZICO_API_KEY || 'sandbox-placeholder',
-    secretKey: process.env.IYZICO_SECRET_KEY || 'sandbox-placeholder',
-    uri: process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com',
-  })
+function generateRandomString() {
+  return crypto.randomBytes(16).toString('hex')
+}
+
+function getAuthorizationHeader(apiKey, secretKey, requestBody) {
+  const randomString = generateRandomString()
+  const hashInput = apiKey + randomString + secretKey + JSON.stringify(requestBody)
+  const hashStr = crypto.createHash('sha1').update(hashInput).digest('base64')
+  return {
+    authorization: `IYZWS ${apiKey}:${hashStr}`,
+    xIyziRnd: randomString,
+  }
 }
 
 const PLANS = {
@@ -41,13 +47,13 @@ export async function POST(request) {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://listingai-gamma.vercel.app'
 
     const requestData = {
-      locale: Iyzipay.LOCALE.TR,
+      locale: 'tr',
       conversationId: conversationId,
       price: selectedPlan.price,
       paidPrice: selectedPlan.price,
-      currency: Iyzipay.CURRENCY.TRY,
+      currency: 'TRY',
       basketId: basketId,
-      paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
+      paymentGroup: 'PRODUCT',
       callbackUrl: `${baseUrl}/api/iyzico/callback`,
       enabledInstallments: [1, 2, 3, 6],
       buyer: {
@@ -79,7 +85,7 @@ export async function POST(request) {
           id: plan,
           name: selectedPlan.name,
           category1: 'SaaS Abonelik',
-          itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL,
+          itemType: 'VIRTUAL',
           price: selectedPlan.price,
         },
       ],
@@ -96,30 +102,37 @@ export async function POST(request) {
       status: 'pending',
     })
 
-    // iyzico Checkout Form oluştur
-    const iyzipay = getIyzipay()
-    return new Promise((resolve) => {
-      iyzipay.checkoutFormInitialize.create(requestData, (err, result) => {
-        if (err) {
-          console.error('iyzico error:', err)
-          resolve(Response.json({ error: 'iyzico bağlantı hatası' }, { status: 500 }))
-          return
-        }
+    // iyzico API'ye HTTP çağrısı yap
+    const apiKey = process.env.IYZICO_API_KEY || 'sandbox-placeholder'
+    const secretKey = process.env.IYZICO_SECRET_KEY || 'sandbox-placeholder'
+    const baseUrl_api = process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com'
 
-        if (result.status === 'success') {
-          resolve(Response.json({
-            checkoutFormContent: result.checkoutFormContent,
-            token: result.token,
-            tokenExpireTime: result.tokenExpireTime,
-          }))
-        } else {
-          console.error('iyzico result error:', result)
-          resolve(Response.json({
-            error: result.errorMessage || 'iyzico hatası',
-          }, { status: 400 }))
-        }
-      })
+    const authHeaders = getAuthorizationHeader(apiKey, secretKey, requestData)
+
+    const response = await fetch(`${baseUrl_api}/payment/iyzipos/checkoutform/initialize/auth/ecom`, {
+      method: 'POST',
+      headers: {
+        'Authorization': authHeaders.authorization,
+        'x-iyzi-rnd': authHeaders.xIyziRnd,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
     })
+
+    const result = await response.json()
+
+    if (result.status === 'success') {
+      return Response.json({
+        checkoutFormContent: result.checkoutFormContent,
+        token: result.token,
+        tokenExpireTime: result.tokenExpireTime,
+      })
+    } else {
+      console.error('iyzico result error:', result)
+      return Response.json({
+        error: result.errorMessage || 'iyzico hatası',
+      }, { status: 400 })
+    }
   } catch (error) {
     console.error('Initialize error:', error)
     return Response.json({ error: 'Sunucu hatası' }, { status: 500 })

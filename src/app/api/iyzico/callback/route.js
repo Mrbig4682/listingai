@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import Iyzipay from 'iyzipay'
+import crypto from 'crypto'
 
 function getSupabase() {
   return createClient(
@@ -8,12 +8,18 @@ function getSupabase() {
   )
 }
 
-function getIyzipay() {
-  return new Iyzipay({
-    apiKey: process.env.IYZICO_API_KEY || 'sandbox-placeholder',
-    secretKey: process.env.IYZICO_SECRET_KEY || 'sandbox-placeholder',
-    uri: process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com',
-  })
+function generateRandomString() {
+  return crypto.randomBytes(16).toString('hex')
+}
+
+function getAuthorizationHeader(apiKey, secretKey, requestBody) {
+  const randomString = generateRandomString()
+  const hashInput = apiKey + randomString + secretKey + JSON.stringify(requestBody)
+  const hashStr = crypto.createHash('sha1').update(hashInput).digest('base64')
+  return {
+    authorization: `IYZWS ${apiKey}:${hashStr}`,
+    xIyziRnd: randomString,
+  }
 }
 
 export async function POST(request) {
@@ -25,86 +31,90 @@ export async function POST(request) {
       return redirectWithStatus('error', 'Token bulunamadı')
     }
 
-    // iyzico'dan ödeme sonucunu al
-    const iyzipay = getIyzipay()
-    return new Promise((resolve) => {
-      iyzipay.checkoutForm.retrieve(
-        {
-          locale: Iyzipay.LOCALE.TR,
-          token: token,
-        },
-        async (err, result) => {
-          if (err) {
-            console.error('iyzico callback error:', err)
-            resolve(redirectWithStatus('error', 'Ödeme doğrulanamadı'))
-            return
-          }
+    // iyzico API'ye HTTP çağrısı yap
+    const apiKey = process.env.IYZICO_API_KEY || 'sandbox-placeholder'
+    const secretKey = process.env.IYZICO_SECRET_KEY || 'sandbox-placeholder'
+    const baseUrl = process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com'
 
-          console.log('iyzico callback result:', JSON.stringify(result, null, 2))
+    const requestData = {
+      locale: 'tr',
+      token: token,
+    }
 
-          if (result.status === 'success' && result.paymentStatus === 'SUCCESS') {
-            // Ödeme başarılı!
-            const basketId = result.basketId || ''
-            const plan = basketId.includes('PRO') ? 'pro' : 'business'
-            const buyerId = result.buyer?.id || result.basketItems?.[0]?.id
+    const authHeaders = getAuthorizationHeader(apiKey, secretKey, requestData)
 
-            // payment_requests tablosunda eşleşen kaydı bul ve güncelle
-            const supabase = getSupabase()
-            const { data: pendingPayments } = await supabase
-              .from('payment_requests')
-              .select('*')
-              .eq('status', 'pending')
-              .order('created_at', { ascending: false })
-
-            // basketId ile eşleşen kaydı bul
-            let matchedPayment = null
-            if (pendingPayments) {
-              matchedPayment = pendingPayments.find(p =>
-                p.transfer_note && p.transfer_note.includes(basketId)
-              )
-            }
-
-            if (matchedPayment) {
-              // Ödeme talebini onayla
-              await supabase
-                .from('payment_requests')
-                .update({
-                  status: 'approved',
-                  reviewed_at: new Date().toISOString(),
-                  admin_note: `iyzico otomatik onay - ${result.paymentId}`,
-                })
-                .eq('id', matchedPayment.id)
-
-              // Kullanıcının planını yükselt
-              const newLimit = plan === 'pro' ? 200 : 999999
-              const expiry = new Date()
-              expiry.setMonth(expiry.getMonth() + 1)
-
-              await supabase
-                .from('user_profiles')
-                .update({
-                  plan: plan,
-                  listings_limit: newLimit,
-                  listings_used: 0,
-                  plan_started_at: new Date().toISOString(),
-                  plan_expires_at: expiry.toISOString(),
-                })
-                .eq('id', matchedPayment.user_id)
-
-              resolve(redirectWithStatus('success', plan))
-            } else {
-              // Eşleşen kayıt bulunamadı ama ödeme başarılı
-              console.error('No matching payment found for basketId:', basketId)
-              resolve(redirectWithStatus('success', plan))
-            }
-          } else {
-            // Ödeme başarısız
-            const errorMsg = result.errorMessage || 'Ödeme başarısız oldu'
-            resolve(redirectWithStatus('failed', errorMsg))
-          }
-        }
-      )
+    const response = await fetch(`${baseUrl}/payment/iyzipos/checkoutform/auth/ecom/detail`, {
+      method: 'POST',
+      headers: {
+        'Authorization': authHeaders.authorization,
+        'x-iyzi-rnd': authHeaders.xIyziRnd,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
     })
+
+    const result = await response.json()
+    console.log('iyzico callback result:', JSON.stringify(result, null, 2))
+
+    if (result.status === 'success' && result.paymentStatus === 'SUCCESS') {
+      // Ödeme başarılı!
+      const basketId = result.basketId || ''
+      const plan = basketId.includes('PRO') ? 'pro' : 'business'
+
+      // payment_requests tablosunda eşleşen kaydı bul ve güncelle
+      const supabase = getSupabase()
+      const { data: pendingPayments } = await supabase
+        .from('payment_requests')
+        .select('*')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+
+      // basketId ile eşleşen kaydı bul
+      let matchedPayment = null
+      if (pendingPayments) {
+        matchedPayment = pendingPayments.find(p =>
+          p.transfer_note && p.transfer_note.includes(basketId)
+        )
+      }
+
+      if (matchedPayment) {
+        // Ödeme talebini onayla
+        await supabase
+          .from('payment_requests')
+          .update({
+            status: 'approved',
+            reviewed_at: new Date().toISOString(),
+            admin_note: `iyzico otomatik onay - ${result.paymentId}`,
+          })
+          .eq('id', matchedPayment.id)
+
+        // Kullanıcının planını yükselt
+        const newLimit = plan === 'pro' ? 200 : 999999
+        const expiry = new Date()
+        expiry.setMonth(expiry.getMonth() + 1)
+
+        await supabase
+          .from('user_profiles')
+          .update({
+            plan: plan,
+            listings_limit: newLimit,
+            listings_used: 0,
+            plan_started_at: new Date().toISOString(),
+            plan_expires_at: expiry.toISOString(),
+          })
+          .eq('id', matchedPayment.user_id)
+
+        return redirectWithStatus('success', plan)
+      } else {
+        // Eşleşen kayıt bulunamadı ama ödeme başarılı
+        console.error('No matching payment found for basketId:', basketId)
+        return redirectWithStatus('success', plan)
+      }
+    } else {
+      // Ödeme başarısız
+      const errorMsg = result.errorMessage || 'Ödeme başarısız oldu'
+      return redirectWithStatus('failed', errorMsg)
+    }
   } catch (error) {
     console.error('Callback error:', error)
     return redirectWithStatus('error', 'Sunucu hatası')
