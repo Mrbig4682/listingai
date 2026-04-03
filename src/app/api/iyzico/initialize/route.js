@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js'
-import crypto from 'crypto'
 
 function getSupabase() {
   return createClient(
@@ -8,55 +7,16 @@ function getSupabase() {
   )
 }
 
-function generateRandomString() {
-  return crypto.randomBytes(8).toString('hex')
-}
-
-// iyzico PKI string formatı - JSON değil, key=value formatında
-function toPkiString(obj) {
-  if (obj === null || obj === undefined) return ''
-  if (Array.isArray(obj)) {
-    let result = '['
-    for (let i = 0; i < obj.length; i++) {
-      if (typeof obj[i] === 'object' && obj[i] !== null) {
-        result += toPkiString(obj[i])
-      } else {
-        result += obj[i]
-      }
-      if (i < obj.length - 1) result += ', '
-    }
-    result += ']'
-    return result
+let Iyzipay = null
+function getIyzipay() {
+  if (!Iyzipay) {
+    Iyzipay = require('iyzipay')
   }
-  if (typeof obj === 'object') {
-    let result = '['
-    const keys = Object.keys(obj)
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]
-      const value = obj[key]
-      if (value === null || value === undefined) continue
-      if (typeof value === 'object') {
-        result += key + '=' + toPkiString(value)
-      } else {
-        result += key + '=' + value
-      }
-      if (i < keys.length - 1) result += ','
-    }
-    result += ']'
-    return result
-  }
-  return String(obj)
-}
-
-function getAuthorizationHeader(apiKey, secretKey, requestData) {
-  const randomString = generateRandomString()
-  const pkiString = toPkiString(requestData)
-  const hashInput = apiKey + randomString + secretKey + pkiString
-  const hashStr = crypto.createHash('sha1').update(hashInput, 'utf8').digest('base64')
-  return {
-    authorization: `IYZWS ${apiKey}:${hashStr}`,
-    xIyziRnd: randomString,
-  }
+  return new Iyzipay({
+    apiKey: process.env.IYZICO_API_KEY,
+    secretKey: process.env.IYZICO_SECRET_KEY,
+    uri: process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com',
+  })
 }
 
 const PLANS = {
@@ -76,20 +36,37 @@ export async function POST(request) {
       return Response.json({ error: 'Kullanıcı bilgisi eksik' }, { status: 400 })
     }
 
+    if (!process.env.IYZICO_API_KEY || !process.env.IYZICO_SECRET_KEY) {
+      return Response.json({ error: 'Ödeme sistemi yapılandırma hatası' }, { status: 500 })
+    }
+
     const selectedPlan = PLANS[plan]
     const basketId = `LISTINGAI_${plan.toUpperCase()}_${Date.now()}`
     const conversationId = `${userId.substring(0, 8)}_${Date.now()}`
-
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://listingai-gamma.vercel.app'
 
-    const requestData = {
-      locale: 'tr',
+    // Supabase'e ödeme kaydı oluştur
+    const supabase = getSupabase()
+    await supabase.from('payment_requests').insert({
+      user_id: userId,
+      plan: plan,
+      amount: parseFloat(selectedPlan.price),
+      sender_name: userEmail,
+      transfer_note: `iyzico - ${basketId}`,
+      status: 'pending',
+    })
+
+    // iyzipay ile ödeme formu oluştur
+    const iyzipay = getIyzipay()
+
+    const paymentRequest = {
+      locale: Iyzipay.LOCALE.TR,
       conversationId: conversationId,
       price: selectedPlan.price,
       paidPrice: selectedPlan.price,
-      currency: 'TRY',
+      currency: Iyzipay.CURRENCY.TRY,
       basketId: basketId,
-      paymentGroup: 'PRODUCT',
+      paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
       callbackUrl: `${baseUrl}/api/iyzico/callback`,
       enabledInstallments: [1, 2, 3, 6],
       buyer: {
@@ -121,46 +98,18 @@ export async function POST(request) {
           id: plan,
           name: selectedPlan.name,
           category1: 'SaaS',
-          itemType: 'VIRTUAL',
+          itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL,
           price: selectedPlan.price,
         },
       ],
     }
 
-    // Supabase'e ödeme kaydı oluştur
-    const supabase = getSupabase()
-    await supabase.from('payment_requests').insert({
-      user_id: userId,
-      plan: plan,
-      amount: parseFloat(selectedPlan.price),
-      sender_name: userEmail,
-      transfer_note: `iyzico - ${basketId}`,
-      status: 'pending',
+    const result = await new Promise((resolve, reject) => {
+      iyzipay.checkoutFormInitialize.create(paymentRequest, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
     })
-
-    // iyzico API çağrısı
-    const apiKey = process.env.IYZICO_API_KEY
-    const secretKey = process.env.IYZICO_SECRET_KEY
-    const baseUrlApi = process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com'
-
-    if (!apiKey || !secretKey) {
-      console.error('iyzico API keys missing')
-      return Response.json({ error: 'Ödeme sistemi yapılandırma hatası' }, { status: 500 })
-    }
-
-    const authHeaders = getAuthorizationHeader(apiKey, secretKey, requestData)
-
-    const response = await fetch(`${baseUrlApi}/payment/iyzipos/checkoutform/initialize/auth/ecom`, {
-      method: 'POST',
-      headers: {
-        'Authorization': authHeaders.authorization,
-        'x-iyzi-rnd': authHeaders.xIyziRnd,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData),
-    })
-
-    const result = await response.json()
 
     console.log('iyzico response status:', result.status)
     if (result.status !== 'success') {

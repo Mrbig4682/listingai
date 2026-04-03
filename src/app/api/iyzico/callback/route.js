@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js'
-import crypto from 'crypto'
 
 function getSupabase() {
   return createClient(
@@ -8,18 +7,16 @@ function getSupabase() {
   )
 }
 
-function generateRandomString() {
-  return crypto.randomBytes(16).toString('hex')
-}
-
-function getAuthorizationHeader(apiKey, secretKey, requestBody) {
-  const randomString = generateRandomString()
-  const hashInput = apiKey + randomString + secretKey + JSON.stringify(requestBody)
-  const hashStr = crypto.createHash('sha1').update(hashInput).digest('base64')
-  return {
-    authorization: `IYZWS ${apiKey}:${hashStr}`,
-    xIyziRnd: randomString,
+let Iyzipay = null
+function getIyzipay() {
+  if (!Iyzipay) {
+    Iyzipay = require('iyzipay')
   }
+  return new Iyzipay({
+    apiKey: process.env.IYZICO_API_KEY,
+    secretKey: process.env.IYZICO_SECRET_KEY,
+    uri: process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com',
+  })
 }
 
 export async function POST(request) {
@@ -31,29 +28,19 @@ export async function POST(request) {
       return redirectWithStatus('error', 'Token bulunamadı')
     }
 
-    // iyzico API'ye HTTP çağrısı yap
-    const apiKey = process.env.IYZICO_API_KEY || 'sandbox-placeholder'
-    const secretKey = process.env.IYZICO_SECRET_KEY || 'sandbox-placeholder'
-    const baseUrl = process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com'
+    // iyzipay ile ödeme sonucunu sorgula
+    const iyzipay = getIyzipay()
 
-    const requestData = {
-      locale: 'tr',
-      token: token,
-    }
-
-    const authHeaders = getAuthorizationHeader(apiKey, secretKey, requestData)
-
-    const response = await fetch(`${baseUrl}/payment/iyzipos/checkoutform/auth/ecom/detail`, {
-      method: 'POST',
-      headers: {
-        'Authorization': authHeaders.authorization,
-        'x-iyzi-rnd': authHeaders.xIyziRnd,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData),
+    const result = await new Promise((resolve, reject) => {
+      iyzipay.checkoutForm.retrieve({
+        locale: Iyzipay.LOCALE.TR,
+        token: token,
+      }, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
     })
 
-    const result = await response.json()
     console.log('iyzico callback result:', JSON.stringify(result, null, 2))
 
     if (result.status === 'success' && result.paymentStatus === 'SUCCESS') {
@@ -106,12 +93,10 @@ export async function POST(request) {
 
         return redirectWithStatus('success', plan)
       } else {
-        // Eşleşen kayıt bulunamadı ama ödeme başarılı
         console.error('No matching payment found for basketId:', basketId)
         return redirectWithStatus('success', plan)
       }
     } else {
-      // Ödeme başarısız
       const errorMsg = result.errorMessage || 'Ödeme başarısız oldu'
       return redirectWithStatus('failed', errorMsg)
     }
