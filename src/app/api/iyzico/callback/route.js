@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import crypto from 'crypto'
 
 function getSupabase() {
   return createClient(
@@ -7,16 +8,22 @@ function getSupabase() {
   )
 }
 
-let Iyzipay = null
-function getIyzipay() {
-  if (!Iyzipay) {
-    Iyzipay = require('iyzipay')
-  }
-  return new Iyzipay({
-    apiKey: process.env.IYZICO_API_KEY,
-    secretKey: process.env.IYZICO_SECRET_KEY,
-    uri: process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com',
-  })
+function generateAuthHeaderV2(apiKey, secretKey, uri, body, randomString) {
+  const signature = crypto
+    .createHmac('sha256', secretKey)
+    .update(randomString + uri + JSON.stringify(body))
+    .digest('hex')
+
+  const authorizationParams = [
+    'apiKey:' + apiKey,
+    'randomKey:' + randomString,
+    'signature:' + signature,
+  ]
+  return 'IYZWSv2 ' + Buffer.from(authorizationParams.join('&')).toString('base64')
+}
+
+function generateRandomString() {
+  return process.hrtime.bigint().toString() + Math.random().toString(8).slice(2)
 }
 
 export async function POST(request) {
@@ -28,27 +35,37 @@ export async function POST(request) {
       return redirectWithStatus('error', 'Token bulunamadı')
     }
 
-    // iyzipay ile ödeme sonucunu sorgula
-    const iyzipay = getIyzipay()
+    const apiKey = process.env.IYZICO_API_KEY
+    const secretKey = process.env.IYZICO_SECRET_KEY
+    const baseUrlApi = process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com'
 
-    const result = await new Promise((resolve, reject) => {
-      iyzipay.checkoutForm.retrieve({
-        locale: Iyzipay.LOCALE.TR,
-        token: token,
-      }, (err, result) => {
-        if (err) reject(err)
-        else resolve(result)
-      })
+    const requestBody = {
+      locale: 'tr',
+      token: token,
+    }
+
+    const uri = '/payment/iyzipos/checkoutform/auth/ecom/detail'
+    const randomString = generateRandomString()
+    const authorization = generateAuthHeaderV2(apiKey, secretKey, uri, requestBody, randomString)
+
+    const response = await fetch(`${baseUrlApi}${uri}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': authorization,
+        'x-iyzi-rnd': randomString,
+        'x-iyzi-client-version': 'iyzipay-node-2.0.67',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
     })
 
+    const result = await response.json()
     console.log('iyzico callback result:', JSON.stringify(result, null, 2))
 
     if (result.status === 'success' && result.paymentStatus === 'SUCCESS') {
-      // Ödeme başarılı!
       const basketId = result.basketId || ''
       const plan = basketId.includes('PRO') ? 'pro' : 'business'
 
-      // payment_requests tablosunda eşleşen kaydı bul ve güncelle
       const supabase = getSupabase()
       const { data: pendingPayments } = await supabase
         .from('payment_requests')
@@ -56,7 +73,6 @@ export async function POST(request) {
         .eq('status', 'pending')
         .order('created_at', { ascending: false })
 
-      // basketId ile eşleşen kaydı bul
       let matchedPayment = null
       if (pendingPayments) {
         matchedPayment = pendingPayments.find(p =>
@@ -65,7 +81,6 @@ export async function POST(request) {
       }
 
       if (matchedPayment) {
-        // Ödeme talebini onayla
         await supabase
           .from('payment_requests')
           .update({
@@ -75,7 +90,6 @@ export async function POST(request) {
           })
           .eq('id', matchedPayment.id)
 
-        // Kullanıcının planını yükselt
         const newLimit = plan === 'pro' ? 200 : 999999
         const expiry = new Date()
         expiry.setMonth(expiry.getMonth() + 1)

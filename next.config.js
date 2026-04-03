@@ -1,5 +1,3 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  serverExternalPackages: ['iyzipay'],
-}
+const nextConfig = {}
 module.exports = nextConfig
