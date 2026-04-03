@@ -1878,33 +1878,27 @@ export const translations = {
   },
 }
 
-// Platform configs per market
+// All platforms available globally - users pick what they want
+export const allPlatforms = [
+  { id: 'amazon', name: 'Amazon', color: 'orange' },
+  { id: 'ebay', name: 'eBay', color: 'blue' },
+  { id: 'etsy', name: 'Etsy', color: 'orange' },
+  { id: 'shopify', name: 'Shopify', color: 'green' },
+  { id: 'walmart', name: 'Walmart', color: 'blue' },
+  { id: 'trendyol', name: 'Trendyol', color: 'orange' },
+  { id: 'hepsiburada', name: 'Hepsiburada', color: 'orange' },
+  { id: 'n11', name: 'N11', color: 'purple' },
+  { id: 'mercadolibre', name: 'Mercado Libre', color: 'yellow' },
+  { id: 'otto', name: 'Otto', color: 'red' },
+  { id: 'cdiscount', name: 'Cdiscount', color: 'blue' },
+]
+
+// Keep marketPlatforms for backward compat but all platforms always available
 export const marketPlatforms = {
-  tr: [
-    { id: 'trendyol', name: 'Trendyol', color: 'orange' },
-    { id: 'hepsiburada', name: 'Hepsiburada', color: 'orange' },
-    { id: 'n11', name: 'N11', color: 'purple' },
-  ],
-  us: [
-    { id: 'amazon', name: 'Amazon', color: 'orange' },
-    { id: 'ebay', name: 'eBay', color: 'blue' },
-    { id: 'etsy', name: 'Etsy', color: 'orange' },
-    { id: 'shopify', name: 'Shopify', color: 'green' },
-    { id: 'walmart', name: 'Walmart', color: 'blue' },
-  ],
-  latam: [
-    { id: 'mercadolibre', name: 'Mercado Libre', color: 'yellow' },
-    { id: 'amazon', name: 'Amazon', color: 'orange' },
-    { id: 'shopify', name: 'Shopify', color: 'green' },
-  ],
-  eu: [
-    { id: 'amazon', name: 'Amazon', color: 'orange' },
-    { id: 'ebay', name: 'eBay', color: 'blue' },
-    { id: 'etsy', name: 'Etsy', color: 'orange' },
-    { id: 'shopify', name: 'Shopify', color: 'green' },
-    { id: 'otto', name: 'Otto', color: 'red' },
-    { id: 'cdiscount', name: 'Cdiscount', color: 'blue' },
-  ],
+  tr: allPlatforms,
+  us: allPlatforms,
+  latam: allPlatforms,
+  eu: allPlatforms,
 }
 
 export const defaultLocale = 'en'

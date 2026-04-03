@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useContext, useState, useEffect } from 'react'
-import { translations, defaultLocale, locales, marketPlatforms, getMarketFromLocale } from './translations'
+import { translations, defaultLocale, locales, allPlatforms, getMarketFromLocale } from './translations'
 
 const I18nContext = createContext()
 
@@ -30,7 +30,7 @@ export function I18nProvider({ children }) {
 
   const t = translations[locale] || translations[defaultLocale]
   const market = getMarketFromLocale(locale)
-  const platforms = marketPlatforms[market]
+  const platforms = allPlatforms
 
   return (
     <I18nContext.Provider value={{ locale, setLocale, t, market, platforms, locales, translations }}>
@@ -48,7 +48,7 @@ export function useI18n() {
       setLocale: () => {},
       t: translations[defaultLocale],
       market: 'us',
-      platforms: marketPlatforms.us,
+      platforms: allPlatforms,
       locales,
       translations,
     }
