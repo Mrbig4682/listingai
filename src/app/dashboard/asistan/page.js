@@ -1,21 +1,23 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
-
-const QUICK_PROMPTS = [
-  { icon: '📈', text: 'Trendyol\'da satışlarımı nasıl artırabilirim?' },
-  { icon: '🔑', text: 'SEO uyumlu başlık nasıl yazılır?' },
-  { icon: '📸', text: 'Ürün fotoğrafı çekim ipuçları ver' },
-  { icon: '💰', text: 'Fiyatlandırma stratejisi öner' },
-  { icon: '⭐', text: 'Müşteri yorumlarını nasıl artırırım?' },
-  { icon: '🏷️', text: 'Hangi kategoriler trend?' },
-]
+import { useI18n } from '@/lib/i18n/context'
 
 export default function AsistanPage() {
+  const { t } = useI18n()
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
+
+  const QUICK_PROMPTS = [
+    { icon: '📈', text: t.chat.q1 },
+    { icon: '🔑', text: t.chat.q2 },
+    { icon: '📸', text: t.chat.q3 },
+    { icon: '💰', text: t.chat.q4 },
+    { icon: '⭐', text: t.chat.q5 },
+    { icon: '🏷️', text: t.chat.q6 },
+  ]
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -63,8 +65,8 @@ export default function AsistanPage() {
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-lg">🤖</div>
         <div>
-          <h2 className="text-lg font-bold">AI Asistan</h2>
-          <p className="text-xs text-gray-400">E-ticaret uzmanın her zaman yanında</p>
+          <h2 className="text-lg font-bold">{t.chat.title}</h2>
+          <p className="text-xs text-gray-400">{t.chat.subtitle}</p>
         </div>
       </div>
 
@@ -74,8 +76,8 @@ export default function AsistanPage() {
           <div className="flex flex-col items-center justify-center h-full gap-6">
             <div className="text-center">
               <div className="text-5xl mb-3">🤖</div>
-              <h3 className="font-bold text-lg mb-1">Merhaba! Ben ListingAI Asistan</h3>
-              <p className="text-sm text-gray-500 max-w-md">E-ticaret konusunda sana yardımcı olabilirim. Listing optimizasyonu, SEO stratejileri, fiyatlandırma ve daha fazlası...</p>
+              <h3 className="font-bold text-lg mb-1">{t.chat.greeting}</h3>
+              <p className="text-sm text-gray-500 max-w-md">{t.chat.greetingSub}</p>
             </div>
             <div className="grid grid-cols-2 gap-2 max-w-lg w-full">
               {QUICK_PROMPTS.map((p, i) => (
@@ -121,7 +123,7 @@ export default function AsistanPage() {
         <div className="flex gap-2">
           <textarea ref={inputRef} rows={1} value={input} onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Bir soru sor..."
+            placeholder={t.chat.placeholder}
             className="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
             style={{ maxHeight: '120px' }}
             onInput={e => { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px' }}
@@ -131,7 +133,7 @@ export default function AsistanPage() {
             ➤
           </button>
         </div>
-        <p className="text-[10px] text-gray-400 mt-1 text-center">AI yanıtları tavsiye niteliğindedir.</p>
+        <p className="text-[10px] text-gray-400 mt-1 text-center">{t.chat.disclaimer}</p>
       </div>
     </div>
   )

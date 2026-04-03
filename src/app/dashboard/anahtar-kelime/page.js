@@ -1,33 +1,33 @@
 'use client'
 import { useState } from 'react'
+import { useI18n } from '@/lib/i18n/context'
 
-const CATEGORIES = [
-  'Elektronik', 'Moda - Kadın', 'Moda - Erkek', 'Ev & Yaşam', 'Kozmetik',
-  'Spor & Outdoor', 'Kitap & Hobi', 'Anne & Bebek', 'Gıda & İçecek', 'Oto & Bahçe'
-]
-
-function CopyBtn({ text }) {
+function CopyBtn({ text, label }) {
   const [copied, setCopied] = useState(false)
   return (
     <button onClick={() => { navigator.clipboard?.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000) }}
       className="px-2 py-1 text-xs border border-gray-200 rounded-lg text-brand-500 hover:bg-brand-50">
-      {copied ? '✓' : 'Kopyala'}
+      {copied ? '✓' : label}
     </button>
   )
 }
 
-function KeywordBadge({ volume, competition }) {
-  const vColor = volume === 'yüksek' ? 'bg-green-100 text-green-700' : volume === 'orta' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'
-  const cColor = competition === 'düşük' ? 'bg-green-100 text-green-700' : competition === 'orta' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+function KeywordBadge({ volume, competition, t }) {
+  const volumeLabel = t?.keywords?.[`${volume}`] || volume
+  const competitionLabel = t?.keywords?.[`${competition}`] || competition
+  const vColor = volume === 'high' ? 'bg-green-100 text-green-700' : volume === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'
+  const cColor = competition === 'low' ? 'bg-green-100 text-green-700' : competition === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
   return (
     <div className="flex gap-1">
-      <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${vColor}`}>Hacim: {volume}</span>
-      <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${cColor}`}>Rekabet: {competition}</span>
+      <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${vColor}`}>{t?.keywords?.volume}: {volumeLabel}</span>
+      <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${cColor}`}>{t?.keywords?.competition}: {competitionLabel}</span>
     </div>
   )
 }
 
 export default function AnahtarKelimePage() {
+  const { t, platforms } = useI18n()
+  const categories = t?.categories || []
   const [product, setProduct] = useState('')
   const [category, setCategory] = useState('')
   const [platform, setPlatform] = useState('all')
@@ -59,8 +59,8 @@ export default function AnahtarKelimePage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <div className="w-14 h-14 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin-slow" />
-        <p className="font-semibold">AI anahtar kelime araştırması yapıyor...</p>
-        <p className="text-sm text-gray-400">Arama hacmi, rekabet ve trend analizi</p>
+        <p className="font-semibold">{t?.keywords?.loading}</p>
+        <p className="text-sm text-gray-400">{t?.keywords?.loadingDesc}</p>
       </div>
     )
   }
@@ -72,20 +72,20 @@ export default function AnahtarKelimePage() {
       <div>
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-xl font-bold">Anahtar Kelime Sonuçları</h2>
-            <p className="text-sm text-gray-500">"{product}" için {allKeywords.length} anahtar kelime bulundu</p>
+            <h2 className="text-xl font-bold">{t?.keywords?.results}</h2>
+            <p className="text-sm text-gray-500">"{product}" {t?.keywords?.found} {allKeywords.length}</p>
           </div>
           <div className="flex gap-2">
-            <CopyBtn text={allKeywords.join(', ')} />
+            <CopyBtn text={allKeywords.join(', ')} label={t?.common?.copy} />
             <button onClick={() => setResult(null)} className="px-4 py-2 text-sm font-semibold bg-gray-100 rounded-xl hover:bg-gray-200 transition">
-              ← Yeni Arama
+              ← {t?.common?.newSearch}
             </button>
           </div>
         </div>
 
         {/* Ana Anahtar Kelimeler */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
-          <h3 className="font-bold text-sm mb-3">🎯 Ana Anahtar Kelimeler</h3>
+          <h3 className="font-bold text-sm mb-3">🎯 {t?.keywords?.primaryKw}</h3>
           <div className="space-y-2">
             {(result.primary_keywords || []).map((k, i) => (
               <div key={i} className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3">
@@ -94,7 +94,7 @@ export default function AnahtarKelimePage() {
                   <span className="text-sm font-medium">{k.keyword}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <KeywordBadge volume={k.volume} competition={k.competition} />
+                  <KeywordBadge volume={k.volume} competition={k.competition} t={t} />
                   <div className="flex items-center gap-0.5">
                     {[...Array(10)].map((_, j) => (
                       <div key={j} className={`w-1.5 h-3 rounded-sm ${j < k.relevance ? 'bg-brand-500' : 'bg-gray-200'}`} />
@@ -108,12 +108,12 @@ export default function AnahtarKelimePage() {
 
         {/* Uzun kuyruklu */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
-          <h3 className="font-bold text-sm mb-3">🔗 Uzun Kuyruklu Anahtar Kelimeler</h3>
+          <h3 className="font-bold text-sm mb-3">🔗 {t?.keywords?.longTail}</h3>
           <div className="grid md:grid-cols-2 gap-2">
             {(result.long_tail || []).map((k, i) => (
               <div key={i} className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-2.5">
                 <span className="text-sm">{k.keyword}</span>
-                <KeywordBadge volume={k.volume} competition={k.competition} />
+                <KeywordBadge volume={k.volume} competition={k.competition} t={t} />
               </div>
             ))}
           </div>
@@ -122,7 +122,7 @@ export default function AnahtarKelimePage() {
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           {/* Trend olanlar */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-            <h3 className="font-bold text-sm mb-3">🔥 Trend Anahtar Kelimeler</h3>
+            <h3 className="font-bold text-sm mb-3">🔥 {t?.keywords?.trending}</h3>
             <div className="space-y-2">
               {(result.trending || []).map((k, i) => (
                 <div key={i} className="flex items-center gap-2 bg-orange-50 rounded-xl px-4 py-2.5">
@@ -135,8 +135,8 @@ export default function AnahtarKelimePage() {
 
           {/* Negatif kelimeler */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-            <h3 className="font-bold text-sm mb-3">🚫 Negatif Anahtar Kelimeler</h3>
-            <p className="text-xs text-gray-400 mb-2">Başlıkta KULLANMAYIN</p>
+            <h3 className="font-bold text-sm mb-3">🚫 {t?.keywords?.negative}</h3>
+            <p className="text-xs text-gray-400 mb-2">{t?.keywords?.negativeNote}</p>
             <div className="space-y-2">
               {(result.negative || []).map((word, i) => (
                 <div key={i} className="flex items-center gap-2 bg-red-50 rounded-xl px-4 py-2.5">
@@ -152,8 +152,8 @@ export default function AnahtarKelimePage() {
         {result.title_suggestion && (
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="font-bold text-sm">💡 Önerilen Başlık</h3>
-              <CopyBtn text={result.title_suggestion} />
+              <h3 className="font-bold text-sm">💡 {t?.keywords?.suggestedTitle}</h3>
+              <CopyBtn text={result.title_suggestion} label={t?.common?.copy} />
             </div>
             <div className="bg-brand-50 rounded-xl p-4 text-sm font-medium text-brand-800">{result.title_suggestion}</div>
           </div>
@@ -162,7 +162,7 @@ export default function AnahtarKelimePage() {
         {/* SEO İpuçları */}
         {result.tips?.length > 0 && (
           <div className="bg-gradient-to-br from-brand-50 to-purple-50 rounded-2xl border border-brand-100 p-6">
-            <h3 className="font-bold text-sm mb-3">💡 SEO İpuçları</h3>
+            <h3 className="font-bold text-sm mb-3">💡 {t?.keywords?.seoTips}</h3>
             <div className="space-y-2">
               {result.tips.map((tip, i) => (
                 <div key={i} className="flex gap-2 text-sm">
@@ -182,8 +182,8 @@ export default function AnahtarKelimePage() {
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center text-white text-lg">🔑</div>
         <div>
-          <h2 className="text-lg font-bold">Anahtar Kelime Araştırma</h2>
-          <p className="text-xs text-gray-400">AI destekli SEO anahtar kelime analizi</p>
+          <h2 className="text-lg font-bold">{t?.keywords?.title}</h2>
+          <p className="text-xs text-gray-400">{t?.keywords?.subtitle}</p>
         </div>
       </div>
 
@@ -191,25 +191,25 @@ export default function AnahtarKelimePage() {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">Ürün / Arama Terimi *</label>
+          <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.keywords?.product} *</label>
           <input className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             placeholder="örn: kablosuz kulaklık, yoga matı, protein tozu..."
             value={product} onChange={e => setProduct(e.target.value)} />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">Kategori (opsiyonel)</label>
+          <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.newListing?.category}</label>
           <select className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
             value={category} onChange={e => setCategory(e.target.value)}>
-            <option value="">Seçiniz...</option>
-            {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+            <option value="">...</option>
+            {categories.map(c => <option key={c}>{c}</option>)}
           </select>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">Platform</label>
+          <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.keywords?.platform}</label>
           <div className="flex gap-2">
-            {[{ id: 'all', name: 'Tümü' }, { id: 'trendyol', name: 'Trendyol' }, { id: 'hepsiburada', name: 'Hepsiburada' }, { id: 'n11', name: 'N11' }].map(p => (
+            {[{ id: 'all', name: t?.common?.all }, ...(platforms || [])].map(p => (
               <button key={p.id} onClick={() => setPlatform(p.id)}
                 className={`flex-1 py-2 px-3 rounded-xl text-sm font-semibold border-2 transition ${platform === p.id ? 'border-brand-500 bg-brand-50 text-brand-500' : 'border-gray-200 text-gray-400'}`}>
                 {p.name}
@@ -221,7 +221,7 @@ export default function AnahtarKelimePage() {
 
       <button onClick={handleSearch} disabled={!product.trim()}
         className="w-full mt-6 py-3.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold rounded-xl hover:shadow-lg transition disabled:opacity-50 text-base">
-        🔍 Anahtar Kelime Araştır
+        🔍 {t?.keywords?.research}
       </button>
     </div>
   )

@@ -1,24 +1,20 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useI18n } from '@/lib/i18n/context'
 
-const PLATFORMS = [
-  { id: 'trendyol', name: 'Trendyol' },
-  { id: 'hepsiburada', name: 'Hepsiburada' },
-  { id: 'n11', name: 'N11' },
-]
-
-function CopyBtn({ text }) {
+function CopyBtn({ text, t }) {
   const [copied, setCopied] = useState(false)
   return (
     <button onClick={() => { navigator.clipboard?.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000) }}
       className="px-2 py-1 text-xs border border-gray-200 rounded-lg text-brand-500 hover:bg-brand-50">
-      {copied ? '✓' : 'Kopyala'}
+      {copied ? '✓' : t.common.copy}
     </button>
   )
 }
 
 export default function TopluPage() {
+  const { t, platforms } = useI18n()
   const [platform, setPlatform] = useState('trendyol')
   const [products, setProducts] = useState([{ name: '', brand: '', features: '' }])
   const [loading, setLoading] = useState(false)
@@ -73,7 +69,7 @@ export default function TopluPage() {
   const exportCSV = () => {
     if (!results?.results) return
     const successResults = results.results.filter(r => r.status === 'success')
-    const headers = ['Ürün Adı', 'Marka', 'Başlık', 'Özellik 1', 'Özellik 2', 'Özellik 3', 'Özellik 4', 'Özellik 5', 'Açıklama', 'SEO Skoru']
+    const headers = [t.bulk.productName, t.newListing.brand, t.bulk.title, 'Özellik 1', 'Özellik 2', 'Özellik 3', 'Özellik 4', 'Özellik 5', t.bulk.description, 'SEO Skoru']
     const rows = successResults.map(r => [
       r.product_name, r.brand, r.title,
       ...(r.bullets || []).slice(0, 5).concat(Array(5).fill('')).slice(0, 5),
@@ -91,8 +87,8 @@ export default function TopluPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <div className="w-14 h-14 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin-slow" />
-        <p className="font-semibold">{validProducts.length} ürün için listing üretiliyor...</p>
-        <p className="text-sm text-gray-400">Bu biraz sürebilir, lütfen bekleyin</p>
+        <p className="font-semibold">{validProducts.length} {t.bulk.generating}</p>
+        <p className="text-sm text-gray-400">{t.bulk.patience}</p>
       </div>
     )
   }
@@ -102,15 +98,15 @@ export default function TopluPage() {
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
           <div>
-            <h2 className="text-xl font-bold">Toplu Üretim Tamamlandı!</h2>
-            <p className="text-sm text-gray-500">{results.success}/{results.total} ürün başarıyla üretildi</p>
+            <h2 className="text-xl font-bold">{t.bulk.completed}</h2>
+            <p className="text-sm text-gray-500">{results.success}/{results.total} {t.bulk.successCount}</p>
           </div>
           <div className="flex gap-2">
             <button onClick={exportCSV} className="px-4 py-2 text-sm font-semibold bg-green-100 text-green-700 rounded-xl hover:bg-green-200 transition">
-              📥 CSV İndir
+              📥 {t.common.export}
             </button>
             <button onClick={() => setResults(null)} className="px-4 py-2 text-sm font-semibold bg-gray-100 rounded-xl hover:bg-gray-200 transition">
-              ← Yeni Toplu Üretim
+              ← {t.bulk.newBulk}
             </button>
           </div>
         </div>
@@ -143,16 +139,16 @@ export default function TopluPage() {
                 <div className="px-5 pb-5 border-t border-gray-100 pt-4 space-y-3">
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs font-semibold text-gray-500">Başlık</span>
-                      <CopyBtn text={r.title} />
+                      <span className="text-xs font-semibold text-gray-500">{t.bulk.title}</span>
+                      <CopyBtn text={r.title} t={t} />
                     </div>
                     <div className="bg-gray-50 rounded-xl p-3 text-sm">{r.title}</div>
                   </div>
                   {r.bullets?.length > 0 && (
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-semibold text-gray-500">Özellikler</span>
-                        <CopyBtn text={r.bullets.join('\n')} />
+                        <span className="text-xs font-semibold text-gray-500">{t.bulk.features}</span>
+                        <CopyBtn text={r.bullets.join('\n')} t={t} />
                       </div>
                       <div className="space-y-1">
                         {r.bullets.map((b, j) => (
@@ -163,8 +159,8 @@ export default function TopluPage() {
                   )}
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs font-semibold text-gray-500">Açıklama</span>
-                      <CopyBtn text={r.description} />
+                      <span className="text-xs font-semibold text-gray-500">{t.bulk.description}</span>
+                      <CopyBtn text={r.description} t={t} />
                     </div>
                     <div className="bg-gray-50 rounded-xl p-3 text-sm leading-relaxed">{r.description}</div>
                   </div>
@@ -188,17 +184,17 @@ export default function TopluPage() {
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl flex items-center justify-center text-white text-lg">📦</div>
         <div>
-          <h2 className="text-lg font-bold">Toplu Listing Üretimi</h2>
-          <p className="text-xs text-gray-400">Birden fazla ürün için tek seferde listing oluştur (max 10)</p>
+          <h2 className="text-lg font-bold">{t.bulk.title}</h2>
+          <p className="text-xs text-gray-400">{t.bulk.subtitle}</p>
         </div>
       </div>
 
       {error && <div className="bg-red-50 text-red-600 text-sm p-3 rounded-xl mb-4">{error}</div>}
 
       <div className="mb-4">
-        <label className="block text-xs font-semibold text-gray-700 mb-1">Platform</label>
+        <label className="block text-xs font-semibold text-gray-700 mb-1">{t.common.platform}</label>
         <div className="flex gap-2">
-          {PLATFORMS.map(p => (
+          {platforms.map(p => (
             <button key={p.id} onClick={() => setPlatform(p.id)}
               className={`flex-1 py-2 px-3 rounded-xl text-sm font-semibold border-2 transition ${platform === p.id ? 'border-brand-500 bg-brand-50 text-brand-500' : 'border-gray-200 text-gray-400'}`}>
               {p.name}
@@ -211,19 +207,19 @@ export default function TopluPage() {
         {products.map((product, idx) => (
           <div key={idx} className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
             <div className="flex justify-between items-center mb-3">
-              <span className="text-xs font-bold text-gray-500">Ürün {idx + 1}</span>
+              <span className="text-xs font-bold text-gray-500">{t.bulk.product} {idx + 1}</span>
               {products.length > 1 && (
-                <button onClick={() => removeProduct(idx)} className="text-xs text-red-400 hover:text-red-600">Kaldır</button>
+                <button onClick={() => removeProduct(idx)} className="text-xs text-red-400 hover:text-red-600">{t.bulk.remove}</button>
               )}
             </div>
             <div className="space-y-2">
               <input className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-                placeholder="Ürün adı *" value={product.name} onChange={e => updateProduct(idx, 'name', e.target.value)} />
+                placeholder={t.bulk.productName + ' *'} value={product.name} onChange={e => updateProduct(idx, 'name', e.target.value)} />
               <div className="grid grid-cols-2 gap-2">
                 <input className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-                  placeholder="Marka" value={product.brand} onChange={e => updateProduct(idx, 'brand', e.target.value)} />
+                  placeholder={t.newListing.brand} value={product.brand} onChange={e => updateProduct(idx, 'brand', e.target.value)} />
                 <input className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-                  placeholder="Kısa özellikler" value={product.features} onChange={e => updateProduct(idx, 'features', e.target.value)} />
+                  placeholder={t.bulk.shortFeatures} value={product.features} onChange={e => updateProduct(idx, 'features', e.target.value)} />
               </div>
             </div>
           </div>
@@ -232,13 +228,13 @@ export default function TopluPage() {
 
       {products.length < 10 && (
         <button onClick={addProduct} className="w-full mt-3 py-3 border-2 border-dashed border-gray-200 rounded-2xl text-sm text-gray-400 hover:border-brand-300 hover:text-brand-500 transition">
-          + Ürün Ekle ({products.length}/10)
+          + {t.bulk.addProduct} ({products.length}/10)
         </button>
       )}
 
       <button onClick={handleGenerate} disabled={!validProducts.length}
         className="w-full mt-6 py-3.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold rounded-xl hover:shadow-lg transition disabled:opacity-50 text-base">
-        ⚡ {validProducts.length} Ürün İçin Listing Üret
+        ⚡ {validProducts.length} {t.bulk.generateFor}
       </button>
     </div>
   )

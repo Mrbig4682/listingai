@@ -2,8 +2,10 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import { useI18n } from '@/lib/i18n/context'
 
 export default function AnalitikPage() {
+  const { t } = useI18n()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -121,24 +123,24 @@ export default function AnalitikPage() {
   const plan = stats.profile?.plan || 'free'
   const used = stats.profile?.listings_used || 0
   const limit = stats.profile?.listings_limit || 10
-  const planLabel = plan === 'business' ? 'Business' : plan === 'pro' ? 'Pro' : 'Ücretsiz'
+  const planLabel = plan === 'business' ? t.plan.business : plan === 'pro' ? t.plan.pro : t.plan.free
   const maxBarCount = Math.max(...stats.monthlyData.map(m => m.count), 1)
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-6">Analitik</h2>
+      <h2 className="text-xl font-bold mb-6">{t.analytics.title}</h2>
 
       {/* Özet kartları */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <StatCard icon="📦" value={stats.total} label="Toplam Listing" />
-        <StatCard icon="🎯" value={stats.avgScore || '—'} label="Ort. SEO Skoru" highlight={stats.avgScore >= 75} />
-        <StatCard icon="📅" value={stats.thisMonth} label="Bu Ay Üretilen" />
-        <StatCard icon="🎟️" value={plan === 'business' ? '∞' : Math.max(0, limit - used)} label="Kalan Hak" />
+        <StatCard icon="📦" value={stats.total} label={t.analytics.totalListings} />
+        <StatCard icon="🎯" value={stats.avgScore || '—'} label={t.analytics.avgSeo} highlight={stats.avgScore >= 75} />
+        <StatCard icon="📅" value={stats.thisMonth} label={t.analytics.thisMonth} />
+        <StatCard icon="🎟️" value={plan === 'business' ? '∞' : Math.max(0, limit - used)} label={t.common.remaining} />
       </div>
 
       {/* Aylık trend grafiği */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
-        <h3 className="font-bold text-sm mb-4">Son 6 Ay Listing Trendi</h3>
+        <h3 className="font-bold text-sm mb-4">{t.analytics.trend}</h3>
         <div className="flex items-end gap-3 h-40">
           {stats.monthlyData.map((m, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-1">
@@ -159,9 +161,9 @@ export default function AnalitikPage() {
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         {/* Platform istatistikleri */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-          <h3 className="font-bold text-sm mb-4">Platform Performansı</h3>
+          <h3 className="font-bold text-sm mb-4">{t.analytics.platformPerf}</h3>
           {Object.keys(stats.platformStats).length === 0 ? (
-            <p className="text-sm text-gray-400">Henüz veri yok</p>
+            <p className="text-sm text-gray-400">{t.analytics.noData}</p>
           ) : (
             <div className="space-y-4">
               {Object.entries(stats.platformStats).map(([platform, data]) => {
@@ -195,15 +197,15 @@ export default function AnalitikPage() {
 
         {/* SEO skor dağılımı */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-          <h3 className="font-bold text-sm mb-4">SEO Skor Dağılımı</h3>
+          <h3 className="font-bold text-sm mb-4">{t.analytics.scoreDist}</h3>
           {stats.totalResults === 0 ? (
-            <p className="text-sm text-gray-400">Henüz veri yok</p>
+            <p className="text-sm text-gray-400">{t.analytics.noData}</p>
           ) : (
             <div className="space-y-3">
-              <ScoreRow label="Mükemmel (85+)" count={stats.scoreDistribution.excellent} total={stats.totalResults} color="bg-green-500" />
-              <ScoreRow label="İyi (70-84)" count={stats.scoreDistribution.good} total={stats.totalResults} color="bg-blue-500" />
-              <ScoreRow label="Orta (55-69)" count={stats.scoreDistribution.average} total={stats.totalResults} color="bg-amber-500" />
-              <ScoreRow label="Düşük (<55)" count={stats.scoreDistribution.low} total={stats.totalResults} color="bg-red-500" />
+              <ScoreRow label={t.analytics.excellent} count={stats.scoreDistribution.excellent} total={stats.totalResults} color="bg-green-500" />
+              <ScoreRow label={t.analytics.good} count={stats.scoreDistribution.good} total={stats.totalResults} color="bg-blue-500" />
+              <ScoreRow label={t.analytics.average} count={stats.scoreDistribution.average} total={stats.totalResults} color="bg-amber-500" />
+              <ScoreRow label={t.analytics.low} count={stats.scoreDistribution.low} total={stats.totalResults} color="bg-red-500" />
             </div>
           )}
         </div>
@@ -212,7 +214,7 @@ export default function AnalitikPage() {
       {/* En iyi listingler */}
       {stats.topListings.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
-          <h3 className="font-bold text-sm mb-4">En Yüksek SEO Skorlu Listinglerin</h3>
+          <h3 className="font-bold text-sm mb-4">{t.analytics.topListings}</h3>
           <div className="space-y-3">
             {stats.topListings.map((l, i) => (
               <div key={l.id} className="flex items-center gap-3">
@@ -234,23 +236,23 @@ export default function AnalitikPage() {
 
       {/* Plan bilgileri */}
       <div className="bg-gradient-to-br from-brand-50 to-purple-50 rounded-2xl border border-brand-100 p-6">
-        <h3 className="font-bold text-sm mb-4">Plan Bilgileri</h3>
+        <h3 className="font-bold text-sm mb-4">{t.analytics.planInfo}</h3>
         <div className="text-sm text-gray-600 space-y-2">
           <div className="flex justify-between">
-            <span>Mevcut Plan</span>
+            <span>{t.analytics.currentPlan}</span>
             <span className="font-bold text-brand-600">{planLabel} {plan === 'business' ? '✨' : plan === 'pro' ? '⚡' : ''}</span>
           </div>
           <div className="flex justify-between">
-            <span>Aylık Limit</span>
-            <span className="font-semibold">{plan === 'business' ? 'Sınırsız' : `${limit} listing`}</span>
+            <span>{t.analytics.monthlyLimit}</span>
+            <span className="font-semibold">{plan === 'business' ? t.common.unlimited : `${limit} listing`}</span>
           </div>
           <div className="flex justify-between">
-            <span>Kullanılan</span>
+            <span>{t.analytics.usedCount}</span>
             <span className="font-semibold">{used} listing</span>
           </div>
           {stats.profile?.plan_expires_at && (
             <div className="flex justify-between">
-              <span>Plan Bitiş</span>
+              <span>{t.analytics.planExpiry}</span>
               <span className="font-semibold">{new Date(stats.profile.plan_expires_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
             </div>
           )}
@@ -260,12 +262,12 @@ export default function AnalitikPage() {
             <div className="bg-white/60 rounded-full h-2 overflow-hidden">
               <div className="bg-brand-500 h-full rounded-full" style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} />
             </div>
-            <div className="text-xs text-gray-500 mt-1">{used}/{limit} kullanıldı</div>
+            <div className="text-xs text-gray-500 mt-1">{used}/{limit} {t.plan.listingsUsed}</div>
           </div>
         )}
         {plan === 'free' && (
           <Link href="/dashboard/odeme" className="block w-full mt-4 py-2.5 bg-brand-500 text-white text-sm font-bold rounded-xl hover:bg-brand-600 transition text-center">
-            Pro'ya Geçerek Limiti Artır
+            {t.analytics.upgradeLimit}
           </Link>
         )}
       </div>
