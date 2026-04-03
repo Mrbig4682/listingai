@@ -1,5 +1,7 @@
 'use client'
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
 
 const CATEGORIES = [
   'Elektronik', 'Moda - Kadın', 'Moda - Erkek', 'Ev & Yaşam', 'Kozmetik',
@@ -118,6 +120,7 @@ export default function YeniListingPage() {
   const [results, setResults] = useState(null)
   const [activeTab, setActiveTab] = useState('trendyol')
   const [error, setError] = useState('')
+  const [quotaExceeded, setQuotaExceeded] = useState(false)
 
   const togglePlatform = (id) => {
     setForm(prev => ({
@@ -141,15 +144,27 @@ export default function YeniListingPage() {
     }, 800)
 
     try {
+      // Auth token al
+      const { data: { session } } = await supabase.auth.getSession()
+      const headers = { 'Content-Type': 'application/json' }
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`
+      }
+
       const res = await fetch('/api/generate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(form),
       })
 
       const data = await res.json()
 
-      if (!res.ok) throw new Error(data.error || 'Bir hata oluştu')
+      if (!res.ok) {
+        if (data.quotaExceeded) {
+          setQuotaExceeded(true)
+        }
+        throw new Error(data.error || 'Bir hata oluştu')
+      }
 
       setResults(data.results)
       setActiveTab(form.platforms[0])
@@ -228,7 +243,16 @@ export default function YeniListingPage() {
       <h2 className="text-xl font-bold mb-1">📦 Ürün Bilgilerini Gir</h2>
       <p className="text-gray-500 text-sm mb-6">Ne kadar detay verirsen, listing o kadar güçlü olur.</p>
 
-      {error && <div className="bg-red-50 text-red-600 text-sm p-3 rounded-xl mb-4">{error}</div>}
+      {error && (
+        <div className={`text-sm p-4 rounded-xl mb-4 ${quotaExceeded ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-red-50 text-red-600'}`}>
+          <p>{error}</p>
+          {quotaExceeded && (
+            <Link href="/dashboard/odeme" className="inline-block mt-2 px-4 py-2 bg-brand-500 text-white text-xs font-bold rounded-lg hover:bg-brand-600 transition">
+              Planı Yükselt
+            </Link>
+          )}
+        </div>
+      )}
 
       <div className="space-y-4">
         <div>

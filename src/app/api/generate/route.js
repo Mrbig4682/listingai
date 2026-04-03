@@ -111,6 +111,53 @@ export async function POST(request) {
       return Response.json({ error: 'Ürün adı, özellikleri ve platform seçimi zorunludur.' }, { status: 400 })
     }
 
+    // Kota kontrolü - kullanıcının listing hakkı var mı?
+    let currentUser = null
+    const supabase = getSupabase()
+    const authHeader = request.headers.get('authorization')
+    if (authHeader) {
+      const token = authHeader.replace('Bearer ', '')
+      const { data: { user } } = await supabase.auth.getUser(token)
+      if (user) {
+        currentUser = user
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('plan, listings_used, listings_limit, plan_expires_at')
+          .eq('id', user.id)
+          .single()
+
+        if (profile) {
+          // Plan süresi dolmuş mu kontrol et
+          if (profile.plan !== 'free' && profile.plan_expires_at) {
+            const expiry = new Date(profile.plan_expires_at)
+            if (expiry < new Date()) {
+              // Plan süresi dolmuş, free'ye düşür
+              await supabase.from('user_profiles').update({
+                plan: 'free',
+                listings_limit: 10,
+                listings_used: 0,
+              }).eq('id', user.id)
+              return Response.json({
+                error: 'Plan süreniz dolmuş. Lütfen planınızı yenileyin.',
+                quotaExceeded: true,
+              }, { status: 403 })
+            }
+          }
+
+          const used = profile.listings_used || 0
+          const limit = profile.listings_limit || 10
+          if (used >= limit) {
+            return Response.json({
+              error: `Listing hakkınız doldu (${used}/${limit}). Daha fazla listing üretmek için planınızı yükseltin.`,
+              quotaExceeded: true,
+              used,
+              limit,
+            }, { status: 403 })
+          }
+        }
+      }
+    }
+
     const results = {}
 
     for (const platform of platforms) {
@@ -174,46 +221,56 @@ SADECE aşağıdaki JSON formatında yanıt ver, başka hiçbir şey yazma:
       }
     }
 
-    // Try to save to database (non-blocking, won't fail the request)
+    // Veritabanına kaydet ve kota güncelle
     try {
-      const supabase = getSupabase()
-      const authHeader = request.headers.get('authorization')
-      if (authHeader) {
-        const token = authHeader.replace('Bearer ', '')
-        const { data: { user } } = await supabase.auth.getUser(token)
+      if (currentUser) {
+        const { data: listing } = await supabase
+          .from('listings')
+          .insert({
+            user_id: currentUser.id,
+            product_name: name,
+            brand,
+            category,
+            features,
+            keywords,
+            platforms,
+          })
+          .select()
+          .single()
 
-        if (user) {
-          const { data: listing } = await supabase
-            .from('listings')
-            .insert({
-              user_id: user.id,
-              product_name: name,
-              brand,
-              category,
-              features,
-              keywords,
-              platforms,
-            })
-            .select()
-            .single()
+        if (listing) {
+          const resultRows = Object.entries(results).map(([platform, result]) => ({
+            listing_id: listing.id,
+            platform,
+            title: result.title,
+            bullets: result.bullets,
+            description: result.description,
+            seo_score: result.seo_score,
+            seo_tips: result.seo_tips,
+          }))
 
-          if (listing) {
-            const resultRows = Object.entries(results).map(([platform, result]) => ({
-              listing_id: listing.id,
-              platform,
-              title: result.title,
-              bullets: result.bullets,
-              description: result.description,
-              seo_score: result.seo_score,
-              seo_tips: result.seo_tips,
-            }))
-
-            await supabase.from('listing_results').insert(resultRows)
-          }
+          await supabase.from('listing_results').insert(resultRows)
         }
+
+        // Kullanım sayısını artır
+        await supabase.rpc('increment_listings_used', { user_id_input: currentUser.id })
+          .then(() => {})
+          .catch(async () => {
+            // RPC yoksa manuel güncelle
+            const { data: prof } = await supabase
+              .from('user_profiles')
+              .select('listings_used')
+              .eq('id', currentUser.id)
+              .single()
+            if (prof) {
+              await supabase
+                .from('user_profiles')
+                .update({ listings_used: (prof.listings_used || 0) + 1 })
+                .eq('id', currentUser.id)
+            }
+          })
       }
     } catch (dbError) {
-      // Database save failed, but we still return results
       console.error('DB save error:', dbError)
     }
 
