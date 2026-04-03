@@ -13,9 +13,11 @@ function getSupabase() {
 }
 
 const platformRules = {
+  // Turkish platforms
   trendyol: {
     name: 'Trendyol',
     titleMaxChars: 150,
+    lang: 'tr',
     rules: `- Başlık formatı: Marka + Ürün Adı + Öne Çıkan Özellikler (pipe | ile ayır)
 - Trendyol aramasında en çok aranan kelimeleri kullan
 - Başlıkta gereksiz sembol kullanma, pipe (|) ile ayır
@@ -24,6 +26,7 @@ const platformRules = {
   hepsiburada: {
     name: 'Hepsiburada',
     titleMaxChars: 200,
+    lang: 'tr',
     rules: `- Başlık formatı: Marka + Ürün Adı + Temel Özellikler (tire - ile ayır)
 - Hepsiburada'da açıklama detaylı ve teknik olmalı
 - Bullet point'ler fayda odaklı ve açıklayıcı olsun
@@ -32,35 +35,149 @@ const platformRules = {
   n11: {
     name: 'N11',
     titleMaxChars: 150,
+    lang: 'tr',
     rules: `- Başlık formatı: Marka + Ürün Adı + Ana Özellikler (pipe | ile ayır)
 - N11'de kategori bazlı arama önemli, kategori kelimelerini başlıkta kullan
 - Bullet point'ler hem özellik hem fayda içersin
 - Açıklamada ürünün kullanım alanlarını da belirt`
-  }
+  },
+  // US & Global platforms
+  amazon: {
+    name: 'Amazon',
+    titleMaxChars: 200,
+    lang: 'en',
+    rules: `- Title format: Brand + Product Name + Key Features (separated by commas or dashes)
+- Include high-volume search keywords naturally in title
+- Bullet points should highlight benefits, not just features (start with CAPITAL)
+- Description should be detailed, persuasive, and SEO-optimized
+- Use A+ Content style writing with rich detail
+- Include dimensions, materials, and use cases`
+  },
+  ebay: {
+    name: 'eBay',
+    titleMaxChars: 80,
+    lang: 'en',
+    rules: `- Title max 80 characters, every word counts for search ranking
+- Include brand, model, key specs, and condition in title
+- Use item specifics-friendly bullet points
+- Description should include shipping info mentions and condition details
+- Avoid ALL CAPS except for brand names`
+  },
+  etsy: {
+    name: 'Etsy',
+    titleMaxChars: 140,
+    lang: 'en',
+    rules: `- Title should feel artisanal and authentic, include long-tail keywords
+- Use tags-friendly language (Etsy uses first few words for search heavily)
+- Bullet points should tell the product story and highlight handmade/unique aspects
+- Description should be warm, personal, and include materials and process
+- Include care instructions and gift-readiness`
+  },
+  shopify: {
+    name: 'Shopify',
+    titleMaxChars: 200,
+    lang: 'en',
+    rules: `- SEO-optimized meta title and product title
+- Bullet points should be conversion-focused with clear value props
+- Description supports HTML — use headers, bold, and structured format
+- Include social proof language and urgency elements
+- Focus on benefits over features, customer-centric language`
+  },
+  walmart: {
+    name: 'Walmart',
+    titleMaxChars: 200,
+    lang: 'en',
+    rules: `- Title: Brand + Product Type + Key Attributes (Size, Color, Count)
+- Walmart prioritizes relevance and price competitiveness
+- Key features should be specific and measurable
+- Description should include Walmart-specific compliance language
+- Include clear product specifications`
+  },
+  // Latin America
+  mercadolibre: {
+    name: 'Mercado Libre',
+    titleMaxChars: 120,
+    lang: 'es',
+    rules: `- Título: Marca + Producto + Características principales (sin caracteres especiales)
+- Mercado Libre penaliza títulos con signos de exclamación o mayúsculas excesivas
+- Los bullet points deben ser claros y directos
+- La descripción debe incluir especificaciones técnicas detalladas
+- Incluir información de compatibilidad si aplica
+- Usar palabras clave populares en el mercado latinoamericano`
+  },
+  // European platforms
+  otto: {
+    name: 'Otto',
+    titleMaxChars: 150,
+    lang: 'de',
+    rules: `- Titel: Marke + Produktname + Hauptmerkmale
+- Otto bevorzugt strukturierte, klare Produktbeschreibungen
+- Bullet Points sollten technische Spezifikationen hervorheben
+- Beschreibung auf Deutsch, professionell und detailliert
+- Materialien, Pflegehinweise und Maße angeben`
+  },
+  cdiscount: {
+    name: 'Cdiscount',
+    titleMaxChars: 150,
+    lang: 'fr',
+    rules: `- Titre: Marque + Nom du Produit + Caractéristiques clés
+- Cdiscount valorise les descriptions détaillées et techniques
+- Les bullet points doivent être concis et informatifs
+- La description doit être en français professionnel
+- Inclure les dimensions, matériaux et certifications`
+  },
+}
+
+const langInstructions = {
+  tr: 'Yanıtını Türkçe yaz. Türkçe karakter ve doğru yazım kurallarına dikkat et.',
+  en: 'Write your response in English. Use professional, sales-oriented American English.',
+  es: 'Escribe tu respuesta en español. Usa español profesional y orientado a ventas.',
+  pt: 'Escreva sua resposta em português brasileiro. Use linguagem profissional e orientada a vendas.',
+  de: 'Schreibe deine Antwort auf Deutsch. Verwende professionelles, verkaufsorientiertes Deutsch.',
+  fr: 'Écris ta réponse en français. Utilise un français professionnel et orienté ventes.',
 }
 
 function calculateSeoScore(result, platform) {
   let score = 0
   const tips = []
   const titleLen = result.title.length
-  const maxChars = platformRules[platform].titleMaxChars
+  const platConfig = platformRules[platform]
+  const maxChars = platConfig?.titleMaxChars || 150
+  const lang = platConfig?.lang || 'en'
+
+  // Multilingual tip texts
+  const tipTexts = {
+    tr: {
+      titleOk: (len) => `Başlık uzunluğu optimal (${len} karakter)`,
+      titleBad: (len, max) => `Başlık uzunluğu ${len} karakter (ideal: 60-${max})`,
+      bulletsOk: (n) => `Bullet point sayısı yeterli (${n} adet)`,
+      bulletsBad: 'Daha fazla bullet point eklenebilir',
+    },
+    en: {
+      titleOk: (len) => `Title length is optimal (${len} chars)`,
+      titleBad: (len, max) => `Title length is ${len} chars (ideal: 60-${max})`,
+      bulletsOk: (n) => `Sufficient bullet points (${n})`,
+      bulletsBad: 'More bullet points could improve the listing',
+    },
+  }
+  const tt = tipTexts[lang] || tipTexts.en
 
   // Title length (20 pts)
   if (titleLen >= 60 && titleLen <= maxChars) {
     score += 20
-    tips.push({ ok: true, text: `Başlık uzunluğu optimal (${titleLen} karakter)` })
+    tips.push({ ok: true, text: tt.titleOk(titleLen) })
   } else {
     score += 8
-    tips.push({ ok: false, text: `Başlık uzunluğu ${titleLen} karakter (ideal: 60-${maxChars})` })
+    tips.push({ ok: false, text: tt.titleBad(titleLen, maxChars) })
   }
 
   // Bullets count (20 pts)
   if (result.bullets.length >= 4) {
     score += 20
-    tips.push({ ok: true, text: `Bullet point sayısı yeterli (${result.bullets.length} adet)` })
+    tips.push({ ok: true, text: tt.bulletsOk(result.bullets.length) })
   } else {
     score += 10
-    tips.push({ ok: false, text: 'Daha fazla bullet point eklenebilir' })
+    tips.push({ ok: false, text: tt.bulletsBad })
   }
 
   // Description length (20 pts)
@@ -164,27 +281,31 @@ export async function POST(request) {
       const platConfig = platformRules[platform]
       if (!platConfig) continue
 
-      const prompt = `Sen bir Türk e-ticaret listing uzmanısın. Aşağıdaki ürün bilgilerinden ${platConfig.name} platformu için optimize edilmiş bir listing oluştur.
+      const platformLang = platConfig.lang || 'en'
+      const langInstruction = langInstructions[platformLang] || langInstructions.en
 
-Ürün Adı: ${name}
-${brand ? `Marka: ${brand}` : ''}
-Kategori: ${category}
-Ürün Özellikleri:
+      const prompt = `You are an expert e-commerce listing optimization specialist for ${platConfig.name}. Create an optimized listing from the following product information.
+
+${langInstruction}
+
+Product Name: ${name}
+${brand ? `Brand: ${brand}` : ''}
+Category: ${category}
+Product Features:
 ${features}
-${keywords ? `Hedef Anahtar Kelimeler: ${keywords}` : ''}
+${keywords ? `Target Keywords: ${keywords}` : ''}
 
-Platform Kuralları (${platConfig.name}):
-- Başlık maksimum ${platConfig.titleMaxChars} karakter olmalı
+Platform Rules (${platConfig.name}):
+- Title maximum ${platConfig.titleMaxChars} characters
 ${platConfig.rules}
 
-Genel Kurallar:
-- 5 adet bullet point üret, her biri bir faydayı vurgulasın (en az 40 karakter)
-- Açıklama 100-300 kelime arasında, SEO uyumlu, profesyonel Türkçe
-- Türkçe karakter ve doğru yazım kurallarına dikkat et
-- Anahtar kelimeleri doğal şekilde başlık ve açıklamaya yerleştir
-- Müşterinin satın alma kararını kolaylaştıracak şekilde yaz
+General Rules:
+- Generate 5 bullet points, each highlighting a benefit (at least 40 characters each)
+- Description should be 100-300 words, SEO-optimized, professional
+- Naturally integrate keywords into the title and description
+- Write in a way that facilitates the customer's purchase decision
 
-SADECE aşağıdaki JSON formatında yanıt ver, başka hiçbir şey yazma:
+RESPOND ONLY in the following JSON format, nothing else:
 {"title": "...", "bullets": ["...", "...", "...", "...", "..."], "description": "..."}`
 
       const message = await getAnthropic().messages.create({
