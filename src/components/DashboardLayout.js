@@ -15,12 +15,17 @@ export default function DashboardLayout({ children }) {
   const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState(null)
+  const [profile, setProfile] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) router.push('/giris')
-      else setUser(data.user)
+      else {
+        setUser(data.user)
+        supabase.from('user_profiles').select('*').eq('id', data.user.id).single()
+          .then(({ data: p }) => { if (p) setProfile(p) })
+      }
     })
   }, [router])
 
@@ -63,14 +68,34 @@ export default function DashboardLayout({ children }) {
 
         <div className="p-4">
           <div className="bg-gradient-to-br from-brand-50 to-purple-50 rounded-xl p-4">
-            <div className="font-bold text-xs">Ücretsiz Plan</div>
-            <div className="text-xs text-gray-500 mt-1">Listing hakkı kaldı</div>
-            <div className="bg-gray-200 rounded-full h-1.5 mt-2 overflow-hidden">
-              <div className="bg-brand-500 h-full rounded-full" style={{ width: '30%' }} />
-            </div>
-            <Link href="/dashboard/odeme" className="block w-full mt-3 py-2 bg-brand-500 text-white text-xs font-bold rounded-lg hover:bg-brand-600 transition text-center">
-              Pro'ya Geç
-            </Link>
+            {profile?.plan === 'business' ? (
+              <>
+                <div className="font-bold text-xs text-purple-700">Business Plan ✨</div>
+                <div className="text-xs text-gray-500 mt-1">Sınırsız listing hakkı</div>
+                <div className="bg-gray-200 rounded-full h-1.5 mt-2 overflow-hidden">
+                  <div className="bg-purple-500 h-full rounded-full" style={{ width: '100%' }} />
+                </div>
+              </>
+            ) : profile?.plan === 'pro' ? (
+              <>
+                <div className="font-bold text-xs text-brand-600">Pro Plan ⚡</div>
+                <div className="text-xs text-gray-500 mt-1">{profile.listings_used || 0}/{profile.listings_limit || 200} listing kullanıldı</div>
+                <div className="bg-gray-200 rounded-full h-1.5 mt-2 overflow-hidden">
+                  <div className="bg-brand-500 h-full rounded-full" style={{ width: `${Math.min(100, ((profile.listings_used || 0) / (profile.listings_limit || 200)) * 100)}%` }} />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="font-bold text-xs">Ücretsiz Plan</div>
+                <div className="text-xs text-gray-500 mt-1">{profile?.listings_used || 0}/{profile?.listings_limit || 10} listing kullanıldı</div>
+                <div className="bg-gray-200 rounded-full h-1.5 mt-2 overflow-hidden">
+                  <div className="bg-brand-500 h-full rounded-full" style={{ width: `${Math.min(100, ((profile?.listings_used || 0) / (profile?.listings_limit || 10)) * 100)}%` }} />
+                </div>
+                <Link href="/dashboard/odeme" className="block w-full mt-3 py-2 bg-brand-500 text-white text-xs font-bold rounded-lg hover:bg-brand-600 transition text-center">
+                  Pro'ya Geç
+                </Link>
+              </>
+            )}
           </div>
           <button onClick={handleLogout} className="w-full mt-3 py-2 text-xs text-gray-400 hover:text-gray-600 transition">
             Çıkış Yap
