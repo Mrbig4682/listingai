@@ -88,7 +88,7 @@ export default function OdemePage() {
       const data = await res.json()
 
       if (data.error) {
-        throw new Error(data.error)
+        throw new Error(data.error + (data.errorCode ? ` (${data.errorCode})` : ''))
       }
 
       if (data.checkoutFormContent) {

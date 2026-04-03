@@ -9,13 +9,50 @@ function getSupabase() {
 }
 
 function generateRandomString() {
-  return crypto.randomBytes(16).toString('hex')
+  return crypto.randomBytes(8).toString('hex')
 }
 
-function getAuthorizationHeader(apiKey, secretKey, requestBody) {
+// iyzico PKI string formatı - JSON değil, key=value formatında
+function toPkiString(obj) {
+  if (obj === null || obj === undefined) return ''
+  if (Array.isArray(obj)) {
+    let result = '['
+    for (let i = 0; i < obj.length; i++) {
+      if (typeof obj[i] === 'object' && obj[i] !== null) {
+        result += toPkiString(obj[i])
+      } else {
+        result += obj[i]
+      }
+      if (i < obj.length - 1) result += ', '
+    }
+    result += ']'
+    return result
+  }
+  if (typeof obj === 'object') {
+    let result = '['
+    const keys = Object.keys(obj)
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]
+      const value = obj[key]
+      if (value === null || value === undefined) continue
+      if (typeof value === 'object') {
+        result += key + '=' + toPkiString(value)
+      } else {
+        result += key + '=' + value
+      }
+      if (i < keys.length - 1) result += ','
+    }
+    result += ']'
+    return result
+  }
+  return String(obj)
+}
+
+function getAuthorizationHeader(apiKey, secretKey, requestData) {
   const randomString = generateRandomString()
-  const hashInput = apiKey + randomString + secretKey + JSON.stringify(requestBody)
-  const hashStr = crypto.createHash('sha1').update(hashInput).digest('base64')
+  const pkiString = toPkiString(requestData)
+  const hashInput = apiKey + randomString + secretKey + pkiString
+  const hashStr = crypto.createHash('sha1').update(hashInput, 'utf8').digest('base64')
   return {
     authorization: `IYZWS ${apiKey}:${hashStr}`,
     xIyziRnd: randomString,
@@ -41,9 +78,8 @@ export async function POST(request) {
 
     const selectedPlan = PLANS[plan]
     const basketId = `LISTINGAI_${plan.toUpperCase()}_${Date.now()}`
-    const conversationId = `${userId}_${Date.now()}`
+    const conversationId = `${userId.substring(0, 8)}_${Date.now()}`
 
-    // Callback URL - Vercel'deki URL
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://listingai-gamma.vercel.app'
 
     const requestData = {
@@ -59,32 +95,32 @@ export async function POST(request) {
       buyer: {
         id: userId,
         name: userEmail.split('@')[0],
-        surname: 'ListingAI',
+        surname: 'User',
         gsmNumber: '+905350000000',
         email: userEmail,
         identityNumber: '11111111111',
-        registrationAddress: 'Istanbul, Turkey',
+        registrationAddress: 'Istanbul Turkey',
         ip: '85.34.78.112',
         city: 'Istanbul',
         country: 'Turkey',
       },
       shippingAddress: {
-        contactName: userEmail.split('@')[0],
+        contactName: userEmail.split('@')[0] + ' User',
         city: 'Istanbul',
         country: 'Turkey',
-        address: 'Istanbul, Turkey',
+        address: 'Istanbul Turkey',
       },
       billingAddress: {
-        contactName: userEmail.split('@')[0],
+        contactName: userEmail.split('@')[0] + ' User',
         city: 'Istanbul',
         country: 'Turkey',
-        address: 'Istanbul, Turkey',
+        address: 'Istanbul Turkey',
       },
       basketItems: [
         {
           id: plan,
           name: selectedPlan.name,
-          category1: 'SaaS Abonelik',
+          category1: 'SaaS',
           itemType: 'VIRTUAL',
           price: selectedPlan.price,
         },
@@ -102,14 +138,19 @@ export async function POST(request) {
       status: 'pending',
     })
 
-    // iyzico API'ye HTTP çağrısı yap
-    const apiKey = process.env.IYZICO_API_KEY || 'sandbox-placeholder'
-    const secretKey = process.env.IYZICO_SECRET_KEY || 'sandbox-placeholder'
-    const baseUrl_api = process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com'
+    // iyzico API çağrısı
+    const apiKey = process.env.IYZICO_API_KEY
+    const secretKey = process.env.IYZICO_SECRET_KEY
+    const baseUrlApi = process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com'
+
+    if (!apiKey || !secretKey) {
+      console.error('iyzico API keys missing')
+      return Response.json({ error: 'Ödeme sistemi yapılandırma hatası' }, { status: 500 })
+    }
 
     const authHeaders = getAuthorizationHeader(apiKey, secretKey, requestData)
 
-    const response = await fetch(`${baseUrl_api}/payment/iyzipos/checkoutform/initialize/auth/ecom`, {
+    const response = await fetch(`${baseUrlApi}/payment/iyzipos/checkoutform/initialize/auth/ecom`, {
       method: 'POST',
       headers: {
         'Authorization': authHeaders.authorization,
@@ -121,6 +162,11 @@ export async function POST(request) {
 
     const result = await response.json()
 
+    console.log('iyzico response status:', result.status)
+    if (result.status !== 'success') {
+      console.error('iyzico error:', JSON.stringify(result))
+    }
+
     if (result.status === 'success') {
       return Response.json({
         checkoutFormContent: result.checkoutFormContent,
@@ -128,13 +174,13 @@ export async function POST(request) {
         tokenExpireTime: result.tokenExpireTime,
       })
     } else {
-      console.error('iyzico result error:', result)
       return Response.json({
-        error: result.errorMessage || 'iyzico hatası',
+        error: result.errorMessage || 'iyzico ödeme başlatılamadı',
+        errorCode: result.errorCode,
       }, { status: 400 })
     }
   } catch (error) {
     console.error('Initialize error:', error)
-    return Response.json({ error: 'Sunucu hatası' }, { status: 500 })
+    return Response.json({ error: 'Sunucu hatası: ' + error.message }, { status: 500 })
   }
 }
