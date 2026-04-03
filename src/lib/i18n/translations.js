@@ -1,7 +1,7 @@
 export const translations = {
   tr: {
     lang: 'Türkçe',
-    flag: '🇹🇷',
+    code: 'TR',
     // Nav
     nav: {
       newListing: 'Yeni Listing',
@@ -217,7 +217,7 @@ export const translations = {
 
   en: {
     lang: 'English',
-    flag: '🇺🇸',
+    code: 'EN',
     nav: {
       newListing: 'New Listing',
       bulkGenerate: 'Bulk Generate',
@@ -421,7 +421,7 @@ export const translations = {
 
   es: {
     lang: 'Español',
-    flag: '🇪🇸',
+    code: 'ES',
     nav: {
       newListing: 'Nuevo Listing',
       bulkGenerate: 'Generación Masiva',
@@ -625,7 +625,7 @@ export const translations = {
 
   pt: {
     lang: 'Português',
-    flag: '🇧🇷',
+    code: 'PT',
     nav: {
       newListing: 'Novo Listing',
       bulkGenerate: 'Geração em Massa',
@@ -829,7 +829,7 @@ export const translations = {
 
   de: {
     lang: 'Deutsch',
-    flag: '🇩🇪',
+    code: 'DE',
     nav: {
       newListing: 'Neues Listing',
       bulkGenerate: 'Massenproduktion',
@@ -1033,7 +1033,7 @@ export const translations = {
 
   fr: {
     lang: 'Français',
-    flag: '🇫🇷',
+    code: 'FR',
     nav: {
       newListing: 'Nouveau Listing',
       bulkGenerate: 'Génération en Masse',

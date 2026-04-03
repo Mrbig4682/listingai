@@ -5,11 +5,11 @@ import { useI18n } from '@/lib/i18n/context'
 function LanguageSelector() {
   const { locale, setLocale, translations, locales } = useI18n()
   return (
-    <div className="flex items-center gap-1 bg-white/80 rounded-full px-2 py-1 border border-surface-200">
+    <div className="flex items-center gap-0.5 bg-white/80 rounded-full px-1.5 py-1 border border-surface-200">
       {locales.map(loc => (
         <button key={loc} onClick={() => setLocale(loc)}
-          className={`px-2 py-1 rounded-full text-xs font-medium transition ${locale === loc ? 'bg-brand-500 text-white' : 'text-trust-medium hover:bg-surface-100'}`}>
-          {translations[loc].flag}
+          className={`px-2 py-1 rounded-full text-[11px] font-semibold tracking-wide transition ${locale === loc ? 'bg-trust-dark text-white' : 'text-trust-light hover:text-trust-medium hover:bg-surface-100'}`}>
+          {translations[loc].code}
         </button>
       ))}
     </div>

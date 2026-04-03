@@ -70,8 +70,8 @@ export default function DashboardLayout({ children }) {
           <div className="flex items-center gap-0.5 bg-surface-50 rounded-xl p-1">
             {locales.map(loc => (
               <button key={loc} onClick={() => setLocale(loc)}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition ${locale === loc ? 'bg-white shadow-soft text-trust-dark' : 'text-trust-light hover:text-trust-medium'}`}>
-                {translations[loc].flag}
+                className={`flex-1 py-1.5 rounded-lg text-[10px] font-semibold tracking-wider transition ${locale === loc ? 'bg-white shadow-soft text-trust-dark' : 'text-trust-light hover:text-trust-medium'}`}>
+                {translations[loc].code}
               </button>
             ))}
           </div>
