@@ -83,7 +83,7 @@ export default function DashboardPage() {
       <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl border border-indigo-100 p-8">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900">{greeting()} 👋</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{greeting()} 👋</h1>
             <p className="text-base text-gray-600 mt-2">{user?.email || 'Welcome back'}</p>
             <p className="text-sm text-gray-500 mt-1">{t?.dashboard?.welcomeSub || 'Here\'s your listing performance overview'}</p>
           </div>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t?.analytics?.totalListings || 'Total Listings'}</div>
-              <div className="text-4xl font-bold text-gray-900 mt-2">{stats.total}</div>
+              <div className="text-3xl font-bold text-gray-900 mt-2">{stats.total}</div>
               <div className="text-sm text-gray-500 mt-3 flex items-center gap-1">
                 <span className="text-green-500">+{stats.thisMonth}</span>
                 <span className="text-gray-400">{t?.analytics?.thisMonth || 'This Month'}</span>
@@ -117,7 +117,7 @@ export default function DashboardPage() {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t?.analytics?.avgSeo || 'Avg. SEO Score'}</div>
-              <div className="text-4xl font-bold mt-2" style={{ color: stats.avgSeo >= 70 ? '#10b981' : stats.avgSeo >= 50 ? '#f59e0b' : '#6b7280' }}>
+              <div className="text-3xl font-bold mt-2" style={{ color: stats.avgSeo >= 70 ? '#10b981' : stats.avgSeo >= 50 ? '#f59e0b' : '#6b7280' }}>
                 {stats.avgSeo || '—'}
               </div>
               <div className="text-sm text-gray-500 mt-3">
@@ -133,9 +133,9 @@ export default function DashboardPage() {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t?.dashboard?.quota || 'Quota Used'}</div>
-              <div className="text-4xl font-bold text-gray-900 mt-2">
+              <div className="text-3xl font-bold text-gray-900 mt-2">
                 {used}
-                <span className="text-xl text-gray-400 font-normal ml-1">/ {limit === 999 ? '∞' : limit}</span>
+                <span className="text-lg text-gray-400 font-normal ml-1">/ {limit === 999 ? '∞' : limit}</span>
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2 mt-3 overflow-hidden">
                 <div
@@ -149,21 +149,21 @@ export default function DashboardPage() {
         </div>
 
         {/* Plan Info */}
-        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl border border-indigo-400 p-6 shadow-sm hover:shadow-md transition-shadow text-white">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="text-xs font-semibold text-indigo-100 uppercase tracking-wide">{t?.analytics?.currentPlan || 'Current Plan'}</div>
-              <div className="text-4xl font-bold text-white mt-2 capitalize">{plan}</div>
+        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl border border-indigo-400 p-6 shadow-sm hover:shadow-md transition-shadow text-white overflow-hidden">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] font-semibold text-indigo-200 uppercase tracking-wide">{t?.analytics?.currentPlan || 'Current Plan'}</div>
+              <div className="text-2xl font-bold text-white mt-1 capitalize truncate">{plan}</div>
               {plan === 'free' && (
-                <Link href="/dashboard/odeme" className="text-sm font-semibold text-indigo-100 hover:text-white mt-3 inline-flex items-center gap-1 transition">
-                  {t?.plan?.upgradeToPro || 'Upgrade Now'} →
+                <Link href="/dashboard/odeme" className="text-xs font-semibold text-indigo-100 hover:text-white mt-2 inline-flex items-center gap-1 transition">
+                  {t?.plan?.upgradeToPro || 'Upgrade'} →
                 </Link>
               )}
               {plan !== 'free' && (
-                <div className="text-sm text-indigo-100 mt-3">Premium features unlocked</div>
+                <div className="text-xs text-indigo-200 mt-2">{t?.plan?.unlimitedListings || 'Premium'}</div>
               )}
             </div>
-            <div className="w-12 h-12 rounded-xl bg-indigo-400 bg-opacity-30 flex items-center justify-center text-xl">👑</div>
+            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg flex-shrink-0">👑</div>
           </div>
         </div>
       </div>
