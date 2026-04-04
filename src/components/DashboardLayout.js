@@ -50,11 +50,11 @@ export default function DashboardLayout({ children }) {
 
   // Mobile bottom tab bar items — the 5 most important
   const mobileTabItems = [
-    { href: '/dashboard', icon: '⬡', label: t.nav?.dashboard || 'Ana Sayfa' },
-    { href: '/dashboard/yeni', icon: '✦', label: t.nav?.newListing || 'İlan' },
-    { href: '/dashboard/marka-dna', icon: '◇', label: 'DNA' },
-    { href: '/dashboard/asistan', icon: '◉', label: 'AI' },
-    { href: '#more', icon: '☰', label: t.nav?.toolsSection || 'Menü' },
+    { href: '/dashboard', icon: '⬡', label: t.nav?.dashboard || 'Ana Sayfa', activeColor: 'text-violet-600' },
+    { href: '/dashboard/yeni', icon: '✦', label: t.nav?.newListing || 'İlan', activeColor: 'text-purple-600' },
+    { href: '/dashboard/marka-dna', icon: '◇', label: 'DNA', activeColor: 'text-fuchsia-600' },
+    { href: '/dashboard/asistan', icon: '◉', label: 'AI', activeColor: 'text-indigo-600' },
+    { href: '#more', icon: '☰', label: t.nav?.toolsSection || 'Menü', activeColor: 'text-brand-600' },
   ]
 
   useEffect(() => {
@@ -250,35 +250,53 @@ export default function DashboardLayout({ children }) {
 
                 {/* All nav items */}
                 <div className="px-4 py-3">
-                  {navSections.map((section, si) => (
-                    <div key={si} className={si > 0 ? 'mt-4' : ''}>
-                      {section.label && (
-                        <div className="px-2 mb-2 text-[10px] font-bold uppercase tracking-widest text-trust-light">
-                          {section.label}
+                  {(() => {
+                    const iconGradients = {
+                      '⬡': 'from-violet-500 to-purple-600',
+                      '✦': 'from-violet-500 to-purple-600',
+                      '◫': 'from-emerald-500 to-teal-600',
+                      '◈': 'from-amber-500 to-orange-600',
+                      '◎': 'from-sky-500 to-indigo-600',
+                      '◇': 'from-fuchsia-500 to-pink-600',
+                      '◆': 'from-rose-500 to-red-600',
+                      '⬢': 'from-cyan-500 to-blue-600',
+                      '◉': 'from-purple-500 to-violet-600',
+                      '◷': 'from-slate-500 to-gray-600',
+                      '◑': 'from-indigo-500 to-blue-600',
+                    }
+                    return navSections.map((section, si) => (
+                      <div key={si} className={si > 0 ? 'mt-4' : ''}>
+                        {section.label && (
+                          <div className="px-2 mb-2 text-[10px] font-bold uppercase tracking-widest text-trust-light">
+                            {section.label}
+                          </div>
+                        )}
+                        <div className="grid grid-cols-3 gap-2">
+                          {section.items.map(item => {
+                            const active = isTabActive(item.href)
+                            const grad = iconGradients[item.icon] || 'from-gray-500 to-gray-600'
+                            return (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className={`flex flex-col items-center gap-2 p-3 rounded-2xl text-center transition ${
+                                  active
+                                    ? 'bg-brand-50 text-brand-600 ring-1 ring-brand-200'
+                                    : 'bg-surface-50 text-trust-medium hover:bg-surface-100'
+                                }`}
+                              >
+                                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${grad} flex items-center justify-center text-white text-lg shadow-sm`}>
+                                  {item.icon}
+                                </div>
+                                <span className="text-[11px] font-medium leading-tight">{item.label}</span>
+                              </Link>
+                            )
+                          })}
                         </div>
-                      )}
-                      <div className="grid grid-cols-3 gap-2">
-                        {section.items.map(item => {
-                          const active = isTabActive(item.href)
-                          return (
-                            <Link
-                              key={item.href}
-                              href={item.href}
-                              onClick={() => setMobileMenuOpen(false)}
-                              className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl text-center transition ${
-                                active
-                                  ? 'bg-brand-50 text-brand-600'
-                                  : 'bg-surface-50 text-trust-medium hover:bg-surface-100'
-                              }`}
-                            >
-                              <span className="text-xl">{item.icon}</span>
-                              <span className="text-[11px] font-medium leading-tight">{item.label}</span>
-                            </Link>
-                          )
-                        })}
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  })()}
 
                   {/* Quick links */}
                   <div className="mt-5 pt-4 border-t border-surface-100">
@@ -291,7 +309,7 @@ export default function DashboardLayout({ children }) {
                     </div>
 
                     {/* Plan badge */}
-                    <div className="mt-4 flex items-center justify-between bg-gradient-to-r from-brand-50 to-purple-50 rounded-xl p-3">
+                    <div className="mt-4 flex items-center justify-between bg-gradient-to-r from-brand-50 via-purple-50 to-fuchsia-50 rounded-xl p-3 border border-brand-100">
                       <div>
                         <div className="text-xs font-bold text-brand-600">
                           {plan === 'business' ? t.plan.business : plan === 'pro' ? t.plan.pro : t.plan.free}
@@ -302,7 +320,7 @@ export default function DashboardLayout({ children }) {
                       </div>
                       {plan === 'free' && (
                         <Link href="/dashboard/odeme" onClick={() => setMobileMenuOpen(false)}
-                          className="text-[11px] font-bold text-white bg-brand-600 px-3 py-1.5 rounded-lg">
+                          className="text-[11px] font-bold text-white bg-gradient-to-r from-brand-600 to-purple-600 px-3 py-1.5 rounded-lg shadow-sm">
                           {t.plan.upgradeToPro}
                         </Link>
                       )}
@@ -339,15 +357,15 @@ export default function DashboardLayout({ children }) {
                     }}
                     className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all min-w-[56px] ${
                       active
-                        ? 'text-brand-600'
+                        ? item.activeColor
                         : isMore && mobileMenuOpen
                         ? 'text-brand-600'
                         : 'text-trust-light'
                     }`}
                   >
-                    <span className={`text-xl transition-transform ${active ? 'scale-110' : ''}`}>{item.icon}</span>
-                    <span className={`text-[10px] font-semibold ${active ? 'text-brand-600' : 'text-trust-light'}`}>{item.label}</span>
-                    {active && <div className="w-1 h-1 rounded-full bg-brand-500 mt-0.5" />}
+                    <span className={`text-xl transition-transform duration-300 ${active ? 'scale-125' : ''}`}>{item.icon}</span>
+                    <span className={`text-[10px] font-semibold ${active ? item.activeColor : 'text-trust-light'}`}>{item.label}</span>
+                    {active && <div className="w-4 h-1 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 mt-0.5" />}
                   </button>
                 )
               })}

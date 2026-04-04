@@ -54,14 +54,14 @@ export default function DashboardPage() {
   const planLabel = plan === 'business' ? 'Business' : plan === 'pro' ? 'Pro' : t?.common?.free || 'Free'
 
   const tools = [
-    { href: '/dashboard/yeni', icon: '✦', label: t?.nav?.newListing || 'New Listing', desc: t?.dashboard?.newListingDesc || 'Create AI-optimized product listings', color: 'bg-violet-500', size: 'large' },
-    { href: '/dashboard/marka-dna', icon: '🧬', label: t?.nav?.brandDna || 'Brand DNA', desc: t?.dashboard?.brandDnaDesc || 'Extract your brand identity from URL', color: 'bg-fuchsia-500', size: 'large' },
-    { href: '/dashboard/rakip-analiz', icon: '⚔️', label: t?.nav?.competitorAnalysis || 'Competitors', desc: t?.dashboard?.competitorDesc || 'AI competitive intelligence', color: 'bg-rose-500', size: 'medium' },
-    { href: '/dashboard/ab-test', icon: '⚖️', label: t?.nav?.abTest || 'A/B Test', desc: t?.dashboard?.abTestDesc || 'Compare listing versions', color: 'bg-cyan-500', size: 'medium' },
-    { href: '/dashboard/toplu', icon: '◫', label: t?.nav?.bulkGenerate || 'Bulk Generate', desc: t?.dashboard?.bulkDesc || 'Generate multiple listings at once', color: 'bg-emerald-500', size: 'medium' },
-    { href: '/dashboard/optimizer', icon: '◈', label: t?.nav?.optimizer || 'Optimizer', desc: t?.dashboard?.optimizerDesc || 'Optimize existing listings', color: 'bg-amber-500', size: 'medium' },
-    { href: '/dashboard/anahtar-kelime', icon: '◎', label: t?.nav?.keywords || 'Keywords', desc: t?.dashboard?.keywordsDesc || 'SEO keyword research', color: 'bg-sky-500', size: 'small' },
-    { href: '/dashboard/asistan', icon: '◉', label: t?.nav?.aiAssistant || 'AI Assistant', desc: t?.dashboard?.assistantDesc || 'Your e-commerce expert', color: 'bg-purple-500', size: 'small' },
+    { href: '/dashboard/yeni', icon: '✦', label: t?.nav?.newListing || 'New Listing', desc: t?.dashboard?.newListingDesc || 'Create AI-optimized product listings', gradient: 'from-violet-500 to-purple-600', bgLight: 'from-violet-50 to-purple-50', size: 'large' },
+    { href: '/dashboard/marka-dna', icon: '🧬', label: t?.nav?.brandDna || 'Brand DNA', desc: t?.dashboard?.brandDnaDesc || 'Extract your brand identity from URL', gradient: 'from-fuchsia-500 to-pink-600', bgLight: 'from-fuchsia-50 to-pink-50', size: 'large' },
+    { href: '/dashboard/rakip-analiz', icon: '⚔️', label: t?.nav?.competitorAnalysis || 'Competitors', desc: t?.dashboard?.competitorDesc || 'AI competitive intelligence', gradient: 'from-rose-500 to-red-600', bgLight: 'from-rose-50 to-red-50', size: 'medium' },
+    { href: '/dashboard/ab-test', icon: '⚖️', label: t?.nav?.abTest || 'A/B Test', desc: t?.dashboard?.abTestDesc || 'Compare listing versions', gradient: 'from-cyan-500 to-blue-600', bgLight: 'from-cyan-50 to-blue-50', size: 'medium' },
+    { href: '/dashboard/toplu', icon: '◫', label: t?.nav?.bulkGenerate || 'Bulk Generate', desc: t?.dashboard?.bulkDesc || 'Generate multiple listings at once', gradient: 'from-emerald-500 to-teal-600', bgLight: 'from-emerald-50 to-teal-50', size: 'medium' },
+    { href: '/dashboard/optimizer', icon: '◈', label: t?.nav?.optimizer || 'Optimizer', desc: t?.dashboard?.optimizerDesc || 'Optimize existing listings', gradient: 'from-amber-500 to-orange-600', bgLight: 'from-amber-50 to-orange-50', size: 'medium' },
+    { href: '/dashboard/anahtar-kelime', icon: '◎', label: t?.nav?.keywords || 'Keywords', desc: t?.dashboard?.keywordsDesc || 'SEO keyword research', gradient: 'from-sky-500 to-indigo-600', bgLight: 'from-sky-50 to-indigo-50', size: 'small' },
+    { href: '/dashboard/asistan', icon: '◉', label: t?.nav?.aiAssistant || 'AI Assistant', desc: t?.dashboard?.assistantDesc || 'Your e-commerce expert', gradient: 'from-purple-500 to-violet-600', bgLight: 'from-purple-50 to-violet-50', size: 'small' },
   ]
 
   const greeting = () => {
@@ -100,9 +100,10 @@ export default function DashboardPage() {
       {/* Stats Cards - Compact 2x2 on mobile, 4 cols on desktop */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {/* Total Listings */}
-        <div className="bg-white rounded-xl border border-surface-200 p-4 hover:shadow-soft-md transition-shadow">
+        <div className="relative overflow-hidden bg-white rounded-xl border border-surface-200 p-4 hover:shadow-soft-md transition-shadow group">
+          <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-blue-500/5 group-hover:bg-blue-500/10 transition" />
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-sm">📊</div>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-sm text-white shadow-sm">📊</div>
             <span className="text-[11px] font-semibold text-trust-light uppercase tracking-wide">{t?.analytics?.totalListings || 'Total Listings'}</span>
           </div>
           <div className="text-2xl font-bold text-trust-dark">{stats.total}</div>
@@ -112,9 +113,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Avg SEO Score */}
-        <div className="bg-white rounded-xl border border-surface-200 p-4 hover:shadow-soft-md transition-shadow">
+        <div className="relative overflow-hidden bg-white rounded-xl border border-surface-200 p-4 hover:shadow-soft-md transition-shadow group">
+          <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-amber-500/5 group-hover:bg-amber-500/10 transition" />
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-sm">⚡</div>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-sm text-white shadow-sm">⚡</div>
             <span className="text-[11px] font-semibold text-trust-light uppercase tracking-wide">{t?.analytics?.avgSeo || 'Avg. SEO'}</span>
           </div>
           <div className="text-2xl font-bold" style={{ color: stats.avgSeo >= 70 ? '#10b981' : stats.avgSeo >= 50 ? '#f59e0b' : '#94a3b8' }}>
@@ -127,23 +129,26 @@ export default function DashboardPage() {
         </div>
 
         {/* Quota */}
-        <div className="bg-white rounded-xl border border-surface-200 p-4 hover:shadow-soft-md transition-shadow">
+        <div className="relative overflow-hidden bg-white rounded-xl border border-surface-200 p-4 hover:shadow-soft-md transition-shadow group">
+          <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-violet-500/5 group-hover:bg-violet-500/10 transition" />
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center text-sm">🎯</div>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-sm text-white shadow-sm">🎯</div>
             <span className="text-[11px] font-semibold text-trust-light uppercase tracking-wide">{t?.dashboard?.quota || 'Kota'}</span>
           </div>
           <div className="text-2xl font-bold text-trust-dark">
             {used}<span className="text-sm text-trust-light font-normal"> / {limit >= 999 ? '∞' : limit}</span>
           </div>
           <div className="w-full bg-surface-100 rounded-full h-1.5 mt-2 overflow-hidden">
-            <div className="bg-brand-500 h-full rounded-full" style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} />
+            <div className="bg-gradient-to-r from-violet-500 to-purple-500 h-full rounded-full" style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} />
           </div>
         </div>
 
         {/* Plan */}
-        <div className="bg-gradient-to-br from-brand-600 to-purple-600 rounded-xl p-4 text-white hover:shadow-soft-md transition-shadow">
+        <div className="relative overflow-hidden bg-gradient-to-br from-brand-600 via-purple-600 to-fuchsia-500 rounded-xl p-4 text-white hover:shadow-soft-md transition-shadow group">
+          <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full bg-white/10" />
+          <div className="absolute bottom-2 left-2 w-12 h-12 rounded-full bg-white/5" />
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-sm">👑</div>
+            <div className="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center text-sm shadow-sm">👑</div>
             <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wide">{t?.analytics?.currentPlan || 'Plan'}</span>
           </div>
           <div className="text-2xl font-bold">{planLabel}</div>
@@ -165,19 +170,26 @@ export default function DashboardPage() {
             <Link
               key={tool.href}
               href={tool.href}
-              className={`group relative bg-white rounded-xl border border-surface-200 p-4 md:p-5 hover:shadow-soft-lg hover:border-brand-200 transition-all hover:-translate-y-0.5 overflow-hidden ${
+              className={`group relative overflow-hidden rounded-xl border border-surface-200 p-4 md:p-5 hover:shadow-lg transition-all hover:-translate-y-1 ${
                 tool.size === 'large' ? 'md:col-span-2 md:row-span-2' : ''
               }`}
             >
+              {/* Subtle gradient background */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${tool.bgLight} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+              <div className="absolute inset-0 bg-white group-hover:bg-white/70 transition" />
+
+              {/* Decorative corner glow */}
+              <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-br ${tool.gradient} opacity-[0.06] group-hover:opacity-[0.12] group-hover:scale-125 transition-all duration-500`} />
+
               <div className="relative z-10">
-                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl ${tool.color} flex items-center justify-center text-lg md:text-xl text-white mb-3 group-hover:scale-105 transition-transform shadow-sm`}>
+                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center text-lg md:text-xl text-white mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300`}>
                   {tool.icon}
                 </div>
                 <h3 className="font-semibold text-sm text-trust-dark group-hover:text-brand-600 transition">{tool.label}</h3>
                 <p className="text-xs text-trust-light mt-1 leading-relaxed line-clamp-2">{tool.desc}</p>
 
                 {tool.size === 'large' && (
-                  <div className="absolute bottom-5 right-5 w-8 h-8 rounded-full bg-surface-50 flex items-center justify-center text-trust-light group-hover:bg-brand-50 group-hover:text-brand-500 transition text-sm">
+                  <div className={`absolute bottom-4 right-4 md:bottom-5 md:right-5 w-8 h-8 rounded-full bg-gradient-to-br ${tool.gradient} flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md text-sm`}>
                     →
                   </div>
                 )}
@@ -197,34 +209,49 @@ export default function DashboardPage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-            {recentListings.map((l, i) => (
-              <Link
-                key={l.id || i}
-                href={`/dashboard/gecmis/${l.id}`}
-                className="group bg-white rounded-xl border border-surface-200 px-4 py-3 hover:shadow-soft-md hover:border-brand-200 transition-all"
-              >
-                <div className="flex justify-between items-center gap-3">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium text-trust-dark truncate group-hover:text-brand-600 transition">
-                      {l.product_name || l.title || 'Listing'}
-                    </h3>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-trust-light">
-                      <span className="capitalize px-1.5 py-0.5 bg-surface-50 rounded text-trust-medium text-[11px]">{l.platform || 'general'}</span>
-                      <span>{new Date(l.created_at).toLocaleDateString()}</span>
+            {recentListings.map((l, i) => {
+              const platformColors = {
+                amazon: 'bg-orange-100 text-orange-700 border-orange-200',
+                ebay: 'bg-blue-100 text-blue-700 border-blue-200',
+                etsy: 'bg-orange-50 text-orange-600 border-orange-200',
+                shopify: 'bg-green-100 text-green-700 border-green-200',
+                trendyol: 'bg-orange-100 text-orange-700 border-orange-200',
+                hepsiburada: 'bg-orange-50 text-orange-600 border-orange-100',
+                n11: 'bg-purple-100 text-purple-700 border-purple-200',
+                walmart: 'bg-blue-100 text-blue-700 border-blue-200',
+                otto: 'bg-red-100 text-red-700 border-red-200',
+                default: 'bg-gray-100 text-gray-600 border-gray-200',
+              }
+              const pColor = platformColors[(l.platform || '').toLowerCase()] || platformColors.default
+              return (
+                <Link
+                  key={l.id || i}
+                  href={`/dashboard/gecmis/${l.id}`}
+                  className="group relative overflow-hidden bg-white rounded-xl border border-surface-200 px-4 py-3 hover:shadow-md hover:border-brand-200 transition-all"
+                >
+                  <div className="flex justify-between items-center gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-medium text-trust-dark truncate group-hover:text-brand-600 transition">
+                        {l.product_name || l.title || 'Listing'}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-1 text-xs text-trust-light">
+                        <span className={`capitalize px-1.5 py-0.5 rounded border text-[11px] font-medium ${pColor}`}>{l.platform || 'general'}</span>
+                        <span>{new Date(l.created_at).toLocaleDateString()}</span>
+                      </div>
                     </div>
+                    {l.seo_score != null && (
+                      <div className={`text-xs font-bold px-2.5 py-1.5 rounded-xl ${
+                        l.seo_score >= 80 ? 'bg-gradient-to-r from-emerald-50 to-green-50 text-emerald-600 ring-1 ring-emerald-200' :
+                        l.seo_score >= 60 ? 'bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-600 ring-1 ring-amber-200' :
+                        'bg-surface-50 text-trust-light ring-1 ring-surface-200'
+                      }`}>
+                        {l.seo_score}
+                      </div>
+                    )}
                   </div>
-                  {l.seo_score != null && (
-                    <div className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
-                      l.seo_score >= 80 ? 'bg-emerald-50 text-emerald-600' :
-                      l.seo_score >= 60 ? 'bg-amber-50 text-amber-600' :
-                      'bg-surface-50 text-trust-light'
-                    }`}>
-                      {l.seo_score}
-                    </div>
-                  )}
-                </div>
-              </Link>
-            ))}
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}
