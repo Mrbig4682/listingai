@@ -12,6 +12,7 @@ export default function DashboardLayout({ children }) {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { t, locale, setLocale, locales, translations } = useI18n()
 
   const navSections = [
@@ -47,6 +48,15 @@ export default function DashboardLayout({ children }) {
     },
   ]
 
+  // Mobile bottom tab bar items — the 5 most important
+  const mobileTabItems = [
+    { href: '/dashboard', icon: '⬡', label: t.nav?.dashboard || 'Ana Sayfa' },
+    { href: '/dashboard/yeni', icon: '✦', label: t.nav?.newListing || 'İlan' },
+    { href: '/dashboard/marka-dna', icon: '◇', label: 'DNA' },
+    { href: '/dashboard/asistan', icon: '◉', label: 'AI' },
+    { href: '#more', icon: '☰', label: t.nav?.toolsSection || 'Menü' },
+  ]
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) router.push('/giris')
@@ -75,13 +85,18 @@ export default function DashboardLayout({ children }) {
   const used = profile?.listings_used || 0
   const limit = profile?.listings_limit || 10
 
+  const isTabActive = (href) => {
+    if (href === '/dashboard') return pathname === '/dashboard'
+    return pathname.startsWith(href)
+  }
+
   return (
-    <div className="min-h-screen flex bg-surface-50">
-      {/* Mobile overlay */}
+    <div className="min-h-screen flex bg-[#faf8ff]">
+      {/* =================== DESKTOP SIDEBAR =================== */}
+      {/* Mobile overlay for sidebar */}
       {sidebarOpen && <div className="fixed inset-0 bg-trust-dark/20 z-30 md:hidden backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />}
 
-      {/* Sidebar */}
-      <aside className={`fixed md:static z-40 w-60 bg-white border-r border-surface-200 h-screen flex flex-col transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+      <aside className={`fixed md:static z-40 w-60 bg-white border-r border-surface-200 h-screen flex-col transition-transform hidden md:flex`}>
         <div className="p-6 pb-4">
           <Link href="/dashboard">
             <Logo size="md" />
@@ -112,7 +127,7 @@ export default function DashboardLayout({ children }) {
                 {section.items.map(item => {
                   const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href + '/'))
                   return (
-                    <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)}
+                    <Link key={item.href} href={item.href}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition duration-200 ${
                         active
                           ? 'bg-brand-50 text-brand-600 font-semibold'
@@ -128,7 +143,7 @@ export default function DashboardLayout({ children }) {
           ))}
         </nav>
 
-        {/* About & Quick Links section */}
+        {/* About & Quick Links */}
         <div className="px-3 mt-2">
           <div className="bg-gradient-to-br from-brand-50 to-purple-50 rounded-xl p-3 border border-brand-100">
             <div className="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-2">
@@ -139,13 +154,13 @@ export default function DashboardLayout({ children }) {
             </p>
             <div className="space-y-1">
               <Link href="/dashboard/sss" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
-                <span className="text-xs">❓</span> {t.sidebar?.faq || 'Sık Sorulan Sorular'}
+                <span className="text-xs">❓</span> {t.sidebar?.faq || 'SSS'}
               </Link>
               <Link href="/mesafeli-satis" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
-                <span className="text-xs">📜</span> {t.sidebar?.distanceSales || 'Mesafeli Satış Sözleşmesi'}
+                <span className="text-xs">📜</span> {t.sidebar?.distanceSales || 'Mesafeli Satış'}
               </Link>
               <Link href="/gizlilik" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
-                <span className="text-xs">🔒</span> {t.sidebar?.privacy || 'Gizlilik Politikası'}
+                <span className="text-xs">🔒</span> {t.sidebar?.privacy || 'Gizlilik'}
               </Link>
               <Link href="/kullanim-sartlari" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
                 <span className="text-xs">📋</span> {t.sidebar?.terms || 'Kullanım Şartları'}
@@ -155,7 +170,6 @@ export default function DashboardLayout({ children }) {
         </div>
 
         <div className="p-4 pt-3">
-          {/* Plan info */}
           <div className="bg-surface-50 rounded-xl p-3 border border-surface-200">
             {plan === 'business' ? (
               <>
@@ -186,23 +200,159 @@ export default function DashboardLayout({ children }) {
               </>
             )}
           </div>
-
           <button onClick={handleLogout} className="w-full mt-2 py-1.5 text-xs text-trust-light hover:text-trust-dark transition font-medium">
             {t.nav.logout}
           </button>
         </div>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 min-h-screen">
-        {/* Mobile header */}
-        <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-surface-200">
-          <button onClick={() => setSidebarOpen(true)} className="text-trust-medium text-xl">☰</button>
-          <Logo size="sm" />
-          <div className="w-6" />
+      {/* =================== MAIN CONTENT =================== */}
+      <main className="flex-1 min-h-screen md:min-h-0">
+        {/* Mobile Top Bar — thin, app-like */}
+        <div className="md:hidden sticky top-0 z-20 bg-white/90 backdrop-blur-lg border-b border-surface-200">
+          <div className="flex items-center justify-between px-4 py-3">
+            <Logo size="sm" />
+            {/* Language mini selector */}
+            <div className="flex items-center gap-1">
+              <select
+                value={locale}
+                onChange={(e) => setLocale(e.target.value)}
+                className="text-[11px] font-semibold text-trust-medium bg-surface-50 border border-surface-200 rounded-lg px-2 py-1 appearance-none"
+              >
+                {locales.map(loc => (
+                  <option key={loc} value={loc}>{translations[loc].code}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
-        <div className="p-5 md:p-8 max-w-4xl mx-auto animate-fade-in">
+
+        {/* Content area — extra bottom padding on mobile for tab bar */}
+        <div className="p-4 pb-24 md:p-8 md:pb-8 max-w-4xl mx-auto animate-fade-in">
           {children}
+        </div>
+
+        {/* =================== MOBILE BOTTOM TAB BAR =================== */}
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-30">
+          {/* Full-screen menu overlay */}
+          {mobileMenuOpen && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={() => setMobileMenuOpen(false)}>
+              <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[80vh] overflow-y-auto animate-sheet-up" onClick={e => e.stopPropagation()}>
+                {/* Handle bar */}
+                <div className="flex justify-center pt-3 pb-2">
+                  <div className="w-10 h-1 bg-surface-200 rounded-full" />
+                </div>
+
+                {/* Menu header */}
+                <div className="px-5 pb-3 border-b border-surface-100">
+                  <h3 className="text-base font-bold text-gray-900">{t.nav?.toolsSection || 'Tüm Araçlar'}</h3>
+                </div>
+
+                {/* All nav items */}
+                <div className="px-4 py-3">
+                  {navSections.map((section, si) => (
+                    <div key={si} className={si > 0 ? 'mt-4' : ''}>
+                      {section.label && (
+                        <div className="px-2 mb-2 text-[10px] font-bold uppercase tracking-widest text-trust-light">
+                          {section.label}
+                        </div>
+                      )}
+                      <div className="grid grid-cols-3 gap-2">
+                        {section.items.map(item => {
+                          const active = isTabActive(item.href)
+                          return (
+                            <Link
+                              key={item.href}
+                              href={item.href}
+                              onClick={() => setMobileMenuOpen(false)}
+                              className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl text-center transition ${
+                                active
+                                  ? 'bg-brand-50 text-brand-600'
+                                  : 'bg-surface-50 text-trust-medium hover:bg-surface-100'
+                              }`}
+                            >
+                              <span className="text-xl">{item.icon}</span>
+                              <span className="text-[11px] font-medium leading-tight">{item.label}</span>
+                            </Link>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Quick links */}
+                  <div className="mt-5 pt-4 border-t border-surface-100">
+                    <div className="flex flex-wrap gap-3 text-[11px] text-trust-light">
+                      <Link href="/dashboard/sss" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-600">SSS</Link>
+                      <span>·</span>
+                      <Link href="/mesafeli-satis" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-600">{t.sidebar?.distanceSales || 'Mesafeli Satış'}</Link>
+                      <span>·</span>
+                      <Link href="/gizlilik" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-600">{t.sidebar?.privacy || 'Gizlilik'}</Link>
+                    </div>
+
+                    {/* Plan badge */}
+                    <div className="mt-4 flex items-center justify-between bg-gradient-to-r from-brand-50 to-purple-50 rounded-xl p-3">
+                      <div>
+                        <div className="text-xs font-bold text-brand-600">
+                          {plan === 'business' ? t.plan.business : plan === 'pro' ? t.plan.pro : t.plan.free}
+                        </div>
+                        <div className="text-[11px] text-trust-light mt-0.5">
+                          {plan === 'business' ? t.plan.unlimitedListings : `${used}/${limit >= 999 ? '∞' : limit} ${t.plan.listingsUsed}`}
+                        </div>
+                      </div>
+                      {plan === 'free' && (
+                        <Link href="/dashboard/odeme" onClick={() => setMobileMenuOpen(false)}
+                          className="text-[11px] font-bold text-white bg-brand-600 px-3 py-1.5 rounded-lg">
+                          {t.plan.upgradeToPro}
+                        </Link>
+                      )}
+                    </div>
+
+                    {/* Logout */}
+                    <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
+                      className="w-full mt-3 mb-2 py-2.5 text-xs text-trust-light hover:text-red-500 transition font-medium text-center">
+                      {t.nav.logout}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab bar */}
+          <div className="bg-white/95 backdrop-blur-lg border-t border-surface-200 px-2 pb-safe">
+            <div className="flex items-center justify-around py-1.5">
+              {mobileTabItems.map((item) => {
+                const isMore = item.href === '#more'
+                const active = !isMore && isTabActive(item.href)
+
+                return (
+                  <button
+                    key={item.href}
+                    onClick={() => {
+                      if (isMore) {
+                        setMobileMenuOpen(!mobileMenuOpen)
+                      } else {
+                        setMobileMenuOpen(false)
+                        router.push(item.href)
+                      }
+                    }}
+                    className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all min-w-[56px] ${
+                      active
+                        ? 'text-brand-600'
+                        : isMore && mobileMenuOpen
+                        ? 'text-brand-600'
+                        : 'text-trust-light'
+                    }`}
+                  >
+                    <span className={`text-xl transition-transform ${active ? 'scale-110' : ''}`}>{item.icon}</span>
+                    <span className={`text-[10px] font-semibold ${active ? 'text-brand-600' : 'text-trust-light'}`}>{item.label}</span>
+                    {active && <div className="w-1 h-1 rounded-full bg-brand-500 mt-0.5" />}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </main>
     </div>
