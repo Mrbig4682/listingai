@@ -1,22 +1,50 @@
 {
-  "name": "ListingAI",
+  "name": "ListingAI - AI ile İlan Optimizasyonu",
   "short_name": "ListingAI",
-  "description": "AI-Powered E-Commerce Listing Optimizer",
+  "description": "Yapay zeka ile e-ticaret ilanlarınızı optimize edin. Amazon, eBay, Etsy, Trendyol ve daha fazlası.",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#faf8ff",
   "theme_color": "#7c3aed",
   "orientation": "portrait",
+  "scope": "/",
+  "lang": "tr",
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.svg",
+      "sizes": "1200x630",
+      "type": "image/svg+xml",
+      "form_factor": "wide",
+      "label": "ListingAI Dashboard"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

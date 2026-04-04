@@ -39,6 +39,10 @@ export default function KayitPage() {
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        skipBrowserRedirect: false,
+        queryParams: {
+          prompt: 'select_account',
+        },
       },
     })
 
