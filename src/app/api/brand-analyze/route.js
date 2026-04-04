@@ -6,7 +6,7 @@ function getAnthropic() {
 
 export async function POST(request) {
   try {
-    const { url } = await request.json()
+    const { url, language = 'tr', country = 'Global' } = await request.json()
 
     if (!url) {
       return Response.json({ error: 'URL is required.' }, { status: 400 })
@@ -34,10 +34,13 @@ export async function POST(request) {
 
     const anthropic = getAnthropic()
 
-    const prompt = `You are a brand strategy expert and business intelligence analyst. Analyze the following website/business and create a comprehensive "Brand DNA" profile.
+    const prompt = `CRITICAL: You MUST respond entirely in ${language} language. All text values in the JSON must be in ${language}.
+
+You are a brand strategy expert and business intelligence analyst. Analyze the following website/business and create a comprehensive "Brand DNA" profile.
 
 Website URL: ${url}
 Website Content (extracted text): ${websiteContent}
+Target Market: ${country}
 
 Based on ALL available information, create a detailed Brand DNA profile. If the website content is limited, use the URL and domain to infer what you can, and note what's inferred vs confirmed.
 
@@ -66,7 +69,11 @@ Return ONLY valid JSON in this exact format:
   },
   "market_positioning": {
     "segment": "premium/mid-range/budget",
-    "competitors": ["competitor1", "competitor2", "competitor3"],
+    "competitors": [
+      { "name": "competitor1", "website_url": "https://..." },
+      { "name": "competitor2", "website_url": "https://..." },
+      { "name": "competitor3", "website_url": "https://..." }
+    ],
     "competitive_advantage": "What makes this brand unique"
   },
   "listing_recommendations": {

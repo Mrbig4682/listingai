@@ -6,7 +6,7 @@ function getAnthropic() {
 
 export async function POST(request) {
   try {
-    const { product, platform, category, competitors } = await request.json()
+    const { product, platform, category, competitors, language = 'en', country = 'Global' } = await request.json()
 
     if (!product) {
       return Response.json({ error: 'Product info required.' }, { status: 400 })
@@ -14,11 +14,14 @@ export async function POST(request) {
 
     const anthropic = getAnthropic()
 
-    const prompt = `You are a competitive intelligence expert for e-commerce. Analyze the competitive landscape for the following product.
+    const prompt = `IMPORTANT: Respond entirely in ${language === 'tr' ? 'Turkish' : 'English'} language.
+
+You are a competitive intelligence expert for e-commerce. Analyze the competitive landscape for the following product.
 
 Product: ${product}
 Platform: ${platform || 'Amazon'}
 Category: ${category || 'General'}
+Market/Country: ${country}
 ${competitors ? `Known Competitors: ${competitors}` : ''}
 
 Provide a comprehensive competitive analysis. Return ONLY valid JSON:
@@ -32,6 +35,7 @@ Provide a comprehensive competitive analysis. Return ONLY valid JSON:
   "top_competitors": [
     {
       "name": "Competitor brand/product name",
+      "website_url": "https://example.com",
       "estimated_price": "$XX.XX",
       "strengths": ["strength1", "strength2"],
       "weaknesses": ["weakness1", "weakness2"],
