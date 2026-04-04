@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ListingAI - 6 Dilde Destek</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            max-width: 1290px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 24px;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+
+        .phone-mockup {
+            position: relative;
+            width: 380px;
+            height: 820px;
+            background: #faf8ff;
+            border-radius: 60px;
+            padding: 14px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            border: 8px solid #000;
+            overflow: hidden;
+        }
+
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 40px 40px;
+            z-index: 10;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #faf8ff 0%, #f5f3ff 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            height: 50px;
+            background: #faf8ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .app-header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, #7c3aed, #7c3aed);
+            color: white;
+        }
+
+        .app-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .app-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .app-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .language-item {
+            background: white;
+            border: 2px solid #e5e5e5;
+            border-radius: 15px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-item:active {
+            transform: scale(0.98);
+            border-color: #7c3aed;
+            background: #f9f5ff;
+        }
+
+        .language-item.selected {
+            border-color: #7c3aed;
+            background: #f9f5ff;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .language-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .language-flag {
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        .language-info h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .language-info p {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .check-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #7c3aed;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .language-item:not(.selected) .check-icon {
+            background: #e5e5e5;
+            color: transparent;
+        }
+
+        .description-text {
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            padding: 15px;
+            background: #f0e7ff;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .description-text strong {
+            color: #7c3aed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>6 Dilde Destek</h1>
+            <p>Dünyaya açılan kapıyı aç</p>
+        </div>
+
+        <div class="phone-mockup">
+            <div class="phone-content">
+                <div class="status-bar">
+                    <span>9:41</span>
+                </div>
+
+                <div class="app-header">
+                    <h2>Dil Seçimi</h2>
+                    <p>Listenizi çevir ve satış yapın</p>
+                </div>
+
+                <div class="app-body">
+                    <div class="language-item selected">
+                        <div class="language-content">
+                            <div class="language-flag">🇹🇷</div>
+                            <div class="language-info">
+                                <h3>Türkçe</h3>
+                                <p>Native Language</p>
+                            </div>
+                        </div>
+                        <div class="check-icon">✓</div>
+                    </div>
+
+                    <div class="language-item">
+                        <div class="language-content">
+                            <div class="language-flag">🇬🇧</div>
+                            <div class="language-info">
+                                <h3>English</h3>
+                                <p>Native Speaker</p>
+                            </div>
+                        </div>
+                        <div class="check-icon">✓</div>
+                    </div>
+
+                    <div class="language-item">
+                        <div class="language-content">
+                            <div class="language-flag">🇩🇪</div>
+                            <div class="language-info">
+                                <h3>Deutsch</h3>
+                                <p>Native Speaker</p>
+                            </div>
+                        </div>
+                        <div class="check-icon">✓</div>
+                    </div>
+
+                    <div class="language-item">
+                        <div class="language-content">
+                            <div class="language-flag">🇫🇷</div>
+                            <div class="language-info">
+                                <h3>Français</h3>
+                                <p>Native Speaker</p>
+                            </div>
+                        </div>
+                        <div class="check-icon">✓</div>
+                    </div>
+
+                    <div class="language-item">
+                        <div class="language-content">
+                            <div class="language-flag">🇪🇸</div>
+                            <div class="language-info">
+                                <h3>Español</h3>
+                                <p>Native Speaker</p>
+                            </div>
+                        </div>
+                        <div class="check-icon">✓</div>
+                    </div>
+
+                    <div class="language-item">
+                        <div class="language-content">
+                            <div class="language-flag">🇮🇹</div>
+                            <div class="language-info">
+                                <h3>Italiano</h3>
+                                <p>Native Speaker</p>
+                            </div>
+                        </div>
+                        <div class="check-icon">✓</div>
+                    </div>
+
+                    <div class="description-text">
+                        🌍 <strong>Otomatik Çeviri</strong> ile tüm listeleri 6 dile çevirin
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

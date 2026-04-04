@@ -9,6 +9,10 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/ios": "^8.3.0",
     "@supabase/supabase-js": "^2.47.0",
     "iyzipay": "^2.0.67",
     "next": "14.2.21",

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ListingAI - 11 Platform Desteği</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            max-width: 1290px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 24px;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+
+        .phone-mockup {
+            position: relative;
+            width: 380px;
+            height: 820px;
+            background: #faf8ff;
+            border-radius: 60px;
+            padding: 14px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            border: 8px solid #000;
+            overflow: hidden;
+        }
+
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 40px 40px;
+            z-index: 10;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #faf8ff 0%, #f5f3ff 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            height: 50px;
+            background: #faf8ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .app-header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, #7c3aed, #7c3aed);
+            color: white;
+        }
+
+        .app-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .app-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .app-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .platform-item {
+            background: white;
+            border: 2px solid #e5e5e5;
+            border-radius: 15px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .platform-item:active {
+            transform: scale(0.95);
+            border-color: #7c3aed;
+        }
+
+        .platform-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .amazon .platform-icon { background: #FF9900; }
+        .ebay .platform-icon { background: #E53238; }
+        .etsy .platform-icon { background: #F1641E; }
+        .trendyol .platform-icon { background: #0066CC; }
+        .hepsiburada .platform-icon { background: #FFC300; color: #000; }
+        .gittigidiyor .platform-icon { background: #F7D700; color: #000; }
+        .bimsa .platform-icon { background: #00C7FD; }
+        .letgo .platform-icon { background: #7C3AED; }
+        .alibaba .platform-icon { background: #FF6B00; }
+        .shopify .platform-icon { background: #96BE00; }
+        .woo .platform-icon { background: #7D4DCA; }
+
+        .platform-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .support-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .info-text {
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0e7ff;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>11 Platform Desteği</h1>
+            <p>Tüm popüler e-ticaret platformlarında satış yap</p>
+        </div>
+
+        <div class="phone-mockup">
+            <div class="phone-content">
+                <div class="status-bar">
+                    <span>9:41</span>
+                </div>
+
+                <div class="app-header">
+                    <h2>Platformlar</h2>
+                    <p>11 e-ticaret platformu bir yerde</p>
+                </div>
+
+                <div class="app-body">
+                    <div class="platforms-grid">
+                        <div class="platform-item amazon">
+                            <div class="platform-icon">A</div>
+                            <div class="platform-name">Amazon</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item ebay">
+                            <div class="platform-icon">E</div>
+                            <div class="platform-name">eBay</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item etsy">
+                            <div class="platform-icon">Ⓔ</div>
+                            <div class="platform-name">Etsy</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item trendyol">
+                            <div class="platform-icon">T</div>
+                            <div class="platform-name">Trendyol</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item hepsiburada">
+                            <div class="platform-icon">H</div>
+                            <div class="platform-name">Hepsiburada</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item gittigidiyor">
+                            <div class="platform-icon">G</div>
+                            <div class="platform-name">GittiGidiyor</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item bimsa">
+                            <div class="platform-icon">B</div>
+                            <div class="platform-name">BimSA</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item letgo">
+                            <div class="platform-icon">L</div>
+                            <div class="platform-name">Letgo</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item alibaba">
+                            <div class="platform-icon">🌐</div>
+                            <div class="platform-name">Alibaba</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item shopify">
+                            <div class="platform-icon">S</div>
+                            <div class="platform-name">Shopify</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+
+                        <div class="platform-item woo">
+                            <div class="platform-icon">W</div>
+                            <div class="platform-name">WooCommerce</div>
+                            <div class="support-badge">Active</div>
+                        </div>
+                    </div>
+
+                    <div class="info-text">
+                        ✨ Tüm platformlarınız senkronize kalacak
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "appId": "com.listingai.app",
+  "appName": "ListingAI",
+  "webDir": "out",
+  "server": {
+    "url": "https://listingai-gamma.vercel.app",
+    "cleartext": false
+  },
+  "ios": {
+    "scheme": "ListingAI",
+    "contentInset": "automatic",
+    "backgroundColor": "#faf8ff",
+    "preferredContentMode": "mobile"
+  },
+  "android": {
+    "backgroundColor": "#faf8ff",
+    "allowMixedContent": false,
+    "overScrollMode": "never"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#7c3aed",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP",
+      "splashFullScreen": true,
+      "splashImmersive": true
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#7c3aed"
+    }
+  }
+}

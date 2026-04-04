@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ListingAI - Rakip Analizi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            max-width: 1290px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 24px;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+
+        .phone-mockup {
+            position: relative;
+            width: 380px;
+            height: 820px;
+            background: #faf8ff;
+            border-radius: 60px;
+            padding: 14px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            border: 8px solid #000;
+            overflow: hidden;
+        }
+
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 40px 40px;
+            z-index: 10;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #faf8ff 0%, #f5f3ff 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            height: 50px;
+            background: #faf8ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .app-header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, #7c3aed, #7c3aed);
+            color: white;
+        }
+
+        .app-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .app-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .app-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .competitor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #7c3aed;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .competitor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .competitor-info h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .competitor-info p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .rating {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            color: #fbbf24;
+            font-size: 12px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .metric {
+            background: #f9fafb;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 11px;
+        }
+
+        .metric-title {
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .metric-value {
+            color: #333;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .comparison-bar {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 8px;
+        }
+
+        .bar {
+            height: 4px;
+            border-radius: 2px;
+            background: #e5e5e5;
+            flex: 1;
+        }
+
+        .bar.your-value {
+            background: #7c3aed;
+            width: 75%;
+        }
+
+        .bar.competitor-value {
+            background: #ddd;
+            width: 85%;
+        }
+
+        .comparison-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #999;
+        }
+
+        .advantage-badge {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #065f46;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .disadvantage-badge {
+            display: inline-block;
+            background: #fee2e2;
+            color: #7f1d1d;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Rakip Analizi</h1>
+            <p>Rakiplerinizi analiz edin, stratejinizi belirleyin</p>
+        </div>
+
+        <div class="phone-mockup">
+            <div class="phone-content">
+                <div class="status-bar">
+                    <span>9:41</span>
+                </div>
+
+                <div class="app-header">
+                    <h2>Rakip Analiz</h2>
+                    <p>Top 3 rakibi karşılaştır</p>
+                </div>
+
+                <div class="app-body">
+                    <div class="competitor-card">
+                        <div class="competitor-header">
+                            <div class="competitor-info">
+                                <h3>Senin Ürünün</h3>
+                                <div class="rating">
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                </div>
+                                <p>4.9 / 5.0 (234 yorum)</p>
+                            </div>
+                        </div>
+                        <div class="metrics">
+                            <div class="metric">
+                                <div class="metric-title">Satış/Ay</div>
+                                <div class="metric-value">1,245</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-title">SEO Skoru</div>
+                                <div class="metric-value">92</div>
+                            </div>
+                        </div>
+                        <span class="advantage-badge">✓ En Yüksek Puan</span>
+                    </div>
+
+                    <div class="competitor-card">
+                        <div class="competitor-header">
+                            <div class="competitor-info">
+                                <h3>ShopStore Ltd</h3>
+                                <div class="rating">
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star" style="color: #ddd;">★</span>
+                                </div>
+                                <p>4.7 / 5.0 (156 yorum)</p>
+                            </div>
+                        </div>
+                        <div class="metrics">
+                            <div class="metric">
+                                <div class="metric-title">Satış/Ay</div>
+                                <div class="metric-value">890</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-title">SEO Skoru</div>
+                                <div class="metric-value">78</div>
+                            </div>
+                        </div>
+                        <span class="advantage-badge">✓ Daha Az Satış</span>
+                    </div>
+
+                    <div class="competitor-card">
+                        <div class="competitor-header">
+                            <div class="competitor-info">
+                                <h3>Premium Store</h3>
+                                <div class="rating">
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star" style="color: #ddd;">★</span>
+                                    <span class="star" style="color: #ddd;">★</span>
+                                </div>
+                                <p>4.3 / 5.0 (412 yorum)</p>
+                            </div>
+                        </div>
+                        <div class="metrics">
+                            <div class="metric">
+                                <div class="metric-title">Satış/Ay</div>
+                                <div class="metric-value">2,340</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-title">SEO Skoru</div>
+                                <div class="metric-value">88</div>
+                            </div>
+                        </div>
+                        <span class="disadvantage-badge">⚠ Daha Fazla Satış</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ListingAI - SEO Optimizasyonu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            max-width: 1290px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 24px;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+
+        .phone-mockup {
+            position: relative;
+            width: 380px;
+            height: 820px;
+            background: #faf8ff;
+            border-radius: 60px;
+            padding: 14px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            border: 8px solid #000;
+            overflow: hidden;
+        }
+
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 40px 40px;
+            z-index: 10;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #faf8ff 0%, #f5f3ff 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            height: 50px;
+            background: #faf8ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .app-header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, #7c3aed, #7c3aed);
+            color: white;
+        }
+
+        .app-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .app-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .app-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .score-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .score-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .score-excellent {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .score-good {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .score-fair {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .score-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e5e5;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .score-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .fill-excellent {
+            background: linear-gradient(90deg, #10b981, #059669);
+            width: 92%;
+        }
+
+        .fill-good {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            width: 78%;
+        }
+
+        .fill-fair {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+            width: 65%;
+        }
+
+        .score-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .metrics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .metric-label {
+            color: #555;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            background: #f0e7ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #7c3aed;
+            font-size: 12px;
+        }
+
+        .recommendation {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #065f46;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SEO Optimizasyonu</h1>
+            <p>Arama motorlarında üst sıralara çıkın</p>
+        </div>
+
+        <div class="phone-mockup">
+            <div class="phone-content">
+                <div class="status-bar">
+                    <span>9:41</span>
+                </div>
+
+                <div class="app-header">
+                    <h2>SEO Analiz</h2>
+                    <p>Listenin arama optimizasyonu</p>
+                </div>
+
+                <div class="app-body">
+                    <div class="score-card">
+                        <div class="score-header">
+                            <div class="score-title">Genel SEO Skoru</div>
+                            <div class="score-badge score-excellent">92</div>
+                        </div>
+                        <div class="score-bar">
+                            <div class="score-fill fill-excellent"></div>
+                        </div>
+                        <div class="score-text">Mükemmel - Arama motorlarında üst sıralar için hazır</div>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-header">
+                            <div class="score-title">Anahtar Kelime Uyumu</div>
+                            <div class="score-badge score-good">78</div>
+                        </div>
+                        <div class="score-bar">
+                            <div class="score-fill fill-good"></div>
+                        </div>
+                        <div class="metrics-list">
+                            <div class="metric-item">
+                                <span class="metric-label">Temel Anahtar Kelimeler</span>
+                                <span class="metric-value">8/10</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">İlgili Terimler</span>
+                                <span class="metric-value">Var</span>
+                            </div>
+                        </div>
+                        <div class="recommendation">
+                            💡 İpucu: 2-3 uzun kuyruklu anahtar kelime daha ekleyin
+                        </div>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-header">
+                            <div class="score-title">Başlık & Açıklama</div>
+                            <div class="score-badge score-fair">65</div>
+                        </div>
+                        <div class="score-bar">
+                            <div class="score-fill fill-fair"></div>
+                        </div>
+                        <div class="metrics-list">
+                            <div class="metric-item">
+                                <span class="metric-label">Başlık Uzunluğu</span>
+                                <span class="metric-value">Optimal</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Açıklama</span>
+                                <span class="metric-value">Kısa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
