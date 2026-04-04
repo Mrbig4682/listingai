@@ -222,6 +222,15 @@ export const translations = {
       details: 'Detay',
       seoTips: 'SEO İpuçları',
     },
+    // Sidebar
+    sidebar: {
+      about: 'Hakkımızda',
+      aboutDesc: 'ListingAI, yapay zeka ile e-ticaret ilanlarınızı optimize eden SaaS platformudur.',
+      faq: 'Sık Sorulan Sorular',
+      distanceSales: 'Mesafeli Satış Sözleşmesi',
+      privacy: 'Gizlilik Politikası',
+      terms: 'Kullanım Şartları',
+    },
     // Plan sidebar
     plan: {
       business: 'Business Plan',
@@ -559,6 +568,14 @@ export const translations = {
       details: 'Details',
       seoTips: 'SEO Tips',
     },
+    sidebar: {
+      about: 'About Us',
+      aboutDesc: 'ListingAI is a SaaS platform that optimizes your e-commerce listings with AI.',
+      faq: 'FAQ',
+      distanceSales: 'Distance Sales Agreement',
+      privacy: 'Privacy Policy',
+      terms: 'Terms of Service',
+    },
     plan: {
       business: 'Business Plan',
       pro: 'Pro Plan',
@@ -873,6 +890,14 @@ export const translations = {
       score: 'Puntuación',
       details: 'Detalles',
       seoTips: 'Consejos SEO',
+    },
+    sidebar: {
+      about: 'Sobre Nosotros',
+      aboutDesc: 'ListingAI es una plataforma SaaS que optimiza tus listings de e-commerce con IA.',
+      faq: 'Preguntas Frecuentes',
+      distanceSales: 'Contrato de Venta a Distancia',
+      privacy: 'Política de Privacidad',
+      terms: 'Términos de Servicio',
     },
     plan: {
       business: 'Plan Business',
@@ -1209,6 +1234,14 @@ export const translations = {
       details: 'Detalhes',
       seoTips: 'Dicas SEO',
     },
+    sidebar: {
+      about: 'Sobre Nós',
+      aboutDesc: 'ListingAI é uma plataforma SaaS que otimiza seus listings de e-commerce com IA.',
+      faq: 'Perguntas Frequentes',
+      distanceSales: 'Contrato de Venda à Distância',
+      privacy: 'Política de Privacidade',
+      terms: 'Termos de Serviço',
+    },
     plan: {
       business: 'Plano Business',
       pro: 'Plano Pro',
@@ -1544,6 +1577,14 @@ export const translations = {
       details: 'Details',
       seoTips: 'SEO-Tipps',
     },
+    sidebar: {
+      about: 'Über Uns',
+      aboutDesc: 'ListingAI ist eine SaaS-Plattform, die Ihre E-Commerce-Listings mit KI optimiert.',
+      faq: 'Häufige Fragen',
+      distanceSales: 'Fernabsatzvertrag',
+      privacy: 'Datenschutzrichtlinie',
+      terms: 'Nutzungsbedingungen',
+    },
     plan: {
       business: 'Business-Plan',
       pro: 'Pro-Plan',
@@ -1878,6 +1919,14 @@ export const translations = {
       score: 'Score',
       details: 'Détails',
       seoTips: 'Conseils SEO',
+    },
+    sidebar: {
+      about: 'À Propos',
+      aboutDesc: 'ListingAI est une plateforme SaaS qui optimise vos listings e-commerce avec l\'IA.',
+      faq: 'FAQ',
+      distanceSales: 'Contrat de Vente à Distance',
+      privacy: 'Politique de Confidentialité',
+      terms: 'Conditions d\'Utilisation',
     },
     plan: {
       business: 'Plan Business',

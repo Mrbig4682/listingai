@@ -128,9 +128,35 @@ export default function DashboardLayout({ children }) {
           ))}
         </nav>
 
-        <div className="p-4">
+        {/* About & Quick Links section */}
+        <div className="px-3 mt-2">
+          <div className="bg-gradient-to-br from-brand-50 to-purple-50 rounded-xl p-3 border border-brand-100">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-2">
+              {t.sidebar?.about || 'Hakkımızda'}
+            </div>
+            <p className="text-[11px] text-trust-medium leading-relaxed mb-3">
+              {t.sidebar?.aboutDesc || 'ListingAI, yapay zeka ile e-ticaret ilanlarınızı optimize eden SaaS platformudur.'}
+            </p>
+            <div className="space-y-1">
+              <Link href="/dashboard/sss" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
+                <span className="text-xs">❓</span> {t.sidebar?.faq || 'Sık Sorulan Sorular'}
+              </Link>
+              <Link href="/mesafeli-satis" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
+                <span className="text-xs">📜</span> {t.sidebar?.distanceSales || 'Mesafeli Satış Sözleşmesi'}
+              </Link>
+              <Link href="/gizlilik" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
+                <span className="text-xs">🔒</span> {t.sidebar?.privacy || 'Gizlilik Politikası'}
+              </Link>
+              <Link href="/kullanim-sartlari" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
+                <span className="text-xs">📋</span> {t.sidebar?.terms || 'Kullanım Şartları'}
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-4 pt-3">
           {/* Plan info */}
-          <div className="bg-surface-50 rounded-2xl p-4 border border-surface-200">
+          <div className="bg-surface-50 rounded-xl p-3 border border-surface-200">
             {plan === 'business' ? (
               <>
                 <div className="font-semibold text-xs text-brand-600">{t.plan.business}</div>
@@ -154,14 +180,14 @@ export default function DashboardLayout({ children }) {
                 <div className="bg-surface-200 rounded-full h-1 mt-2 overflow-hidden">
                   <div className="bg-brand-500 h-full rounded-full" style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} />
                 </div>
-                <Link href="/dashboard/odeme" className="block w-full mt-3 py-2 bg-trust-dark text-white text-xs font-semibold rounded-lg hover:bg-brand-600 transition text-center">
+                <Link href="/dashboard/odeme" className="block w-full mt-2 py-1.5 bg-trust-dark text-white text-xs font-semibold rounded-lg hover:bg-brand-600 transition text-center">
                   {t.plan.upgradeToPro}
                 </Link>
               </>
             )}
           </div>
 
-          <button onClick={handleLogout} className="w-full mt-3 py-2 text-xs text-trust-light hover:text-trust-dark transition font-medium">
+          <button onClick={handleLogout} className="w-full mt-2 py-1.5 text-xs text-trust-light hover:text-trust-dark transition font-medium">
             {t.nav.logout}
           </button>
         </div>
