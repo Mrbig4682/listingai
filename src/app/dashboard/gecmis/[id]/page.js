@@ -37,6 +37,8 @@ export default function ListingDetailPage() {
   const [error, setError] = useState(null)
   const [activeTab, setActiveTab] = useState(0)
   const [copied, setCopied] = useState('')
+  const [deleteConfirm, setDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     async function loadListing() {
@@ -69,6 +71,22 @@ export default function ListingDetailPage() {
     }
     if (id) loadListing()
   }, [id])
+
+  const deleteListing = async () => {
+    setDeleting(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      await supabase.from('listing_results').delete().eq('listing_id', id)
+      const { error } = await supabase.from('listings').delete().eq('id', id).eq('user_id', user.id)
+      if (error) throw error
+      router.push('/dashboard/gecmis')
+    } catch (err) {
+      console.error('Silme hatası:', err)
+      alert('İlan silinirken bir hata oluştu.')
+      setDeleting(false)
+    }
+  }
 
   const copyToClipboard = (text, label) => {
     navigator.clipboard?.writeText(text)
@@ -108,11 +126,17 @@ export default function ListingDetailPage() {
 
   return (
     <div>
-      {/* Back button */}
-      <Link href="/dashboard/gecmis"
-        className="flex items-center gap-2 text-base text-gray-500 hover:text-brand-600 mb-5 transition font-medium">
-        ← Listeye Dön
-      </Link>
+      {/* Back button + Delete */}
+      <div className="flex justify-between items-center mb-5">
+        <Link href="/dashboard/gecmis"
+          className="flex items-center gap-2 text-base text-gray-500 hover:text-brand-600 transition font-medium">
+          ← Listeye Dön
+        </Link>
+        <button onClick={() => setDeleteConfirm(true)}
+          className="flex items-center gap-1.5 text-sm font-semibold text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-xl transition">
+          🗑️ İlanı Sil
+        </button>
+      </div>
 
       {/* Product Info Card */}
       <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-md mb-5">
@@ -230,7 +254,7 @@ export default function ListingDetailPage() {
                 <h3 className="font-bold text-base text-gray-900">{nl?.description || 'Ürün Açıklaması'}</h3>
                 <button onClick={() => copyToClipboard(currentResult.description, 'desc')}
                   className={`text-sm px-4 py-1.5 rounded-xl transition font-semibold ${
-                    copied === 'desc' ? 'bg-green-100 text-green-600' : 'bg-gr!y-100 text-gray-600 hover:bg-brand-50 hover:text-brand-600'
+                    copied === 'desc' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600 hover:bg-brand-50 hover:text-brand-600'
                   }`}>
                   {copied === 'desc' ? '✓ Kopyalandı' : 'Kopyala'}
                 </button>
@@ -258,6 +282,31 @@ export default function ListingDetailPage() {
         <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm">
           <div className="text-4xl mb-3">📭</div>
           <p className="text-gray-500 text-base">Bu listing için sonuç bulunamadı.</p>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => !deleting && setDeleteConfirm(false)}>
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="text-center">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center text-2xl">🗑️</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">İlanı Sil</h3>
+              <p className="text-sm text-gray-500 mb-6">Bu ilanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</p>
+              <div className="flex gap-3">
+                <button onClick={() => setDeleteConfirm(false)} disabled={deleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition text-sm disabled:opacity-50">
+                  İptal
+                </button>
+                <button onClick={deleteListing} disabled={deleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition text-sm disabled:opacity-50 flex items-center justify-center gap-2">
+                  {deleting ? (
+                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Siliniyor...</>
+                  ) : 'Evet, Sil'}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
