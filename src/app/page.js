@@ -129,7 +129,7 @@ export default function LandingPage() {
           <span className="gradient-text">listing</span><span className="text-trust-dark">AI</span>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
-          <div className="hidden sm:block"><LanguageSelector /></div>
+          <div className="hidden md:block"><LanguageSelector /></div>
           <Link href="/giris" className="px-4 py-2 text-sm font-medium text-trust-medium hover:text-trust-dark transition">{l.login}</Link>
           <Link href="/kayit" className="px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-brand-600 to-purple-600 text-white rounded-xl hover:shadow-glow transition">
             {l.cta}
@@ -265,7 +265,7 @@ export default function LandingPage() {
           {plans.map((p, i) => (
             <div key={i} className={`relative rounded-2xl md:rounded-3xl transition-all ${
               p.highlight
-                ? 'bg-gradient-to-b from-brand-600 via-purple-600 to-fuchsia-600 text-white p-[2px] shadow-glow md:scale-105 md:-my-3'
+                ? 'bg-gradient-to-b from-brand-600 via-purple-600 to-fuchsia-600 text-white p-[2px] shadow-glow md:scale-105 md:-my-3 order-first md:order-none'
                 : 'bg-white border border-gray-100 shadow-soft'
             }`}>
               {p.highlight && (
