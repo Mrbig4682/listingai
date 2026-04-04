@@ -34,8 +34,8 @@ export default function SSSPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-trust-dark">{locale === 'tr' ? 'Sık Sorulan Sorular' : 'Frequently Asked Questions'}</h1>
-        <p className="text-sm text-trust-light mt-1">{locale === 'tr' ? 'ListingAI hakkında merak ettikleriniz' : 'Everything you need to know about ListingAI'}</p>
+        <h1 className="text-xl font-bold text-gray-900">{locale === 'tr' ? 'Sık Sorulan Sorular' : 'Frequently Asked Questions'}</h1>
+        <p className="text-sm text-gray-500 mt-1">{locale === 'tr' ? 'ListingAI hakkında merak ettikleriniz' : 'Everything you need to know about ListingAI'}</p>
       </div>
 
       <div className="space-y-2">
@@ -45,11 +45,11 @@ export default function SSSPage() {
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
               className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-surface-50 transition"
             >
-              <span className="text-sm font-medium text-trust-dark pr-4">{faq.q}</span>
-              <span className={`text-trust-light text-lg flex-shrink-0 transition-transform ${openIndex === i ? 'rotate-45' : ''}`}>+</span>
+              <span className="text-sm font-medium text-gray-800 pr-4">{faq.q}</span>
+              <span className={`text-gray-400 text-lg flex-shrink-0 transition-transform ${openIndex === i ? 'rotate-45' : ''}`}>+</span>
             </button>
             {openIndex === i && (
-              <div className="px-5 pb-4 text-sm text-trust-medium leading-relaxed border-t border-surface-100 pt-3">
+              <div className="px-5 pb-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
                 {faq.a}
               </div>
             )}

@@ -212,8 +212,9 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-6 text-sm text-trust-light">
             <span>© 2026 ListingAI</span>
-            <a href="#" className="hover:text-trust-dark transition">Privacy</a>
-            <a href="#" className="hover:text-trust-dark transition">Terms</a>
+            <Link href="/gizlilik" className="hover:text-trust-dark transition">{t?.sidebar?.privacy || 'Gizlilik Politikası'}</Link>
+            <Link href="/kullanim-sartlari" className="hover:text-trust-dark transition">{t?.sidebar?.terms || 'Kullanım Şartları'}</Link>
+            <Link href="/mesafeli-satis" className="hover:text-trust-dark transition">{t?.sidebar?.distanceSales || 'Mesafeli Satış'}</Link>
           </div>
         </div>
       </footer>
