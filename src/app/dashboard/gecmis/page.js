@@ -35,6 +35,8 @@ export default function GecmisPage() {
   const [selectedListing, setSelectedListing] = useState(null)
   const [activeTab, setActiveTab] = useState(0)
   const [copied, setCopied] = useState('')
+  const [deleteConfirm, setDeleteConfirm] = useState(null)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     loadListings()
@@ -103,6 +105,32 @@ export default function GecmisPage() {
     URL.revokeObjectURL(url)
   }
 
+  const deleteListing = async (listingId) => {
+    setDeleting(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      // Önce listing_results sil
+      await supabase.from('listing_results').delete().eq('listing_id', listingId)
+      // Sonra listing'i sil
+      const { error } = await supabase.from('listings').delete().eq('id', listingId).eq('user_id', user.id)
+      if (error) throw error
+
+      setListings(prev => prev.filter(l => l.id !== listingId))
+      if (selectedListing?.id === listingId) {
+        setSelectedListing(null)
+        setActiveTab(0)
+      }
+      setDeleteConfirm(null)
+    } catch (err) {
+      console.error('Silme hatası:', err)
+      alert('İlan silinirken bir hata oluştu.')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   // Loading
   if (loading) {
     return (
@@ -124,11 +152,17 @@ export default function GecmisPage() {
 
     return (
       <div>
-        {/* Back button */}
-        <button onClick={() => { setSelectedListing(null); setActiveTab(0) }}
-          className="flex items-center gap-2 text-base text-gray-500 hover:text-brand-600 mb-5 transition font-medium">
-          ← Listeye Dön
-        </button>
+        {/* Back button + Delete */}
+        <div className="flex justify-between items-center mb-5">
+          <button onClick={() => { setSelectedListing(null); setActiveTab(0) }}
+            className="flex items-center gap-2 text-base text-gray-500 hover:text-brand-600 transition font-medium">
+            ← Listeye Dön
+          </button>
+          <button onClick={() => setDeleteConfirm(selectedListing.id)}
+            className="flex items-center gap-1.5 text-sm font-semibold text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-xl transition">
+            🗑️ İlanı Sil
+          </button>
+        </div>
 
         {/* Product Info Card */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-md mb-5">
@@ -377,12 +411,42 @@ export default function GecmisPage() {
                         {avgScore}
                       </span>
                     )}
+                    <button onClick={(e) => { e.stopPropagation(); setDeleteConfirm(listing.id) }}
+                      className="text-gray-300 hover:text-red-500 transition text-base ml-1 p-1 rounded-lg hover:bg-red-50 opacity-0 group-hover:opacity-100"
+                      title="İlanı Sil">
+                      🗑️
+                    </button>
                     <span className="text-gray-300 group-hover:text-brand-500 transition text-xl ml-1">→</span>
                   </div>
                 </div>
               </div>
             )
           })}
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => !deleting && setDeleteConfirm(null)}>
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="text-center">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center text-2xl">🗑️</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">İlanı Sil</h3>
+              <p className="text-sm text-gray-500 mb-6">Bu ilanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</p>
+              <div className="flex gap-3">
+                <button onClick={() => setDeleteConfirm(null)} disabled={deleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition text-sm disabled:opacity-50">
+                  İptal
+                </button>
+                <button onClick={() => deleteListing(deleteConfirm)} disabled={deleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition text-sm disabled:opacity-50 flex items-center justify-center gap-2">
+                  {deleting ? (
+                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Siliniyor...</>
+                  ) : 'Evet, Sil'}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
