@@ -181,32 +181,47 @@ function calculateSeoScore(result, platform) {
   }
 
   // Description length (20 pts)
+  const descTips = {
+    tr: { ok: (w) => `Açıklama uzunluğu ideal (${w} kelime)`, bad: (w) => `Açıklama ${w} kelime (ideal: 80-400)` },
+    en: { ok: (w) => `Description length is ideal (${w} words)`, bad: (w) => `Description is ${w} words (ideal: 80-400)` },
+  }
+  const dt = descTips[lang] || descTips.en
   const wordCount = result.description.split(/\s+/).length
   if (wordCount >= 80 && wordCount <= 400) {
     score += 20
-    tips.push({ ok: true, text: `Açıklama uzunluğu ideal (${wordCount} kelime)` })
+    tips.push({ ok: true, text: dt.ok(wordCount) })
   } else {
     score += 10
-    tips.push({ ok: false, text: `Açıklama ${wordCount} kelime (ideal: 80-400)` })
+    tips.push({ ok: false, text: dt.bad(wordCount) })
   }
 
   // Title contains brand-like capitalized word (15 pts)
+  const brandTips = {
+    tr: { ok: 'Marka adı başlıkta mevcut', bad: 'Başlığa marka adı eklenmeli' },
+    en: { ok: 'Brand name present in title', bad: 'Brand name should be added to title' },
+  }
+  const bt = brandTips[lang] || brandTips.en
   if (/[A-ZÇĞİÖŞÜ]{2,}/.test(result.title) || result.title.split(' ').some(w => w[0] === w[0]?.toUpperCase())) {
     score += 15
-    tips.push({ ok: true, text: 'Marka adı başlıkta mevcut' })
+    tips.push({ ok: true, text: bt.ok })
   } else {
     score += 5
-    tips.push({ ok: false, text: 'Başlığa marka adı eklenmeli' })
+    tips.push({ ok: false, text: bt.bad })
   }
 
   // Bonus for quality (up to 25 pts)
+  const qualityTips = {
+    tr: { ok: 'Bullet point\'ler yeterince detaylı', bad: 'Bullet point\'ler daha detaylı yazılabilir' },
+    en: { ok: 'Bullet points are sufficiently detailed', bad: 'Bullet points could be more detailed' },
+  }
+  const qt = qualityTips[lang] || qualityTips.en
   const avgBulletLen = result.bullets.reduce((a, b) => a + b.length, 0) / result.bullets.length
   if (avgBulletLen > 40) {
     score += 15
-    tips.push({ ok: true, text: 'Bullet point\'ler yeterince detaylı' })
+    tips.push({ ok: true, text: qt.ok })
   } else {
     score += 5
-    tips.push({ ok: false, text: 'Bullet point\'ler daha detaylı yazılabilir' })
+    tips.push({ ok: false, text: qt.bad })
   }
 
   // Cap at 100
@@ -222,11 +237,14 @@ function calculateSeoScore(result, platform) {
 export async function POST(request) {
   try {
     const body = await request.json()
-    const { name, brand, category, features, keywords, platforms } = body
+    const { name, brand, category, features, keywords, platforms, resultLanguage } = body
 
     if (!name || !features || !platforms?.length) {
       return Response.json({ error: 'Ürün adı, özellikleri ve platform seçimi zorunludur.' }, { status: 400 })
     }
+
+    // Kullanıcının seçtiği sonuç dili (varsa platform dilini override eder)
+    const userLang = resultLanguage || null
 
     // Kota kontrolü - kullanıcının listing hakkı var mı?
     let currentUser = null
@@ -281,12 +299,14 @@ export async function POST(request) {
       const platConfig = platformRules[platform]
       if (!platConfig) continue
 
-      const platformLang = platConfig.lang || 'en'
+      // Kullanıcı dil seçtiyse onu kullan, yoksa platformun varsayılan dilini kullan
+      const platformLang = userLang || platConfig.lang || 'en'
       const langInstruction = langInstructions[platformLang] || langInstructions.en
 
       const prompt = `You are an expert e-commerce listing optimization specialist for ${platConfig.name}. Create an optimized listing from the following product information.
 
-${langInstruction}
+CRITICAL: ${langInstruction}
+ALL output (title, bullets, description) MUST be written in the language specified above. Do NOT use any other language.
 
 Product Name: ${name}
 ${brand ? `Brand: ${brand}` : ''}
@@ -304,6 +324,7 @@ General Rules:
 - Description should be 100-300 words, SEO-optimized, professional
 - Naturally integrate keywords into the title and description
 - Write in a way that facilitates the customer's purchase decision
+- Adapt your writing style to the specific platform's audience and expectations
 
 RESPOND ONLY in the following JSON format, nothing else:
 {"title": "...", "bullets": ["...", "...", "...", "...", "..."], "description": "..."}`
