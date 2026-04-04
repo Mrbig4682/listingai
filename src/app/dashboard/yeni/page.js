@@ -106,12 +106,30 @@ function ResultCard({ platform, result, t }) {
 }
 
 export default function YeniListingPage() {
-  const { t, platforms } = useI18n()
+  const { t, locale, platforms } = useI18n()
   const categories = t?.categories || []
+
+  const marketplaceGroups = {
+    tr: { label: '🇹🇷 Türkiye', platforms: ['trendyol', 'hepsiburada', 'n11'] },
+    us: { label: '🇺🇸 ABD / Global', platforms: ['amazon', 'ebay', 'etsy', 'shopify', 'walmart'] },
+    eu: { label: '🇪🇺 Avrupa', platforms: ['otto', 'cdiscount'] },
+    latam: { label: '🌎 Latin Amerika', platforms: ['mercadolibre'] },
+  }
+
+  const languageOptions = [
+    { code: 'tr', label: '🇹🇷 Türkçe', flag: '🇹🇷' },
+    { code: 'en', label: '🇺🇸 English', flag: '🇺🇸' },
+    { code: 'de', label: '🇩🇪 Deutsch', flag: '🇩🇪' },
+    { code: 'fr', label: '🇫🇷 Français', flag: '🇫🇷' },
+    { code: 'es', label: '🇪🇸 Español', flag: '🇪🇸' },
+    { code: 'pt', label: '🇧🇷 Português', flag: '🇧🇷' },
+  ]
 
   const [form, setForm] = useState({
     name: '', brand: '', category: categories[0] || '',
-    features: '', keywords: '', platforms: [platforms[0]?.id || 'trendyol']
+    features: '', keywords: '', platforms: [platforms[0]?.id || 'trendyol'],
+    resultLanguage: locale || 'tr',
+    marketplace: 'tr'
   })
   const [loading, setLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
@@ -120,11 +138,19 @@ export default function YeniListingPage() {
   const [error, setError] = useState('')
   const [quotaExceeded, setQuotaExceeded] = useState(false)
 
-  // Update platforms when they change (on locale change)
+  // Update default marketplace based on locale
   useEffect(() => {
-    setForm(prev => ({ ...prev, platforms: [platforms[0]?.id || 'trendyol'] }))
-    setActiveTab(platforms[0]?.id || 'trendyol')
-  }, [platforms])
+    const marketMap = { tr: 'tr', en: 'us', de: 'eu', fr: 'eu', es: 'latam', pt: 'latam' }
+    const defaultMarket = marketMap[locale] || 'tr'
+    const defaultPlatforms = marketplaceGroups[defaultMarket]?.platforms || ['trendyol']
+    setForm(prev => ({
+      ...prev,
+      marketplace: defaultMarket,
+      platforms: [defaultPlatforms[0]],
+      resultLanguage: locale || 'tr'
+    }))
+    setActiveTab(defaultPlatforms[0])
+  }, [locale])
 
   const togglePlatform = (id) => {
     setForm(prev => ({
@@ -158,7 +184,10 @@ export default function YeniListingPage() {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers,
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          resultLanguage: form.resultLanguage || locale || 'tr',
+        }),
       })
 
       const data = await res.json()
@@ -183,24 +212,69 @@ export default function YeniListingPage() {
   // Loading screen
   if (loading) {
     const steps = [
-      t?.newListing?.analyzing || 'Ürün özellikleri analiz ediliyor...',
-      t?.newListing?.seoKeywords || 'SEO anahtar kelimeleri belirleniyor...',
-      t?.newListing?.formatting || 'Platform formatları uygulanıyor...',
-      t?.newListing?.generating || 'Başlık ve açıklamalar üretiliyor...',
-      t?.newListing?.scoring || 'SEO skoru hesaplanıyor...'
+      { icon: '🔍', text: t?.newListing?.analyzing || 'Ürün özellikleri analiz ediliyor...', detail: t?.newListing?.analyzingDetail || 'Ürününüzün temel özelliklerini ve benzersiz satış noktalarını belirliyorum.' },
+      { icon: '🎯', text: t?.newListing?.seoKeywords || 'SEO anahtar kelimeleri belirleniyor...', detail: t?.newListing?.seoDetail || 'Platformdaki en çok aranan kelimeleri listing\'inize entegre ediyorum.' },
+      { icon: '⚙️', text: t?.newListing?.formatting || 'Platform formatları uygulanıyor...', detail: t?.newListing?.formattingDetail || 'Her platformun kurallarına uygun başlık ve açıklama formatı hazırlıyorum.' },
+      { icon: '✍️', text: t?.newListing?.generating || 'Başlık ve açıklamalar üretiliyor...', detail: t?.newListing?.generatingDetail || 'Satış odaklı, ikna edici ve SEO uyumlu içerikler oluşturuyorum.' },
+      { icon: '📊', text: t?.newListing?.scoring || 'SEO skoru hesaplanıyor...', detail: t?.newListing?.scoringDetail || 'Listing\'inizin arama sıralamasındaki performansını değerlendiriyorum.' },
     ]
+    const tips = [
+      t?.newListing?.tip1 || '💡 Detaylı ürün özellikleri, SEO skorunu %40\'a kadar artırabilir.',
+      t?.newListing?.tip2 || '💡 Doğru anahtar kelimeler satışları 3 kata kadar artırabilir.',
+      t?.newListing?.tip3 || '💡 Profesyonel listing\'ler, dönüşüm oranını %60 artırır.',
+      t?.newListing?.tip4 || '💡 Her platformun kendine özel algoritması ve kuralları vardır.',
+      t?.newListing?.tip5 || '💡 AI ile optimize edilmiş listing\'ler organik trafiği artırır.',
+    ]
+    const progress = ((loadingStep + 1) / steps.length) * 100
+    const tipIndex = Math.floor(Date.now() / 4000) % tips.length
+
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] gap-6">
-        <div className="w-14 h-14 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin-slow" />
-        <div className="space-y-3 min-w-[280px]">
+      <div className="flex flex-col items-center justify-center min-h-[500px] gap-6 px-4">
+        {/* AI Working Animation */}
+        <div className="relative">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center shadow-lg shadow-brand-500/30 animate-pulse">
+            <span className="text-3xl">{steps[loadingStep]?.icon || '🤖'}</span>
+          </div>
+          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white animate-ping" />
+          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white" />
+        </div>
+
+        {/* Current Step Title */}
+        <div className="text-center max-w-sm">
+          <h3 className="text-lg font-bold text-gray-800 mb-1">{steps[loadingStep]?.text}</h3>
+          <p className="text-sm text-gray-500 leading-relaxed">{steps[loadingStep]?.detail}</p>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="w-full max-w-xs">
+          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-brand-500 to-purple-500 rounded-full transition-all duration-700 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="flex justify-between mt-1.5">
+            <span className="text-xs text-gray-400">{t?.newListing?.step || 'Adım'} {loadingStep + 1}/{steps.length}</span>
+            <span className="text-xs text-brand-500 font-semibold">{Math.round(progress)}%</span>
+          </div>
+        </div>
+
+        {/* Step Indicators */}
+        <div className="flex gap-2 mt-2">
           {steps.map((s, i) => (
-            <div key={i} className={`flex items-center gap-3 transition-opacity ${i <= loadingStep ? 'opacity-100' : 'opacity-20'}`}>
-              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${i < loadingStep ? 'bg-green-500' : i === loadingStep ? 'bg-brand-500' : 'bg-gray-300'}`}>
-                {i < loadingStep ? '✓' : i + 1}
-              </span>
-              <span className="text-sm">{s}</span>
+            <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-500 ${
+              i < loadingStep ? 'bg-green-500 text-white scale-90' :
+              i === loadingStep ? 'bg-brand-500 text-white scale-110 shadow-lg shadow-brand-500/40' :
+              'bg-gray-100 text-gray-400 scale-90'
+            }`}>
+              {i < loadingStep ? '✓' : s.icon}
             </div>
           ))}
+        </div>
+
+        {/* Tips Section */}
+        <div className="mt-4 bg-gradient-to-r from-brand-50 to-purple-50 border border-brand-100 rounded-2xl px-5 py-3.5 max-w-sm w-full">
+          <p className="text-xs text-brand-700 leading-relaxed text-center font-medium">{tips[tipIndex]}</p>
         </div>
       </div>
     )
@@ -296,18 +370,56 @@ export default function YeniListingPage() {
             value={form.keywords} onChange={e => setForm({ ...form, keywords: e.target.value })} />
         </div>
 
+        {/* Sonuç Dili Seçimi */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.newListing?.platformSelect || 'Platform Seçimi'} *</label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-1">
-            {platforms.map(p => (
-              <button key={p.id} onClick={() => togglePlatform(p.id)} type="button"
-                className={`flex items-center gap-2.5 py-2.5 px-3.5 rounded-xl text-sm font-medium border-2 transition text-left ${form.platforms.includes(p.id) ? 'border-brand-500 bg-brand-50 text-brand-600' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}>
-                <span className={`w-4 h-4 rounded flex-shrink-0 border-2 flex items-center justify-center text-[10px] ${form.platforms.includes(p.id) ? 'border-brand-500 bg-brand-500 text-white' : 'border-gray-300'}`}>
-                  {form.platforms.includes(p.id) && '✓'}
-                </span>
-                {p.name}
+          <label className="block text-xs font-semibold text-gray-700 mb-1">🌍 {t?.newListing?.resultLanguage || 'Sonuç Dili'}</label>
+          <p className="text-xs text-gray-400 mb-2">{t?.newListing?.resultLanguageDesc || 'Listing içeriği hangi dilde oluşturulsun?'}</p>
+          <div className="flex flex-wrap gap-2">
+            {languageOptions.map(lang => (
+              <button key={lang.code} onClick={() => setForm({ ...form, resultLanguage: lang.code })} type="button"
+                className={`py-2 px-3.5 rounded-xl text-sm font-medium border-2 transition ${form.resultLanguage === lang.code ? 'border-brand-500 bg-brand-50 text-brand-600' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}>
+                {lang.label}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Pazar Yeri Seçimi */}
+        <div>
+          <label className="block text-xs font-semibold text-gray-700 mb-1">🏪 {t?.newListing?.marketplace || 'Pazar Yeri'} *</label>
+          <p className="text-xs text-gray-400 mb-2">{t?.newListing?.marketplaceDesc || 'Hangi pazarda satış yapacaksınız?'}</p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {Object.entries(marketplaceGroups).map(([key, group]) => (
+              <button key={key} onClick={() => {
+                const firstPlatform = group.platforms[0]
+                setForm({ ...form, marketplace: key, platforms: [firstPlatform] })
+                setActiveTab(firstPlatform)
+              }} type="button"
+                className={`py-2 px-4 rounded-xl text-sm font-medium border-2 transition ${form.marketplace === key ? 'border-brand-500 bg-brand-50 text-brand-600' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}>
+                {group.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Platform Seçimi (seçilen pazara göre filtrelenmiş) */}
+        <div>
+          <label className="block text-xs font-semibold text-gray-700 mb-1">📦 {t?.newListing?.platformSelect || 'Platform Seçimi'} *</label>
+          <p className="text-xs text-gray-400 mb-2">{t?.newListing?.platformDesc || 'Birden fazla platform seçebilirsiniz. Her platform için ayrı optimize edilmiş listing oluşturulur.'}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-1">
+            {(marketplaceGroups[form.marketplace]?.platforms || []).map(pid => {
+              const plat = platforms.find(p => p.id === pid)
+              if (!plat) return null
+              return (
+                <button key={pid} onClick={() => togglePlatform(pid)} type="button"
+                  className={`flex items-center gap-2.5 py-2.5 px-3.5 rounded-xl text-sm font-medium border-2 transition text-left ${form.platforms.includes(pid) ? 'border-brand-500 bg-brand-50 text-brand-600' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}>
+                  <span className={`w-4 h-4 rounded flex-shrink-0 border-2 flex items-center justify-center text-[10px] ${form.platforms.includes(pid) ? 'border-brand-500 bg-brand-500 text-white' : 'border-gray-300'}`}>
+                    {form.platforms.includes(pid) && '✓'}
+                  </span>
+                  {plat.name}
+                </button>
+              )
+            })}
           </div>
         </div>
       </div>
