@@ -245,7 +245,7 @@ export default function OdemePage() {
                 <div className="text-right">
                   <p className="text-white/80 text-sm">{currentPlan === 'starter' ? 'Tek Seferlik' : 'Aylik'}</p>
                   <p className="text-5xl font-bold text-white">
-                    \u20ba{activePlan?.price || '0'}
+                    ₺{activePlan?.price || '0'}
                   </p>
                 </div>
               </div>
@@ -313,7 +313,7 @@ export default function OdemePage() {
         <div className="text-center mb-16">
           <div className="inline-block mb-4">
             <div className="px-4 py-2 bg-white border border-brand-200 rounded-full text-sm font-semibold text-brand-600">
-              \u2728 Sadece \u20ba1'den baslayan fiyatlar
+              ✨ Sadece ₺1'den başlayan fiyatlar
             </div>
           </div>
           <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-brand-600 to-purple-600 bg-clip-text text-transparent mb-4 leading-tight">
@@ -378,7 +378,7 @@ export default function OdemePage() {
                 <div className="px-8 pt-4 pb-6 border-b border-gray-100">
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-bold bg-gradient-to-r from-brand-600 to-purple-600 bg-clip-text text-transparent">
-                      \u20ba{plan.price}
+                      ₺{plan.price}
                     </span>
                     <span className="text-gray-500 font-semibold">
                       {key === 'starter' ? '' : '/ay'}
@@ -429,7 +429,7 @@ export default function OdemePage() {
                       </>
                     ) : (
                       <>
-                        <span>{key === 'starter' ? 'Hemen Dene \u2014 \u20ba1' : `\u20ba${plan.price}/ay \u2014 Basla`}</span>
+                        <span>{key === 'starter' ? 'Hemen Dene — ₺1' : `₺${plan.price}/ay — Başla`}</span>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>
@@ -445,7 +445,7 @@ export default function OdemePage() {
                   <p className="text-xs text-gray-600">
                     {key === 'starter'
                       ? 'Kredi karti ile guvenli odeme'
-                      : <><strong>30 Gun</strong> \u2014 Para iade garantisi</>
+                      : <><strong>30 Gun</strong> — Para iade garantisi</>
                     }
                   </p>
                 </div>
