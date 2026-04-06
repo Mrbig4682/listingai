@@ -55,22 +55,15 @@ function LoadingSkeleton() {
       <div className="max-w-2xl w-full">
         <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
           <div className="space-y-6">
-            {/* Skeleton Circle */}
             <div className="flex justify-center">
               <div className="w-24 h-24 bg-gray-200 rounded-full animate-pulse" />
             </div>
-
-            {/* Skeleton Text */}
             <div className="space-y-3">
               <div className="h-8 bg-gray-200 rounded-lg w-3/4 mx-auto animate-pulse" />
               <div className="h-6 bg-gray-200 rounded-lg w-full animate-pulse" />
               <div className="h-6 bg-gray-200 rounded-lg w-5/6 mx-auto animate-pulse" />
             </div>
-
-            {/* Skeleton Card */}
             <div className="h-32 bg-gray-200 rounded-2xl animate-pulse" />
-
-            {/* Skeleton Button */}
             <div className="h-12 bg-gray-200 rounded-xl w-2/3 mx-auto animate-pulse" />
           </div>
         </div>
@@ -81,37 +74,36 @@ function LoadingSkeleton() {
 
 // Success Screen Component
 function SuccessScreen({ planName, message }) {
-  const planDuration = message === 'pro' ? '30 gün' : '30 gün'
-  const planFeatures = message === 'pro'
-    ? ['100 İlan/Ay', 'Canlı Destek', 'Analitik Paneli']
-    : ['Sınırsız İlan', 'Öncelikli Destek', 'Gelişmiş Analitik']
+  const planConfig = {
+    starter: { duration: 'Tek Seferlik', features: ['2 Ilan Optimizasyonu', 'SEO Baslik & Aciklama', '10+ Platform Destegi'] },
+    pro: { duration: '30 gun', features: ['100 Ilan/Ay', 'Toplu Ilan Uretimi', 'Oncelikli Destek'] },
+    business: { duration: '30 gun', features: ['Sinirsiz Ilan', '7/24 VIP Destek', 'AI E-Ticaret Asistani'] },
+  }
+  const config = planConfig[message] || planConfig.pro
+  const planDuration = config.duration
+  const planFeatures = config.features
 
   return (
     <>
       <Confetti />
       <div className="min-h-screen bg-gradient-to-br from-[#faf8ff] via-white to-[#f5f0ff] flex items-center justify-center px-4 py-12">
         <div className="max-w-2xl w-full">
-          {/* Decorative Gradient Elements */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-200 to-purple-50 rounded-full blur-3xl opacity-40 -z-10" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-100 to-pink-50 rounded-full blur-3xl opacity-40 -z-10" />
 
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-            {/* Header with gradient */}
             <div className="bg-gradient-to-r from-[#7c3aed] to-[#a855f7] p-8 md:p-12 text-center">
-              {/* Success Icon with animation */}
               <div className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-white bg-opacity-20 rounded-full mb-6 animate-bounce">
                 <svg className="w-10 h-10 md:w-12 md:h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
 
-              <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-3">Ödeme Başarılı!</h1>
-              <p className="text-purple-100 text-lg md:text-xl">Tebrikler! {planName} planınız aktive edildi.</p>
+              <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-3">Odeme Basarili!</h1>
+              <p className="text-purple-100 text-lg md:text-xl">Tebrikler! {planName} planiniz aktive edildi.</p>
             </div>
 
-            {/* Content */}
             <div className="p-8 md:p-12">
-              {/* Plan Activation Card */}
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 md:p-8 mb-8">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
@@ -126,13 +118,12 @@ function SuccessScreen({ planName, message }) {
                     <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1">Plan Aktif</h3>
                     <p className="text-gray-600 font-medium">{planName} Paketi</p>
                     <p className="text-sm text-gray-500 mt-2">Aktivasyon: Hemen</p>
-                    <p className="text-sm text-gray-500">Süre: {planDuration}</p>
+                    <p className="text-sm text-gray-500">Sure: {planDuration}</p>
                   </div>
                 </div>
 
-                {/* Plan Features */}
                 <div className="mt-6 pt-6 border-t border-green-200">
-                  <p className="text-sm font-semibold text-gray-700 mb-3">Paket Özellikleri:</p>
+                  <p className="text-sm font-semibold text-gray-700 mb-3">Paket Ozellikleri:</p>
                   <ul className="space-y-2">
                     {planFeatures.map((feature, idx) => (
                       <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
@@ -148,19 +139,19 @@ function SuccessScreen({ planName, message }) {
 
               {/* Trust Badges */}
               <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-                <p className="text-xs md:text-sm font-semibold text-gray-600 text-center mb-4">GÜVENDİ ÖDEME SİSTEMİ</p>
+                <p className="text-xs md:text-sm font-semibold text-gray-600 text-center mb-4">GUVENLI ODEME SISTEMI</p>
                 <div className="flex justify-center items-center gap-4 flex-wrap">
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-gray-200">
                     <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-xs font-medium text-gray-700">SSL Güvenli</span>
+                    <span className="text-xs font-medium text-gray-700">SSL Guvenli</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-gray-200">
                     <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 3.062v6.372a3.066 3.066 0 01-2.812 3.062 3.066 3.066 0 01-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 01-1.745-.723 3.066 3.066 0 01-2.812-3.062V6.517a3.066 3.066 0 012.812-3.062z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-xs font-medium text-gray-700">İyzico Güvenli</span>
+                    <span className="text-xs font-medium text-gray-700">Shopier Guvenli</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-gray-200">
                     <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -175,18 +166,17 @@ function SuccessScreen({ planName, message }) {
               <div className="space-y-3">
                 <Link href="/dashboard/yeni"
                   className="block w-full px-6 py-4 bg-gradient-to-r from-[#7c3aed] to-[#a855f7] text-white font-bold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 text-center text-lg">
-                  İlan Oluşturmaya Başla
+                  Ilan Olusturmaya Basla
                 </Link>
                 <Link href="/dashboard"
                   className="block w-full px-6 py-4 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200 text-center">
-                  Panele Dön
+                  Panele Don
                 </Link>
               </div>
 
-              {/* Additional Info */}
               <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
                 <p className="text-sm text-blue-900">
-                  <span className="font-semibold">Bilgi:</span> Ödeme makbuzunuz e-posta adresinize gönderilmiştir. Herhangi bir sorun yaşanırsa destek ekibimizle iletişime geçebilirsiniz.
+                  <span className="font-semibold">Bilgi:</span> Odeme makbuzunuz e-posta adresinize gonderilmistir. Herhangi bir sorun yasanirsa destek ekibimizle iletisime gecebilirsiniz.
                 </p>
               </div>
             </div>
@@ -200,20 +190,18 @@ function SuccessScreen({ planName, message }) {
 // Error/Failed Screen Component
 function ErrorScreen({ status, message }) {
   const isError = status === 'error'
-  const title = isError ? 'Bir Hata Oluştu' : 'Ödeme Başarısız'
+  const title = isError ? 'Bir Hata Olustu' : 'Odeme Basarisiz'
   const description = isError
-    ? 'İşlem sırasında beklenmeyen bir hata meydana geldi. Lütfen daha sonra tekrar deneyin.'
-    : 'Ödeme işlemi tamamlanamadı. Kartınızı kontrol ederek tekrar deneyin.'
+    ? 'Islem sirasinda beklenmeyen bir hata meydana geldi. Lutfen daha sonra tekrar deneyin.'
+    : 'Odeme islemi tamamlanamadi. Kartinizi kontrol ederek tekrar deneyin.'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#faf8ff] via-white to-[#f5f0ff] flex items-center justify-center px-4 py-12">
       <div className="max-w-2xl w-full">
-        {/* Decorative Elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-red-100 to-pink-50 rounded-full blur-3xl opacity-30 -z-10" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-orange-100 to-yellow-50 rounded-full blur-3xl opacity-30 -z-10" />
 
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Header with gradient */}
           <div className="bg-gradient-to-r from-red-500 to-orange-500 p-8 md:p-12 text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-white bg-opacity-20 rounded-full mb-6 animate-pulse">
               <svg className="w-10 h-10 md:w-12 md:h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -225,9 +213,7 @@ function ErrorScreen({ status, message }) {
             <p className="text-red-100 text-lg md:text-xl">{description}</p>
           </div>
 
-          {/* Content */}
           <div className="p-8 md:p-12">
-            {/* Error Message Card */}
             {message && (
               <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-8">
                 <div className="flex gap-4">
@@ -237,63 +223,50 @@ function ErrorScreen({ status, message }) {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-red-900 mb-1">Hata Detayları</h3>
+                    <h3 className="font-semibold text-red-900 mb-1">Hata Detaylari</h3>
                     <p className="text-red-800 text-sm">{decodeURIComponent(message)}</p>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Troubleshooting Tips */}
             <div className="bg-amber-50 rounded-2xl p-6 md:p-8 mb-8 border border-amber-200">
               <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
-                İpuçları
+                Ipuclari
               </h3>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
-                  <span className="text-amber-600 font-bold mt-0.5">•</span>
-                  <span>Kartınızın geçerlilik tarihini kontrol edin</span>
+                  <span className="text-amber-600 font-bold mt-0.5">\u2022</span>
+                  <span>Kartinizin gecerlilik tarihini kontrol edin</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-amber-600 font-bold mt-0.5">•</span>
-                  <span>CVV kodunun doğru olduğundan emin olun</span>
+                  <span className="text-amber-600 font-bold mt-0.5">\u2022</span>
+                  <span>CVV kodunun dogru oldugundan emin olun</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-amber-600 font-bold mt-0.5">•</span>
-                  <span>Bankanızın 3D Secure onayını kontrol edin</span>
+                  <span className="text-amber-600 font-bold mt-0.5">\u2022</span>
+                  <span>Bankanizin 3D Secure onayini kontrol edin</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-amber-600 font-bold mt-0.5">•</span>
-                  <span>Yeterli bakiyeniz olduğundan emin olun</span>
+                  <span className="text-amber-600 font-bold mt-0.5">\u2022</span>
+                  <span>Yeterli bakiyeniz oldugundan emin olun</span>
                 </li>
               </ul>
             </div>
 
             {/* Support Contact */}
             <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 md:p-8 mb-8 border border-purple-200">
-              <h3 className="font-bold text-gray-900 mb-4">Yardıma mı İhtiyacınız var?</h3>
+              <h3 className="font-bold text-gray-900 mb-4">Yardima mi Ihtiyaciniz var?</h3>
               <div className="space-y-3">
-                <div className="flex items-center gap-3 text-gray-700">
-                  <svg className="w-5 h-5 text-[#7c3aed] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773c.26.559.656 1.236 1.24 1.82.584.584 1.261.98 1.82 1.24l.773-1.548a1 1 0 011.06-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 4 14.18 4 9.5S7.82 2 12 2h2a1 1 0 011 1v2.153a1 1 0 01-.836.986l-4.435.74a1 1 0 01-1.06-.54l-.773-1.548c-.559.26-1.236.656-1.82 1.24-.584.584-.98 1.261-1.24 1.82l1.548.773a1 1 0 01.54 1.06l-.74 4.435a1 1 0 01-.986.836H3a1 1 0 01-1-1V3z" />
-                  </svg>
-                  <span className="text-sm font-medium">Destek: +90 (212) 555-0123</span>
-                </div>
                 <div className="flex items-center gap-3 text-gray-700">
                   <svg className="w-5 h-5 text-[#7c3aed] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                   </svg>
-                  <span className="text-sm font-medium">E-posta: destek@listingai.com</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-700">
-                  <svg className="w-5 h-5 text-[#7c3aed] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm font-medium">Canlı Chat: Saat 09:00 - 18:00 (Pzt-Cum)</span>
+                  <span className="text-sm font-medium">E-posta: listingai.official@gmail.com</span>
                 </div>
               </div>
             </div>
@@ -306,7 +279,7 @@ function ErrorScreen({ status, message }) {
               </Link>
               <Link href="/dashboard"
                 className="block w-full px-6 py-4 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200 text-center">
-                Panele Dön
+                Panele Don
               </Link>
             </div>
           </div>
@@ -323,7 +296,8 @@ function SonucContent() {
   const message = searchParams.get('message')
 
   if (status === 'success') {
-    const planName = message === 'pro' ? 'Pro' : 'Business'
+    const planNames = { starter: 'Starter', pro: 'Pro', business: 'Business' }
+    const planName = planNames[message] || message || 'Pro'
     return <SuccessScreen planName={planName} message={message} />
   }
 
