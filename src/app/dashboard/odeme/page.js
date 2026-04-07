@@ -163,7 +163,7 @@ export default function OdemePage() {
         .eq('id', user.id)
         .single()
 
-      const res = await fetch('/api/stripe/checkout', {
+      const res = await fetch('/api/iyzico/initialize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -180,8 +180,27 @@ export default function OdemePage() {
         throw new Error(data.error)
       }
 
-      if (data.url) {
-        window.location.href = data.url
+      // iyzico checkout form content'i göster
+      if (data.checkoutFormContent) {
+        if (formContainerRef.current) {
+          formContainerRef.current.style.display = 'block'
+          formContainerRef.current.innerHTML = data.checkoutFormContent
+
+          // Script'leri çalıştır
+          const scripts = formContainerRef.current.querySelectorAll('script')
+          scripts.forEach((oldScript) => {
+            const newScript = document.createElement('script')
+            if (oldScript.src) {
+              newScript.src = oldScript.src
+            } else {
+              newScript.textContent = oldScript.textContent
+            }
+            oldScript.parentNode.replaceChild(newScript, oldScript)
+          })
+
+          // Checkout form'a scroll
+          formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
       }
     } catch (err) {
       setError(err.message || 'An error occurred.')
@@ -275,7 +294,7 @@ export default function OdemePage() {
   // Pricing screen
   return (
     <div className="pb-10">
-      <div ref={formContainerRef} style={{ display: 'none' }} />
+      <div ref={formContainerRef} id="iyzico-checkout-form" style={{ display: 'none' }} className="max-w-2xl mx-auto mb-8" />
 
       <div className="max-w-5xl mx-auto">
         {/* Header */}
@@ -482,7 +501,7 @@ export default function OdemePage() {
         <div className="mt-10 text-center">
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">{p.accepted}</p>
           <div className="flex flex-wrap justify-center gap-2">
-            {['Visa', 'Mastercard', 'American Express', 'PayPal'].map((method) => (
+            {['Visa', 'Mastercard', 'American Express', 'Troy'].map((method) => (
               <div key={method} className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-500">
                 {method}
               </div>

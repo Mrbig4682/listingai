@@ -8,7 +8,6 @@ function getSupabase() {
   )
 }
 
-// iyzico V2 auth - HMAC-SHA256 tabanlı
 function generateAuthHeaderV2(apiKey, secretKey, uri, body, randomString) {
   const signature = crypto
     .createHmac('sha256', secretKey)
@@ -34,13 +33,14 @@ function formatPrice(price) {
 }
 
 const PLANS = {
-  pro: { name: 'Pro Plan', price: '299.00' },
-  business: { name: 'Business Plan', price: '799.00' },
+  starter: { name: 'ListingAI Starter', price: '1.00', limit: 2, duration: 0 },
+  pro: { name: 'ListingAI Pro', price: '19.00', limit: 100, duration: 30 },
+  business: { name: 'ListingAI Business', price: '49.00', limit: 999999, duration: 30 },
 }
 
 export async function POST(request) {
   try {
-    const { plan, userId, userEmail } = await request.json()
+    const { plan, userId, userEmail, userName } = await request.json()
 
     if (!plan || !PLANS[plan]) {
       return Response.json({ error: 'Geçersiz plan' }, { status: 400 })
@@ -59,40 +59,47 @@ export async function POST(request) {
     }
 
     const selectedPlan = PLANS[plan]
-    const basketId = `LISTINGAI_${plan.toUpperCase()}_${Date.now()}`
+    // basketId format: userId__plan__timestamp — callback'te parse edilecek
+    const basketId = `${userId}__${plan}__${Date.now()}`
     const conversationId = `${userId.substring(0, 8)}_${Date.now()}`
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.listingai.store'
-    const buyerName = userEmail.split('@')[0]
+
+    const nameParts = (userName || userEmail.split('@')[0] || 'Musteri').split(' ')
+    const buyerName = nameParts[0] || 'Musteri'
+    const buyerSurname = nameParts.slice(1).join(' ') || '.'
 
     const requestBody = {
       locale: 'tr',
       conversationId: conversationId,
       price: formatPrice(selectedPlan.price),
+      paidPrice: formatPrice(selectedPlan.price),
       basketId: basketId,
       paymentGroup: 'PRODUCT',
+      currency: 'USD',
+      enabledInstallments: [1],
       buyer: {
         id: userId,
         name: buyerName,
-        surname: 'User',
+        surname: buyerSurname,
         gsmNumber: '+905350000000',
         email: userEmail,
         identityNumber: '11111111111',
-        registrationAddress: 'Istanbul Turkey',
+        registrationAddress: 'Digital Product',
         ip: '85.34.78.112',
         city: 'Istanbul',
         country: 'Turkey',
       },
       shippingAddress: {
-        contactName: buyerName + ' User',
+        contactName: `${buyerName} ${buyerSurname}`,
         city: 'Istanbul',
         country: 'Turkey',
-        address: 'Istanbul Turkey',
+        address: 'Digital Product',
       },
       billingAddress: {
-        contactName: buyerName + ' User',
+        contactName: `${buyerName} ${buyerSurname}`,
         city: 'Istanbul',
         country: 'Turkey',
-        address: 'Istanbul Turkey',
+        address: 'Digital Product',
       },
       basketItems: [
         {
@@ -104,20 +111,18 @@ export async function POST(request) {
         },
       ],
       callbackUrl: `${baseUrl}/api/iyzico/callback`,
-      currency: 'TRY',
-      paidPrice: formatPrice(selectedPlan.price),
-      enabledInstallments: [1, 2, 3, 6],
     }
 
     // Supabase'e ödeme kaydı oluştur
     const supabase = getSupabase()
-    await supabase.from('payment_requests').insert({
+    await supabase.from('shopier_payments').insert({
       user_id: userId,
+      user_email: userEmail,
       plan: plan,
       amount: parseFloat(selectedPlan.price),
-      sender_name: userEmail,
-      transfer_note: `iyzico - ${basketId}`,
+      platform_order_id: basketId,
       status: 'pending',
+      created_at: new Date().toISOString(),
     })
 
     // iyzico V2 API çağrısı
@@ -153,6 +158,7 @@ export async function POST(request) {
       console.error('iyzico error:', JSON.stringify(result))
       return Response.json({
         error: result.errorMessage || 'iyzico ödeme başlatılamadı',
+        errorCode: result.errorCode || '',
       }, { status: 400 })
     }
   } catch (error) {
