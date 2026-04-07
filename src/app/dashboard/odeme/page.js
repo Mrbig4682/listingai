@@ -163,7 +163,7 @@ export default function OdemePage() {
         .eq('id', user.id)
         .single()
 
-      const res = await fetch('/api/shopier/initialize', {
+      const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -180,29 +180,8 @@ export default function OdemePage() {
         throw new Error(data.error)
       }
 
-      if (data.formHtml && formContainerRef.current) {
-        formContainerRef.current.innerHTML = data.formHtml
-        const scripts = formContainerRef.current.querySelectorAll('script')
-        scripts.forEach(oldScript => {
-          const newScript = document.createElement('script')
-          newScript.textContent = oldScript.textContent
-          oldScript.parentNode.replaceChild(newScript, oldScript)
-        })
-      } else if (data.formParams) {
-        const form = document.createElement('form')
-        form.method = 'POST'
-        form.action = data.paymentUrl || 'https://www.shopier.com/ShowProduct/api_pay4.php'
-
-        for (const [key, value] of Object.entries(data.formParams)) {
-          const input = document.createElement('input')
-          input.type = 'hidden'
-          input.name = key
-          input.value = value
-          form.appendChild(input)
-        }
-
-        document.body.appendChild(form)
-        form.submit()
+      if (data.url) {
+        window.location.href = data.url
       }
     } catch (err) {
       setError(err.message || 'An error occurred.')
