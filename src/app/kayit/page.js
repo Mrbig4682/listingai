@@ -1,10 +1,10 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function KayitPage() {
+function KayitForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -147,5 +147,17 @@ export default function KayitPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function KayitPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-orange-50 flex items-center justify-center">
+        <div className="animate-pulse text-gray-400">Yükleniyor...</div>
+      </div>
+    }>
+      <KayitForm />
+    </Suspense>
   )
 }
