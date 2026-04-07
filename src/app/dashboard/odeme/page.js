@@ -6,68 +6,71 @@ const PLANS = {
   starter: {
     name: 'Starter',
     price: 1,
-    period: 'tek sefer',
-    description: 'ListingAI\'yı test etmek isteyenler için',
+    currency: '$',
+    period: 'one-time',
+    description: 'Try ListingAI with a quick test drive',
     icon: '🚀',
     features: [
-      '2 ilan optimizasyonu',
-      'AI destekli SEO başlık ve açıklama',
-      '10+ platform desteği',
-      '6 dil desteği',
-      'Anahtar kelime önerisi'
+      '2 listing optimizations',
+      'AI-powered SEO titles & descriptions',
+      '10+ platform support',
+      '6 language support',
+      'Keyword suggestions'
     ]
   },
   pro: {
     name: 'Pro',
-    price: 149,
-    period: '/ay',
-    description: 'Profesyonel e-ticaret satıcıları için ideal',
+    price: 19,
+    currency: '$',
+    period: '/mo',
+    description: 'Ideal for professional e-commerce sellers',
     icon: '⚡',
     features: [
-      'Ayda 100 ilan optimizasyonu',
-      'AI destekli SEO başlık ve açıklama',
-      '10+ platform desteği',
-      '6 dil desteği',
-      'Anahtar kelime önerisi',
-      'Toplu ilan üretimi',
-      'Rakip analizi',
-      'Öncelikli destek'
+      '100 listing optimizations/month',
+      'AI-powered SEO titles & descriptions',
+      '10+ platform support',
+      '6 language support',
+      'Keyword suggestions',
+      'Bulk listing generation',
+      'Competitor analysis',
+      'Priority support'
     ]
   },
   business: {
     name: 'Business',
-    price: 349,
-    period: '/ay',
-    description: 'İşletmeler için sınırsız optimizasyon',
-    badge: 'En Popüler',
+    price: 49,
+    currency: '$',
+    period: '/mo',
+    description: 'Unlimited optimization for businesses',
+    badge: 'Most Popular',
     icon: '👑',
     features: [
-      'Sınırsız ilan optimizasyonu',
-      'AI destekli SEO başlık ve açıklama',
-      '10+ platform desteği',
-      '6 dil desteği',
-      'Anahtar kelime önerisi',
-      'Toplu ilan üretimi',
-      'Rakip analizi',
-      'Marka DNA analizi',
-      'AI e-ticaret asistanı',
-      '7/24 VIP destek'
+      'Unlimited listing optimizations',
+      'AI-powered SEO titles & descriptions',
+      '10+ platform support',
+      '6 language support',
+      'Keyword suggestions',
+      'Bulk listing generation',
+      'Competitor analysis',
+      'Brand DNA analysis',
+      'AI e-commerce assistant',
+      '24/7 VIP support'
     ]
   },
 }
 
 const COMPARISON_FEATURES = [
-  { name: 'Aylık AI İlan', starter: '2', pro: '100', business: 'Sınırsız' },
-  { name: 'Platform Desteği', starter: '10+', pro: '10+', business: '10+' },
-  { name: 'SEO Başlık & Açıklama', starter: '✓', pro: '✓', business: '✓' },
-  { name: 'Çoklu Dil Desteği', starter: '✓', pro: '✓', business: '✓' },
-  { name: 'Anahtar Kelime Önerisi', starter: '✓', pro: '✓', business: '✓' },
-  { name: 'Toplu İlan Üretimi', starter: '✗', pro: '✓', business: '✓' },
-  { name: 'Rakip Analizi', starter: '✗', pro: '✓', business: '✓' },
-  { name: 'A/B Test', starter: '✗', pro: '✓', business: '✓' },
-  { name: 'Marka DNA Analizi', starter: '✗', pro: '✗', business: '✓' },
-  { name: 'AI E-Ticaret Asistanı', starter: '✗', pro: '✗', business: '✓' },
-  { name: '7/24 VIP Destek', starter: '✗', pro: '✗', business: '✓' },
+  { name: 'Monthly AI Listings', starter: '2', pro: '100', business: 'Unlimited' },
+  { name: 'Platform Support', starter: '10+', pro: '10+', business: '10+' },
+  { name: 'SEO Title & Description', starter: '✓', pro: '✓', business: '✓' },
+  { name: 'Multi-Language Support', starter: '✓', pro: '✓', business: '✓' },
+  { name: 'Keyword Suggestions', starter: '✓', pro: '✓', business: '✓' },
+  { name: 'Bulk Listing Generation', starter: '✗', pro: '✓', business: '✓' },
+  { name: 'Competitor Analysis', starter: '✗', pro: '✓', business: '✓' },
+  { name: 'A/B Testing', starter: '✗', pro: '✓', business: '✓' },
+  { name: 'Brand DNA Analysis', starter: '✗', pro: '✗', business: '✓' },
+  { name: 'AI E-Commerce Assistant', starter: '✗', pro: '✗', business: '✓' },
+  { name: '24/7 VIP Support', starter: '✗', pro: '✗', business: '✓' },
 ]
 
 function TrustBadge() {
@@ -81,7 +84,7 @@ function TrustBadge() {
             </svg>
           </div>
           <p className="text-sm font-semibold text-gray-800">256-bit SSL</p>
-          <p className="text-xs text-gray-500 mt-0.5">Güvenli Şifreleme</p>
+          <p className="text-xs text-gray-500 mt-0.5">Secure Encryption</p>
         </div>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-brand-50 flex items-center justify-center">
@@ -89,8 +92,8 @@ function TrustBadge() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <p className="text-sm font-semibold text-gray-800">Shopier</p>
-          <p className="text-xs text-gray-500 mt-0.5">Güvenli Ödeme</p>
+          <p className="text-sm font-semibold text-gray-800">Secure Payment</p>
+          <p className="text-xs text-gray-500 mt-0.5">Trusted Provider</p>
         </div>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-amber-50 flex items-center justify-center">
@@ -98,8 +101,8 @@ function TrustBadge() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
             </svg>
           </div>
-          <p className="text-sm font-semibold text-gray-800">30 Gün</p>
-          <p className="text-xs text-gray-500 mt-0.5">Para İade Garantisi</p>
+          <p className="text-sm font-semibold text-gray-800">30 Days</p>
+          <p className="text-xs text-gray-500 mt-0.5">Money-Back Guarantee</p>
         </div>
       </div>
     </div>
@@ -133,13 +136,15 @@ export default function OdemePage() {
     }
   }
 
-  async function handlePayment() {
+  async function handlePayment(planKey) {
+    const plan = planKey || selectedPlan
+    setSelectedPlan(plan)
     setLoading(true)
     setError('')
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Oturum bulunamadı. Lütfen giriş yapın.')
+      if (!user) throw new Error('Session not found. Please sign in.')
 
       const { data: profile } = await supabase
         .from('user_profiles')
@@ -151,7 +156,7 @@ export default function OdemePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          plan: selectedPlan,
+          plan: plan,
           userId: user.id,
           userEmail: user.email,
           userName: profile?.full_name || user.email.split('@')[0],
@@ -189,27 +194,27 @@ export default function OdemePage() {
         form.submit()
       }
     } catch (err) {
-      setError(err.message || 'Bir hata oluştu.')
+      setError(err.message || 'An error occurred.')
     } finally {
       setLoading(false)
     }
   }
 
-  // Aktif plan ekranı
+  // Active plan screen
   if (currentPlan !== 'free') {
     const activePlan = PLANS[currentPlan]
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-brand-50/30 to-purple-50/30 pt-10 pb-16">
-        <div className="max-w-2xl mx-auto px-4">
+      <div className="pb-10">
+        <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-500 to-purple-600 mb-5 shadow-lg">
               <span className="text-4xl">{activePlan?.icon || '🎉'}</span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {activePlan?.name || currentPlan} Planı Aktif
+              {activePlan?.name || currentPlan} Plan Active
             </h1>
             <p className="text-base text-gray-500 max-w-md mx-auto">
-              Tüm premium özelliklere erişiminiz var. ListingAI'nın tüm gücünü kullanabilirsiniz.
+              You have access to all premium features. Enjoy the full power of ListingAI.
             </p>
           </div>
 
@@ -217,22 +222,22 @@ export default function OdemePage() {
             <div className="bg-gradient-to-r from-brand-500 to-purple-600 px-6 py-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/70 text-xs font-medium uppercase tracking-wider">Aktif Plan</p>
+                  <p className="text-white/70 text-xs font-medium uppercase tracking-wider">Active Plan</p>
                   <h2 className="text-2xl font-bold text-white mt-1">
                     {activePlan?.name || currentPlan}
                   </h2>
                 </div>
                 <div className="text-right">
-                  <p className="text-white/70 text-xs">{currentPlan === 'starter' ? 'Tek Seferlik' : 'Aylık'}</p>
+                  <p className="text-white/70 text-xs">{currentPlan === 'starter' ? 'One-time' : 'Monthly'}</p>
                   <p className="text-3xl font-bold text-white mt-1">
-                    {activePlan?.price || '0'} <span className="text-lg font-medium">TL</span>
+                    ${activePlan?.price || '0'}<span className="text-lg font-medium">{currentPlan !== 'starter' ? '/mo' : ''}</span>
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="px-6 py-6">
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Özellikler</h3>
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Features</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {(activePlan?.features || []).map((feature, i) => (
                   <div key={i} className="flex items-center gap-2.5">
@@ -250,26 +255,26 @@ export default function OdemePage() {
 
           {currentPlan !== 'business' && (
             <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Planınızı Yükseltin</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Upgrade Your Plan</h3>
               <p className="text-sm text-gray-500 mb-5">
-                Daha fazla ilan optimizasyonu için planınızı yükseltebilirsiniz.
+                Need more listing optimizations? Upgrade to unlock more power.
               </p>
               <button
                 onClick={() => setCurrentPlan('free')}
                 className="px-6 py-2.5 bg-gradient-to-r from-brand-500 to-purple-600 text-white text-sm font-semibold rounded-xl hover:shadow-md transition-all"
               >
-                Planları Gör
+                View Plans
               </button>
             </div>
           )}
 
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center mt-4 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Destek</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">Support</h3>
             <p className="text-sm text-gray-500 mb-5">
-              Sorularınız için bize ulaşın.
+              Have questions? Get in touch with us.
             </p>
             <a href="mailto:listingai.official@gmail.com" className="px-6 py-2.5 bg-gray-100 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-200 transition-all inline-block">
-              Destek İletişimi
+              Contact Support
             </a>
           </div>
         </div>
@@ -277,28 +282,28 @@ export default function OdemePage() {
     )
   }
 
-  // Fiyatlandırma ekranı
+  // Pricing screen
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-brand-50/30 to-purple-50/30 pt-10 pb-16">
+    <div className="pb-10">
       <div ref={formContainerRef} style={{ display: 'none' }} />
 
-      <div className="max-w-6xl mx-auto px-4">
-        {/* Başlık */}
-        <div className="text-center mb-12">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 border border-brand-200 rounded-full text-xs font-semibold text-brand-600 mb-4">
             <span>✨</span>
-            <span>Sadece 1 TL'den başlayan fiyatlar</span>
+            <span>Starting from just $1</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            Basit, Şeffaf Fiyatlandırma
+            Simple, Transparent Pricing
           </h1>
           <p className="text-base text-gray-500 max-w-lg mx-auto">
-            İşinizi büyütmek için gerekli tüm araçları alın. Gizli ücret yok.
+            Get all the tools you need to grow your business. No hidden fees.
           </p>
         </div>
 
-        {/* Plan Kartları */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14 max-w-5xl mx-auto">
+        {/* Plan Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
           {Object.entries(PLANS).map(([key, plan]) => {
             const isSelected = selectedPlan === key
             const isBusiness = key === 'business'
@@ -321,40 +326,40 @@ export default function OdemePage() {
                   {/* Badge */}
                   {isBusiness && (
                     <div className="bg-gradient-to-r from-brand-500 to-purple-600 text-center py-2">
-                      <span className="text-white text-xs font-bold uppercase tracking-wider">En Popüler</span>
+                      <span className="text-white text-xs font-bold uppercase tracking-wider">Most Popular</span>
                     </div>
                   )}
 
-                  {/* Plan İçeriği */}
+                  {/* Plan Content */}
                   <div className="p-6 flex flex-col h-full">
-                    {/* Plan Adı */}
+                    {/* Plan Name */}
                     <div className="mb-5">
                       <div className="flex items-center justify-between mb-1">
                         <h2 className="text-lg font-bold text-gray-900">{plan.name}</h2>
                         {isStarter && (
                           <span className="px-2 py-0.5 bg-green-50 text-green-700 text-xs font-semibold rounded-full">
-                            Dene
+                            Try
                           </span>
                         )}
                       </div>
                       <p className="text-sm text-gray-500">{plan.description}</p>
                     </div>
 
-                    {/* Fiyat */}
+                    {/* Price */}
                     <div className="mb-6 pb-5 border-b border-gray-100">
-                      <div className="flex items-end gap-1">
+                      <div className="flex items-end gap-0.5">
+                        <span className="text-lg font-bold text-gray-500 mb-1">$</span>
                         <span className="text-4xl font-extrabold text-gray-900">{plan.price}</span>
-                        <span className="text-lg font-semibold text-gray-900 mb-0.5">TL</span>
                         {!isStarter && (
-                          <span className="text-sm text-gray-400 mb-1 ml-0.5">/ay</span>
+                          <span className="text-sm text-gray-400 mb-1 ml-0.5">/mo</span>
                         )}
                       </div>
                       <p className="text-xs text-gray-400 mt-1.5">
-                        {isStarter ? 'Tek seferlik ödeme' : 'Tüm vergiler dahil'}
+                        {isStarter ? 'One-time payment' : 'All taxes included'}
                       </p>
                     </div>
 
-                    {/* Özellik Listesi */}
+                    {/* Feature List */}
                     <div className="space-y-2.5 flex-grow mb-6">
                       {plan.features.map((feature, i) => (
                         <div key={i} className="flex items-start gap-2.5">
@@ -368,12 +373,11 @@ export default function OdemePage() {
                       ))}
                     </div>
 
-                    {/* CTA Butonu */}
+                    {/* CTA Button */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
-                        setSelectedPlan(key)
-                        setTimeout(() => handlePayment(), 100)
+                        handlePayment(key)
                       }}
                       disabled={loading && selectedPlan === key}
                       className={`w-full py-3 text-sm font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 ${
@@ -385,12 +389,12 @@ export default function OdemePage() {
                       {loading && selectedPlan === key ? (
                         <>
                           <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          <span>Yönlendiriliyor...</span>
+                          <span>Redirecting...</span>
                         </>
                       ) : (
                         <>
                           <span>
-                            {isStarter ? 'Hemen Dene — 1 TL' : `${plan.price} TL/ay — Başla`}
+                            {isStarter ? 'Try Now — $1' : `$${plan.price}/mo — Get Started`}
                           </span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -399,9 +403,9 @@ export default function OdemePage() {
                       )}
                     </button>
 
-                    {/* Alt Not */}
+                    {/* Note */}
                     <p className="text-center text-xs text-gray-400 mt-3">
-                      {isStarter ? 'Kredi kartı ile güvenli ödeme' : '30 gün para iade garantisi'}
+                      {isStarter ? 'Secure payment via credit card' : '30-day money-back guarantee'}
                     </p>
                   </div>
                 </div>
@@ -410,7 +414,7 @@ export default function OdemePage() {
           })}
         </div>
 
-        {/* Hata Mesajı */}
+        {/* Error Message */}
         {error && (
           <div className="mb-8 max-w-lg mx-auto">
             <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
@@ -418,15 +422,15 @@ export default function OdemePage() {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <div>
-                <p className="text-sm font-medium text-red-800">Bir hata oluştu</p>
+                <p className="text-sm font-medium text-red-800">An error occurred</p>
                 <p className="text-sm text-red-600 mt-0.5">{error}</p>
               </div>
             </div>
           </div>
         )}
 
-        {/* Karşılaştırma Tablosu */}
-        <div className="mb-12 max-w-5xl mx-auto">
+        {/* Comparison Table */}
+        <div className="mb-12">
           <button
             onClick={() => setShowComparison(!showComparison)}
             className="w-full text-center py-4 hover:bg-white/50 rounded-xl transition"
@@ -435,7 +439,7 @@ export default function OdemePage() {
               <svg className={`w-4 h-4 transition-transform ${showComparison ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-              Tüm Özellikleri Karşılaştır
+              Compare All Features
             </p>
           </button>
 
@@ -445,7 +449,7 @@ export default function OdemePage() {
                 <table className="w-full">
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
-                      <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Özellik</th>
+                      <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Feature</th>
                       <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Starter</th>
                       <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Pro</th>
                       <th className="px-5 py-3 text-center text-xs font-semibold text-brand-600 uppercase tracking-wider bg-brand-50/50">Business</th>
@@ -479,16 +483,16 @@ export default function OdemePage() {
           )}
         </div>
 
-        {/* Güven Rozetleri */}
+        {/* Trust Badges */}
         <div className="max-w-2xl mx-auto">
           <TrustBadge />
         </div>
 
-        {/* Ödeme Yöntemleri */}
+        {/* Payment Methods */}
         <div className="mt-10 text-center">
-          <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">Kabul edilen ödeme yöntemleri</p>
+          <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">Accepted payment methods</p>
           <div className="flex flex-wrap justify-center gap-2">
-            {['Visa', 'Mastercard', 'Troy', 'Taksit'].map((method) => (
+            {['Visa', 'Mastercard', 'American Express', 'PayPal'].map((method) => (
               <div key={method} className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-500">
                 {method}
               </div>
@@ -496,10 +500,10 @@ export default function OdemePage() {
           </div>
         </div>
 
-        {/* Alt CTA */}
+        {/* Footer CTA */}
         <div className="mt-10 text-center">
           <p className="text-sm text-gray-400">
-            Sorularınız mı var?{' '}
+            Have questions?{' '}
             <a href="mailto:listingai.official@gmail.com" className="text-brand-600 hover:text-brand-700 font-medium">
               listingai.official@gmail.com
             </a>
