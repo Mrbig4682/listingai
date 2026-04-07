@@ -17,8 +17,7 @@
     "iyzipay": "^2.0.67",
     "next": "14.2.21",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "stripe": "^22.0.0"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
