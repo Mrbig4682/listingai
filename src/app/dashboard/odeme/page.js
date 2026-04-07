@@ -1,79 +1,83 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useI18n } from '@/lib/i18n/context'
 
-const PLANS = {
-  starter: {
-    name: 'Starter',
-    price: 1,
-    currency: '$',
-    period: 'one-time',
-    description: 'Try ListingAI with a quick test drive',
-    icon: '🚀',
-    features: [
-      '2 listing optimizations',
-      'AI-powered SEO titles & descriptions',
-      '10+ platform support',
-      '6 language support',
-      'Keyword suggestions'
-    ]
-  },
-  pro: {
-    name: 'Pro',
-    price: 19,
-    currency: '$',
-    period: '/mo',
-    description: 'Ideal for professional e-commerce sellers',
-    icon: '⚡',
-    features: [
-      '100 listing optimizations/month',
-      'AI-powered SEO titles & descriptions',
-      '10+ platform support',
-      '6 language support',
-      'Keyword suggestions',
-      'Bulk listing generation',
-      'Competitor analysis',
-      'Priority support'
-    ]
-  },
-  business: {
-    name: 'Business',
-    price: 49,
-    currency: '$',
-    period: '/mo',
-    description: 'Unlimited optimization for businesses',
-    badge: 'Most Popular',
-    icon: '👑',
-    features: [
-      'Unlimited listing optimizations',
-      'AI-powered SEO titles & descriptions',
-      '10+ platform support',
-      '6 language support',
-      'Keyword suggestions',
-      'Bulk listing generation',
-      'Competitor analysis',
-      'Brand DNA analysis',
-      'AI e-commerce assistant',
-      '24/7 VIP support'
-    ]
-  },
+function usePlans() {
+  const { t } = useI18n()
+  const p = t.payment
+
+  const PLANS = {
+    starter: {
+      name: p.starterName,
+      price: 1,
+      currency: '$',
+      description: p.starterDesc,
+      icon: '🚀',
+      features: [
+        p.features.listingOpt2,
+        p.features.aiSeo,
+        p.features.platformSupport,
+        p.features.langSupport,
+        p.features.keywords,
+      ]
+    },
+    pro: {
+      name: p.proName,
+      price: 19,
+      currency: '$',
+      description: p.proDesc,
+      icon: '⚡',
+      features: [
+        p.features.listingOpt100,
+        p.features.aiSeo,
+        p.features.platformSupport,
+        p.features.langSupport,
+        p.features.keywords,
+        p.features.bulkGen,
+        p.features.competitor,
+        p.features.priority,
+      ]
+    },
+    business: {
+      name: p.businessName,
+      price: 49,
+      currency: '$',
+      description: p.businessDesc,
+      icon: '👑',
+      features: [
+        p.features.listingOptUnlimited,
+        p.features.aiSeo,
+        p.features.platformSupport,
+        p.features.langSupport,
+        p.features.keywords,
+        p.features.bulkGen,
+        p.features.competitor,
+        p.features.brandDna,
+        p.features.aiAssistant,
+        p.features.vipSupport,
+      ]
+    },
+  }
+
+  const COMPARISON_FEATURES = [
+    { name: p.comparison.monthlyListings, starter: '2', pro: '100', business: t.common.unlimited },
+    { name: p.comparison.platformSupport, starter: '10+', pro: '10+', business: '10+' },
+    { name: p.comparison.seoTitle, starter: '✓', pro: '✓', business: '✓' },
+    { name: p.comparison.multiLang, starter: '✓', pro: '✓', business: '✓' },
+    { name: p.comparison.keywords, starter: '✓', pro: '✓', business: '✓' },
+    { name: p.comparison.bulkGen, starter: '✗', pro: '✓', business: '✓' },
+    { name: p.comparison.competitor, starter: '✗', pro: '✓', business: '✓' },
+    { name: p.comparison.abTest, starter: '✗', pro: '✓', business: '✓' },
+    { name: p.comparison.brandDna, starter: '✗', pro: '✗', business: '✓' },
+    { name: p.comparison.aiAssistant, starter: '✗', pro: '✗', business: '✓' },
+    { name: p.comparison.vipSupport, starter: '✗', pro: '✗', business: '✓' },
+  ]
+
+  return { PLANS, COMPARISON_FEATURES, p }
 }
 
-const COMPARISON_FEATURES = [
-  { name: 'Monthly AI Listings', starter: '2', pro: '100', business: 'Unlimited' },
-  { name: 'Platform Support', starter: '10+', pro: '10+', business: '10+' },
-  { name: 'SEO Title & Description', starter: '✓', pro: '✓', business: '✓' },
-  { name: 'Multi-Language Support', starter: '✓', pro: '✓', business: '✓' },
-  { name: 'Keyword Suggestions', starter: '✓', pro: '✓', business: '✓' },
-  { name: 'Bulk Listing Generation', starter: '✗', pro: '✓', business: '✓' },
-  { name: 'Competitor Analysis', starter: '✗', pro: '✓', business: '✓' },
-  { name: 'A/B Testing', starter: '✗', pro: '✓', business: '✓' },
-  { name: 'Brand DNA Analysis', starter: '✗', pro: '✗', business: '✓' },
-  { name: 'AI E-Commerce Assistant', starter: '✗', pro: '✗', business: '✓' },
-  { name: '24/7 VIP Support', starter: '✗', pro: '✗', business: '✓' },
-]
-
-function TrustBadge() {
+function TrustBadge({ trust }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
       <div className="grid grid-cols-3 gap-6">
@@ -83,8 +87,8 @@ function TrustBadge() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <p className="text-sm font-semibold text-gray-800">256-bit SSL</p>
-          <p className="text-xs text-gray-500 mt-0.5">Secure Encryption</p>
+          <p className="text-sm font-semibold text-gray-800">{trust.ssl}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{trust.sslDesc}</p>
         </div>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-brand-50 flex items-center justify-center">
@@ -92,8 +96,8 @@ function TrustBadge() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <p className="text-sm font-semibold text-gray-800">Secure Payment</p>
-          <p className="text-xs text-gray-500 mt-0.5">Trusted Provider</p>
+          <p className="text-sm font-semibold text-gray-800">{trust.secure}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{trust.secureDesc}</p>
         </div>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-amber-50 flex items-center justify-center">
@@ -101,8 +105,8 @@ function TrustBadge() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
             </svg>
           </div>
-          <p className="text-sm font-semibold text-gray-800">30 Days</p>
-          <p className="text-xs text-gray-500 mt-0.5">Money-Back Guarantee</p>
+          <p className="text-sm font-semibold text-gray-800">{trust.days}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{trust.daysDesc}</p>
         </div>
       </div>
     </div>
@@ -116,6 +120,7 @@ export default function OdemePage() {
   const [currentPlan, setCurrentPlan] = useState('free')
   const [showComparison, setShowComparison] = useState(false)
   const formContainerRef = useRef(null)
+  const { PLANS, COMPARISON_FEATURES, p } = usePlans()
 
   useEffect(() => {
     loadUserData()
@@ -217,10 +222,10 @@ export default function OdemePage() {
               <span className="text-4xl">{activePlan?.icon || '🎉'}</span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {activePlan?.name || currentPlan} Plan Active
+              {activePlan?.name || currentPlan} — {p.active.planActive}
             </h1>
             <p className="text-base text-gray-500 max-w-md mx-auto">
-              You have access to all premium features. Enjoy the full power of ListingAI.
+              {p.active.activeDesc}
             </p>
           </div>
 
@@ -228,13 +233,13 @@ export default function OdemePage() {
             <div className="bg-gradient-to-r from-brand-500 to-purple-600 px-6 py-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/70 text-xs font-medium uppercase tracking-wider">Active Plan</p>
+                  <p className="text-white/70 text-xs font-medium uppercase tracking-wider">{p.active.activePlan}</p>
                   <h2 className="text-2xl font-bold text-white mt-1">
                     {activePlan?.name || currentPlan}
                   </h2>
                 </div>
                 <div className="text-right">
-                  <p className="text-white/70 text-xs">{currentPlan === 'starter' ? 'One-time' : 'Monthly'}</p>
+                  <p className="text-white/70 text-xs">{currentPlan === 'starter' ? p.active.oneTimeLabel : p.active.monthlyLabel}</p>
                   <p className="text-3xl font-bold text-white mt-1">
                     ${activePlan?.price || '0'}<span className="text-lg font-medium">{currentPlan !== 'starter' ? '/mo' : ''}</span>
                   </p>
@@ -243,7 +248,7 @@ export default function OdemePage() {
             </div>
 
             <div className="px-6 py-6">
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Features</h3>
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">{p.active.featuresTitle}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {(activePlan?.features || []).map((feature, i) => (
                   <div key={i} className="flex items-center gap-2.5">
@@ -261,26 +266,26 @@ export default function OdemePage() {
 
           {currentPlan !== 'business' && (
             <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Upgrade Your Plan</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">{p.active.upgradeTitle}</h3>
               <p className="text-sm text-gray-500 mb-5">
-                Need more listing optimizations? Upgrade to unlock more power.
+                {p.active.upgradeDesc}
               </p>
               <button
                 onClick={() => setCurrentPlan('free')}
                 className="px-6 py-2.5 bg-gradient-to-r from-brand-500 to-purple-600 text-white text-sm font-semibold rounded-xl hover:shadow-md transition-all"
               >
-                View Plans
+                {p.active.viewPlans}
               </button>
             </div>
           )}
 
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center mt-4 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Support</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">{p.active.supportTitle}</h3>
             <p className="text-sm text-gray-500 mb-5">
-              Have questions? Get in touch with us.
+              {p.active.supportDesc}
             </p>
             <a href="mailto:listingai.official@gmail.com" className="px-6 py-2.5 bg-gray-100 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-200 transition-all inline-block">
-              Contact Support
+              {p.active.contactSupport}
             </a>
           </div>
         </div>
@@ -298,13 +303,13 @@ export default function OdemePage() {
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 border border-brand-200 rounded-full text-xs font-semibold text-brand-600 mb-4">
             <span>✨</span>
-            <span>Starting from just $1</span>
+            <span>{p.startingFrom}</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            Simple, Transparent Pricing
+            {p.pageTitle}
           </h1>
           <p className="text-base text-gray-500 max-w-lg mx-auto">
-            Get all the tools you need to grow your business. No hidden fees.
+            {p.pageSubtitle}
           </p>
         </div>
 
@@ -332,7 +337,7 @@ export default function OdemePage() {
                   {/* Badge */}
                   {isBusiness && (
                     <div className="bg-gradient-to-r from-brand-500 to-purple-600 text-center py-2">
-                      <span className="text-white text-xs font-bold uppercase tracking-wider">Most Popular</span>
+                      <span className="text-white text-xs font-bold uppercase tracking-wider">{p.mostPopular}</span>
                     </div>
                   )}
 
@@ -344,7 +349,7 @@ export default function OdemePage() {
                         <h2 className="text-lg font-bold text-gray-900">{plan.name}</h2>
                         {isStarter && (
                           <span className="px-2 py-0.5 bg-green-50 text-green-700 text-xs font-semibold rounded-full">
-                            Try
+                            {p.starterBadge}
                           </span>
                         )}
                       </div>
@@ -361,7 +366,7 @@ export default function OdemePage() {
                         )}
                       </div>
                       <p className="text-xs text-gray-400 mt-1.5">
-                        {isStarter ? 'One-time payment' : 'All taxes included'}
+                        {isStarter ? p.oneTime : p.allTaxes}
                       </p>
                     </div>
 
@@ -395,12 +400,12 @@ export default function OdemePage() {
                       {loading && selectedPlan === key ? (
                         <>
                           <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          <span>Redirecting...</span>
+                          <span>{p.redirecting}</span>
                         </>
                       ) : (
                         <>
                           <span>
-                            {isStarter ? 'Try Now — $1' : `$${plan.price}/mo — Get Started`}
+                            {isStarter ? p.tryNow : `$${plan.price}${p.perMonth} — ${p.getStarted}`}
                           </span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -411,7 +416,7 @@ export default function OdemePage() {
 
                     {/* Note */}
                     <p className="text-center text-xs text-gray-400 mt-3">
-                      {isStarter ? 'Secure payment via credit card' : '30-day money-back guarantee'}
+                      {isStarter ? p.securePayment : p.moneyBack}
                     </p>
                   </div>
                 </div>
@@ -428,7 +433,7 @@ export default function OdemePage() {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <div>
-                <p className="text-sm font-medium text-red-800">An error occurred</p>
+                <p className="text-sm font-medium text-red-800">{p.error.title}</p>
                 <p className="text-sm text-red-600 mt-0.5">{error}</p>
               </div>
             </div>
@@ -445,7 +450,7 @@ export default function OdemePage() {
               <svg className={`w-4 h-4 transition-transform ${showComparison ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-              Compare All Features
+              {p.compareAll}
             </p>
           </button>
 
@@ -455,7 +460,7 @@ export default function OdemePage() {
                 <table className="w-full">
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
-                      <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Feature</th>
+                      <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{p.comparison.feature}</th>
                       <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Starter</th>
                       <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Pro</th>
                       <th className="px-5 py-3 text-center text-xs font-semibold text-brand-600 uppercase tracking-wider bg-brand-50/50">Business</th>
@@ -491,12 +496,12 @@ export default function OdemePage() {
 
         {/* Trust Badges */}
         <div className="max-w-2xl mx-auto">
-          <TrustBadge />
+          <TrustBadge trust={p.trust} />
         </div>
 
         {/* Payment Methods */}
         <div className="mt-10 text-center">
-          <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">Accepted payment methods</p>
+          <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">{p.accepted}</p>
           <div className="flex flex-wrap justify-center gap-2">
             {['Visa', 'Mastercard', 'American Express', 'PayPal'].map((method) => (
               <div key={method} className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-500">
@@ -509,7 +514,7 @@ export default function OdemePage() {
         {/* Footer CTA */}
         <div className="mt-10 text-center">
           <p className="text-sm text-gray-400">
-            Have questions?{' '}
+            {p.questions}{' '}
             <a href="mailto:listingai.official@gmail.com" className="text-brand-600 hover:text-brand-700 font-medium">
               listingai.official@gmail.com
             </a>

@@ -106,21 +106,23 @@ export default function LandingPage() {
   const lang = planDetails[locale] ? locale : 'en'
   const pd = planDetails[lang]
 
+  const pm = t.payment || {}
   const plans = [
     {
-      name: 'Starter', price: '$1', period: locale === 'tr' ? '(tek seferlik)' : '(one-time)',
+      name: pm.starterName || 'Starter', price: '$1',
+      period: pm.oneTime ? `(${pm.oneTime.toLowerCase()})` : '(one-time)',
       ...pd.free, highlight: false, href: '/kayit?plan=starter',
-      cta: locale === 'tr' ? 'Sadece $1 - Dene' : 'Try for $1',
+      cta: pm.tryNow || 'Try Now — $1',
     },
     {
       name: l.pricePro, price: '$19', period: `/ ${t.common.month}`,
       ...pd.pro, highlight: true, href: '/kayit?plan=pro',
-      cta: locale === 'tr' ? 'Pro Planı Başlat' : 'Start Pro',
+      cta: `Pro ${pm.getStarted || 'Get Started'}`,
     },
     {
       name: l.priceBusiness, price: '$49', period: `/ ${t.common.month}`,
       ...pd.business, highlight: false, href: '/kayit?plan=business',
-      cta: locale === 'tr' ? 'Business Başlat' : 'Start Business',
+      cta: `Business ${pm.getStarted || 'Get Started'}`,
     },
   ]
 
