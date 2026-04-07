@@ -48,7 +48,7 @@ export async function POST(request) {
 
     const apiKey = process.env.IYZICO_API_KEY
     const secretKey = process.env.IYZICO_SECRET_KEY
-    const baseUrlApi = process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com'
+    const baseUrlApi = process.env.IYZICO_BASE_URL || 'https://api.iyzipay.com'
 
     if (!apiKey || !secretKey) {
       return redirectWithStatus(baseUrl, 'error', 'Sunucu yapılandırma hatası')
