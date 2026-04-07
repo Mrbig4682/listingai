@@ -143,33 +143,7 @@ export default function DashboardLayout({ children }) {
           ))}
         </nav>
 
-        {/* About & Quick Links */}
-        <div className="px-3 mt-2">
-          <div className="bg-gradient-to-br from-brand-50 to-purple-50 rounded-xl p-3 border border-brand-100">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-2">
-              {t.sidebar?.about || 'Hakkımızda'}
-            </div>
-            <p className="text-[11px] text-trust-medium leading-relaxed mb-3">
-              {t.sidebar?.aboutDesc || 'ListingAI, yapay zeka ile e-ticaret ilanlarınızı optimize eden SaaS platformudur.'}
-            </p>
-            <div className="space-y-1">
-              <Link href="/dashboard/sss" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
-                <span className="text-xs">❓</span> {t.sidebar?.faq || 'SSS'}
-              </Link>
-              <Link href="/mesafeli-satis" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
-                <span className="text-xs">📜</span> {t.sidebar?.distanceSales || 'Mesafeli Satış'}
-              </Link>
-              <Link href="/gizlilik" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
-                <span className="text-xs">🔒</span> {t.sidebar?.privacy || 'Gizlilik'}
-              </Link>
-              <Link href="/kullanim-sartlari" className="flex items-center gap-2 text-[11px] text-trust-medium hover:text-brand-600 transition py-1">
-                <span className="text-xs">📋</span> {t.sidebar?.terms || 'Kullanım Şartları'}
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-4 pt-3">
+        <div className="p-3 pt-1">
           <div className="bg-surface-50 rounded-xl p-3 border border-surface-200">
             {plan === 'business' ? (
               <>
@@ -207,7 +181,7 @@ export default function DashboardLayout({ children }) {
       </aside>
 
       {/* =================== MAIN CONTENT =================== */}
-      <main className="flex-1 min-h-screen md:min-h-0">
+      <main className="flex-1 min-h-screen md:min-h-0 overflow-y-auto">
         {/* Mobile Top Bar — thin, app-like */}
         <div className="md:hidden sticky top-0 z-20 bg-white/90 backdrop-blur-lg border-b border-surface-200">
           <div className="flex items-center justify-between px-4 py-3">
@@ -228,7 +202,7 @@ export default function DashboardLayout({ children }) {
         </div>
 
         {/* Content area — extra bottom padding on mobile for tab bar */}
-        <div className="p-4 pb-24 md:p-8 md:pb-8 max-w-4xl mx-auto animate-fade-in">
+        <div className="p-4 pb-24 md:p-6 md:pb-8 max-w-6xl mx-auto animate-fade-in">
           {children}
         </div>
 
