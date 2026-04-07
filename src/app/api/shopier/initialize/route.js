@@ -9,9 +9,9 @@ function getSupabase() {
 }
 
 const PLANS = {
-  starter: { name: 'ListingAI Starter - Deneme Paketi', price: '1.00', limit: 2 },
-  pro: { name: 'ListingAI Pro - Aylik Paket', price: '149.00', limit: 100 },
-  business: { name: 'ListingAI Business - Aylik Paket', price: '349.00', limit: 999999 },
+  starter: { name: 'ListingAI Starter - Trial', price: '1.00', limit: 2 },
+  pro: { name: 'ListingAI Pro - Monthly', price: '19.00', limit: 100 },
+  business: { name: 'ListingAI Business - Monthly', price: '49.00', limit: 999999 },
 }
 
 export async function POST(request) {
@@ -38,7 +38,7 @@ export async function POST(request) {
 
     const platformOrderId = `${userId}__${plan}__${Date.now()}`
     const randomNr = Math.floor(100000 + Math.random() * 900000).toString()
-    const currency = '0'
+    const currency = '1' // 0=TL, 1=USD, 2=EUR
     const totalOrderValue = selectedPlan.price
 
     const dataToHash = randomNr + platformOrderId + totalOrderValue + currency
