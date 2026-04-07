@@ -63,7 +63,15 @@ export default function DashboardLayout({ children }) {
       else {
         setUser(data.user)
         supabase.from('user_profiles').select('*').eq('id', data.user.id).single()
-          .then(({ data: p }) => { if (p) setProfile(p) })
+          .then(({ data: p }) => {
+            if (p) setProfile(p)
+            // Check if user selected a plan before signup — redirect to payment
+            const savedPlan = localStorage.getItem('listingai_selected_plan')
+            if (savedPlan && ['pro', 'business'].includes(savedPlan) && (!p || p.plan === 'free')) {
+              localStorage.removeItem('listingai_selected_plan')
+              router.push('/dashboard/odeme')
+            }
+          })
       }
     })
   }, [router])

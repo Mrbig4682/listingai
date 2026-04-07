@@ -121,7 +121,7 @@ export async function POST(request) {
 }
 
 function redirectWithStatus(status, message) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://listingai-gamma.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.listingai.store'
   const url = `${baseUrl}/dashboard/odeme/sonuc?status=${status}&message=${encodeURIComponent(message)}`
   return Response.redirect(url, 303)
 }

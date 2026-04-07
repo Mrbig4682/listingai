@@ -2,7 +2,7 @@ import './globals.css'
 import { I18nProvider } from '@/lib/i18n/context'
 import PWAInstallBanner from '@/components/PWAInstallBanner'
 
-const baseUrl = 'https://listingai-gamma.vercel.app'
+const baseUrl = 'https://www.listingai.store'
 
 export const metadata = {
   title: 'ListingAI — AI-Powered E-Commerce Listing Optimizer',

@@ -1,8 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function KayitPage() {
   const [email, setEmail] = useState('')
@@ -11,6 +11,23 @@ export default function KayitPage() {
   const [socialLoading, setSocialLoading] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Save selected plan from URL param so we can redirect after signup
+  useEffect(() => {
+    const plan = searchParams.get('plan')
+    if (plan && ['pro', 'business'].includes(plan)) {
+      localStorage.setItem('listingai_selected_plan', plan)
+    }
+  }, [searchParams])
+
+  const getRedirectPath = () => {
+    const savedPlan = localStorage.getItem('listingai_selected_plan')
+    if (savedPlan && ['pro', 'business'].includes(savedPlan)) {
+      return '/dashboard/odeme'
+    }
+    return '/dashboard'
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -28,12 +45,18 @@ export default function KayitPage() {
       return
     }
 
-    router.push('/dashboard')
+    router.push(getRedirectPath())
   }
 
   const handleSocialLogin = async (provider) => {
     setSocialLoading(provider)
     setError('')
+
+    // Save plan to localStorage before OAuth redirect
+    const plan = searchParams.get('plan')
+    if (plan && ['pro', 'business'].includes(plan)) {
+      localStorage.setItem('listingai_selected_plan', plan)
+    }
 
     const { error: socialError } = await supabase.auth.signInWithOAuth({
       provider,

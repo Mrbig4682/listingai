@@ -61,7 +61,7 @@ export async function POST(request) {
     const selectedPlan = PLANS[plan]
     const basketId = `LISTINGAI_${plan.toUpperCase()}_${Date.now()}`
     const conversationId = `${userId.substring(0, 8)}_${Date.now()}`
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://listingai-gamma.vercel.app'
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.listingai.store'
     const buyerName = userEmail.split('@')[0]
 
     const requestBody = {

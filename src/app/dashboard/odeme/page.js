@@ -119,6 +119,12 @@ export default function OdemePage() {
 
   useEffect(() => {
     loadUserData()
+    // Check if user selected a plan from the landing page
+    const savedPlan = localStorage.getItem('listingai_selected_plan')
+    if (savedPlan && ['pro', 'business'].includes(savedPlan)) {
+      setSelectedPlan(savedPlan)
+      localStorage.removeItem('listingai_selected_plan')
+    }
   }, [])
 
   async function loadUserData() {

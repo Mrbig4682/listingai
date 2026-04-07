@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const baseUrl = 'https://listingai-gamma.vercel.app'
+  const baseUrl = 'https://www.listingai.store'
 
   return [
     {

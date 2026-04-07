@@ -8,16 +8,11 @@ export function I18nProvider({ children }) {
   const [locale, setLocaleState] = useState(defaultLocale)
 
   useEffect(() => {
+    // Only use saved preference — no auto-detect from browser
+    // Default is always English, users can switch manually from the language selector
     const saved = localStorage.getItem('listingai_locale')
     if (saved && locales.includes(saved)) {
       setLocaleState(saved)
-    } else {
-      // Auto-detect from browser
-      const browserLang = navigator.language?.split('-')[0]
-      if (browserLang && locales.includes(browserLang)) {
-        setLocaleState(browserLang)
-        localStorage.setItem('listingai_locale', browserLang)
-      }
     }
   }, [])
 

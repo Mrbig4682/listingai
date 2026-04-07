@@ -7,6 +7,6 @@ export default function robots() {
         disallow: ['/dashboard/', '/admin/', '/api/'],
       },
     ],
-    sitemap: 'https://listingai-gamma.vercel.app/sitemap.xml',
+    sitemap: 'https://www.listingai.store/sitemap.xml',
   }
 }

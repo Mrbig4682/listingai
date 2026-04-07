@@ -110,14 +110,17 @@ export default function LandingPage() {
     {
       name: l.priceFree, price: '$0', period: `/ ${t.common.month}`,
       ...pd.free, highlight: false, href: '/kayit',
+      cta: locale === 'tr' ? 'Ücretsiz Başla' : 'Start Free',
     },
     {
       name: l.pricePro, price: '$29', period: `/ ${t.common.month}`,
-      ...pd.pro, highlight: true, href: '/dashboard/odeme',
+      ...pd.pro, highlight: true, href: '/kayit?plan=pro',
+      cta: locale === 'tr' ? 'Pro Planı Dene' : 'Start Pro Trial',
     },
     {
       name: l.priceBusiness, price: '$79', period: `/ ${t.common.month}`,
-      ...pd.business, highlight: false, href: '/dashboard/odeme',
+      ...pd.business, highlight: false, href: '/kayit?plan=business',
+      cta: locale === 'tr' ? 'Business Planı Dene' : 'Start Business Trial',
     },
   ]
 
