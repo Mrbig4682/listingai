@@ -34,7 +34,7 @@ export async function POST(request) {
     }
 
     const selectedPlan = PLANS[plan]
-    const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://listingai-gamma.vercel.app'}/api/shopier/callback`
+    const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.listingai.store'}/api/shopier/callback`
 
     const platformOrderId = `${userId}__${plan}__${Date.now()}`
     const randomNr = Math.floor(100000 + Math.random() * 900000).toString()

@@ -32,7 +32,7 @@ function getPlanDetails(planName) {
 }
 
 export async function POST(request) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://listingai-gamma.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.listingai.store'
 
   try {
     const formData = await request.formData()
@@ -136,7 +136,7 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://listingai-gamma.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.listingai.store'
   const { searchParams } = new URL(request.url)
   const status = searchParams.get('status')
 

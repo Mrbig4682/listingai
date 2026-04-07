@@ -108,19 +108,19 @@ export default function LandingPage() {
 
   const plans = [
     {
-      name: l.priceFree, price: '$0', period: `/ ${t.common.month}`,
-      ...pd.free, highlight: false, href: '/kayit',
-      cta: locale === 'tr' ? 'Ücretsiz Başla' : 'Start Free',
+      name: 'Starter', price: '$1', period: locale === 'tr' ? '(tek seferlik)' : '(one-time)',
+      ...pd.free, highlight: false, href: '/kayit?plan=starter',
+      cta: locale === 'tr' ? 'Sadece $1 - Dene' : 'Try for $1',
     },
     {
-      name: l.pricePro, price: '$29', period: `/ ${t.common.month}`,
+      name: l.pricePro, price: '$19', period: `/ ${t.common.month}`,
       ...pd.pro, highlight: true, href: '/kayit?plan=pro',
-      cta: locale === 'tr' ? 'Pro Planı Dene' : 'Start Pro Trial',
+      cta: locale === 'tr' ? 'Pro Planı Başlat' : 'Start Pro',
     },
     {
-      name: l.priceBusiness, price: '$79', period: `/ ${t.common.month}`,
+      name: l.priceBusiness, price: '$49', period: `/ ${t.common.month}`,
       ...pd.business, highlight: false, href: '/kayit?plan=business',
-      cta: locale === 'tr' ? 'Business Planı Dene' : 'Start Business Trial',
+      cta: locale === 'tr' ? 'Business Başlat' : 'Start Business',
     },
   ]
 

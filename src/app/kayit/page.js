@@ -16,14 +16,14 @@ export default function KayitPage() {
   // Save selected plan from URL param so we can redirect after signup
   useEffect(() => {
     const plan = searchParams.get('plan')
-    if (plan && ['pro', 'business'].includes(plan)) {
+    if (plan && ['starter', 'pro', 'business'].includes(plan)) {
       localStorage.setItem('listingai_selected_plan', plan)
     }
   }, [searchParams])
 
   const getRedirectPath = () => {
     const savedPlan = localStorage.getItem('listingai_selected_plan')
-    if (savedPlan && ['pro', 'business'].includes(savedPlan)) {
+    if (savedPlan && ['starter', 'pro', 'business'].includes(savedPlan)) {
       return '/dashboard/odeme'
     }
     return '/dashboard'
@@ -54,7 +54,7 @@ export default function KayitPage() {
 
     // Save plan to localStorage before OAuth redirect
     const plan = searchParams.get('plan')
-    if (plan && ['pro', 'business'].includes(plan)) {
+    if (plan && ['starter', 'pro', 'business'].includes(plan)) {
       localStorage.setItem('listingai_selected_plan', plan)
     }
 

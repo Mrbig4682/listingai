@@ -67,7 +67,7 @@ export default function DashboardLayout({ children }) {
             if (p) setProfile(p)
             // Check if user selected a plan before signup — redirect to payment
             const savedPlan = localStorage.getItem('listingai_selected_plan')
-            if (savedPlan && ['pro', 'business'].includes(savedPlan) && (!p || p.plan === 'free')) {
+            if (savedPlan && ['starter', 'pro', 'business'].includes(savedPlan) && (!p || p.plan === 'free')) {
               localStorage.removeItem('listingai_selected_plan')
               router.push('/dashboard/odeme')
             }
