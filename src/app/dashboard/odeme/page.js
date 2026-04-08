@@ -163,7 +163,7 @@ export default function OdemePage() {
         .eq('id', user.id)
         .single()
 
-      const res = await fetch('/api/iyzico/initialize', {
+      const res = await fetch('/api/paytr/get-token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -180,25 +180,11 @@ export default function OdemePage() {
         throw new Error(data.error)
       }
 
-      // iyzico checkout form content'i göster
-      if (data.checkoutFormContent) {
+      // PayTR iframe göster
+      if (data.iframeUrl) {
         if (formContainerRef.current) {
           formContainerRef.current.style.display = 'block'
-          formContainerRef.current.innerHTML = data.checkoutFormContent
-
-          // Script'leri çalıştır
-          const scripts = formContainerRef.current.querySelectorAll('script')
-          scripts.forEach((oldScript) => {
-            const newScript = document.createElement('script')
-            if (oldScript.src) {
-              newScript.src = oldScript.src
-            } else {
-              newScript.textContent = oldScript.textContent
-            }
-            oldScript.parentNode.replaceChild(newScript, oldScript)
-          })
-
-          // Checkout form'a scroll
+          formContainerRef.current.innerHTML = `<iframe src="${data.iframeUrl}" id="paytriframe" frameborder="0" scrolling="yes" style="width: 100%; min-height: 600px; border: none; border-radius: 12px; overflow: hidden;"></iframe>`
           formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
       }
@@ -294,7 +280,7 @@ export default function OdemePage() {
   // Pricing screen
   return (
     <div className="pb-10">
-      <div ref={formContainerRef} id="iyzico-checkout-form" style={{ display: 'none' }} className="max-w-2xl mx-auto mb-8" />
+      <div ref={formContainerRef} id="paytr-checkout-form" style={{ display: 'none' }} className="max-w-2xl mx-auto mb-8" />
 
       <div className="max-w-5xl mx-auto">
         {/* Header */}
