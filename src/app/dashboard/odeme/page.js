@@ -10,8 +10,8 @@ function usePlans() {
   const PLANS = {
     starter: {
       name: p.starterName,
-      price: 1,
-      currency: '$',
+      price: 35,
+      currency: '₺',
       description: p.starterDesc,
       icon: '🚀',
       features: [
@@ -24,8 +24,8 @@ function usePlans() {
     },
     pro: {
       name: p.proName,
-      price: 19,
-      currency: '$',
+      price: 650,
+      currency: '₺',
       description: p.proDesc,
       icon: '⚡',
       features: [
@@ -41,8 +41,8 @@ function usePlans() {
     },
     business: {
       name: p.businessName,
-      price: 49,
-      currency: '$',
+      price: 1700,
+      currency: '₺',
       description: p.businessDesc,
       icon: '👑',
       features: [
@@ -146,6 +146,12 @@ export default function OdemePage() {
     }
   }
 
+  const CHECKOUT_LINKS = {
+    starter: 'https://listingaistore.lemonsqueezy.com/checkout/buy/3ff48e34-a644-48cd-8a1f-2044fe63a22d',
+    pro: 'https://listingaistore.lemonsqueezy.com/checkout/buy/7a571f87-5ac9-48cc-b18b-e7600d01f0ab',
+    business: 'https://listingaistore.lemonsqueezy.com/checkout/buy/6131781a-253f-49f2-8e61-ad13e0fa8920',
+  }
+
   async function handlePayment(planKey) {
     const plan = planKey || selectedPlan
     setSelectedPlan(plan)
@@ -156,33 +162,28 @@ export default function OdemePage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Session not found. Please sign in.')
 
-      const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('full_name')
-        .eq('id', user.id)
-        .single()
-
-      const res = await fetch('/api/lemonsqueezy/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          plan: plan,
-          userId: user.id,
-          userEmail: user.email,
-          userName: profile?.full_name || user.email.split('@')[0],
-        }),
+      // Supabase'e pending ödeme kaydet
+      const orderId = `${user.id.substring(0, 8)}_${plan}_${Date.now()}`
+      await supabase.from('shopier_payments').insert({
+        user_id: user.id,
+        plan: plan,
+        amount: plan === 'starter' ? 35 : plan === 'pro' ? 650 : 1700,
+        currency: 'TRY',
+        status: 'pending',
+        platform_order_id: orderId,
+        payment_method: 'lemonsqueezy',
       })
 
-      const data = await res.json()
+      // Lemon Squeezy checkout URL'ine custom parametreler ekle
+      const checkoutBase = CHECKOUT_LINKS[plan]
+      const params = new URLSearchParams({
+        'checkout[custom][user_id]': user.id,
+        'checkout[custom][plan]': plan,
+        'checkout[custom][order_id]': orderId,
+        'checkout[email]': user.email,
+      })
 
-      if (data.error) {
-        throw new Error(data.error)
-      }
-
-      // Lemon Squeezy checkout sayfasına yönlendir
-      if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl
-      }
+      window.location.href = `${checkoutBase}?${params.toString()}`
     } catch (err) {
       setError(err.message || 'An error occurred.')
     } finally {
@@ -220,7 +221,7 @@ export default function OdemePage() {
                 <div className="text-right">
                   <p className="text-white/70 text-xs">{currentPlan === 'starter' ? p.active.oneTimeLabel : p.active.monthlyLabel}</p>
                   <p className="text-3xl font-bold text-white mt-1">
-                    ${activePlan?.price || '0'}<span className="text-lg font-medium">{currentPlan !== 'starter' ? '/mo' : ''}</span>
+                    {activePlan?.price || '0'}₺<span className="text-lg font-medium">{currentPlan !== 'starter' ? '/ay' : ''}</span>
                   </p>
                 </div>
               </div>
@@ -336,10 +337,10 @@ export default function OdemePage() {
                     {/* Price */}
                     <div className="mb-6 pb-5 border-b border-gray-100">
                       <div className="flex items-end gap-0.5">
-                        <span className="text-lg font-bold text-gray-500 mb-1">$</span>
                         <span className="text-4xl font-extrabold text-gray-900">{plan.price}</span>
+                        <span className="text-lg font-bold text-gray-500 mb-1 ml-0.5">₺</span>
                         {!isStarter && (
-                          <span className="text-sm text-gray-400 mb-1 ml-0.5">/mo</span>
+                          <span className="text-sm text-gray-400 mb-1 ml-0.5">/ay</span>
                         )}
                       </div>
                       <p className="text-xs text-gray-400 mt-1.5">
@@ -382,7 +383,7 @@ export default function OdemePage() {
                       ) : (
                         <>
                           <span>
-                            {isStarter ? p.tryNow : `$${plan.price}${p.perMonth} — ${p.getStarted}`}
+                            {isStarter ? p.tryNow : `${plan.price}₺${p.perMonth} — ${p.getStarted}`}
                           </span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
