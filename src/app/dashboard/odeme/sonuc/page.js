@@ -151,7 +151,7 @@ function SuccessScreen({ planName, message }) {
                     <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 3.062v6.372a3.066 3.066 0 01-2.812 3.062 3.066 3.066 0 01-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 01-1.745-.723 3.066 3.066 0 01-2.812-3.062V6.517a3.066 3.066 0 012.812-3.062z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-xs font-medium text-gray-700">PayTR Güvenli</span>
+                    <span className="text-xs font-medium text-gray-700">Lemon Squeezy</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-gray-200">
                     <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useI18n } from '@/lib/i18n/context'
 
@@ -119,7 +119,6 @@ export default function OdemePage() {
   const [error, setError] = useState('')
   const [currentPlan, setCurrentPlan] = useState('free')
   const [showComparison, setShowComparison] = useState(false)
-  const formContainerRef = useRef(null)
   const { PLANS, COMPARISON_FEATURES, p } = usePlans()
 
   useEffect(() => {
@@ -163,7 +162,7 @@ export default function OdemePage() {
         .eq('id', user.id)
         .single()
 
-      const res = await fetch('/api/paytr/get-token', {
+      const res = await fetch('/api/lemonsqueezy/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -180,13 +179,9 @@ export default function OdemePage() {
         throw new Error(data.error)
       }
 
-      // PayTR iframe göster
-      if (data.iframeUrl) {
-        if (formContainerRef.current) {
-          formContainerRef.current.style.display = 'block'
-          formContainerRef.current.innerHTML = `<iframe src="${data.iframeUrl}" id="paytriframe" frameborder="0" scrolling="yes" style="width: 100%; min-height: 600px; border: none; border-radius: 12px; overflow: hidden;"></iframe>`
-          formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }
+      // Lemon Squeezy checkout sayfasına yönlendir
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl
       }
     } catch (err) {
       setError(err.message || 'An error occurred.')
@@ -280,8 +275,6 @@ export default function OdemePage() {
   // Pricing screen
   return (
     <div className="pb-10">
-      <div ref={formContainerRef} id="paytr-checkout-form" style={{ display: 'none' }} className="max-w-2xl mx-auto mb-8" />
-
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
@@ -487,7 +480,7 @@ export default function OdemePage() {
         <div className="mt-10 text-center">
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">{p.accepted}</p>
           <div className="flex flex-wrap justify-center gap-2">
-            {['Visa', 'Mastercard', 'American Express', 'Troy'].map((method) => (
+            {['Visa', 'Mastercard', 'American Express', 'PayPal', 'Apple Pay'].map((method) => (
               <div key={method} className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-500">
                 {method}
               </div>
