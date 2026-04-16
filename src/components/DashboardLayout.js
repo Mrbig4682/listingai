@@ -288,6 +288,8 @@ export default function DashboardLayout({ children }) {
                       <Link href="/mesafeli-satis" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-600">{t.sidebar?.distanceSales || 'Mesafeli Satış'}</Link>
                       <span>·</span>
                       <Link href="/gizlilik" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-600">{t.sidebar?.privacy || 'Gizlilik'}</Link>
+                      <span>·</span>
+                      <Link href="/iade-politikasi" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-600">İade Politikası</Link>
                     </div>
 
                     {/* Plan badge */}

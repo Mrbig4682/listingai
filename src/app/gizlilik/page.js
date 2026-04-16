@@ -19,7 +19,7 @@ export default function GizlilikPage() {
               <li>E-posta adresi ve hesap bilgileri</li>
               <li>Oluşturulan ilan verileri (ürün adı, açıklama, anahtar kelimeler)</li>
               <li>Platform tercihleri ve dil seçimi</li>
-              <li>Ödeme bilgileri (iyzico üzerinden güvenli şekilde işlenir, tarafımızca saklanmaz)</li>
+              <li>Ödeme bilgileri (güvenli ödeme altyapısı üzerinden işlenir, tarafımızca saklanmaz)</li>
               <li>Kullanım istatistikleri ve performans verileri</li>
             </ul>
           </section>
@@ -31,7 +31,7 @@ export default function GizlilikPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-trust-dark">3. Veri Güvenliği</h2>
-            <p>Kullanıcı verileri, Supabase altyapısı üzerinde endüstri standardı şifreleme yöntemleriyle korunur. Tüm iletişimler SSL/TLS protokolü ile şifrelenir. Ödeme bilgileri PCI DSS uyumlu iyzico altyapısında işlenir.</p>
+            <p>Kullanıcı verileri, Supabase altyapısı üzerinde endüstri standardı şifreleme yöntemleriyle korunur. Tüm iletişimler SSL/TLS protokolü ile şifrelenir. Ödeme bilgileri PCI DSS uyumlu güvenli ödeme altyapısında işlenir.</p>
           </section>
 
           <section>

@@ -109,18 +109,18 @@ export default function LandingPage() {
   const pm = t.payment || {}
   const plans = [
     {
-      name: pm.starterName || 'Starter', price: '$1',
-      period: pm.oneTime ? `(${pm.oneTime.toLowerCase()})` : '(one-time)',
+      name: pm.starterName || 'Starter', price: 'Free',
+      period: '',
       ...pd.free, highlight: false, href: '/kayit?plan=starter',
-      cta: pm.tryNow || 'Try Now — $1',
+      cta: pm.tryNow || 'Try Free',
     },
     {
-      name: l.pricePro, price: '$19', period: `/ ${t.common.month}`,
+      name: l.pricePro, price: '$19.90', period: `/ ${t.common.month}`,
       ...pd.pro, highlight: true, href: '/kayit?plan=pro',
       cta: `Pro ${pm.getStarted || 'Get Started'}`,
     },
     {
-      name: l.priceBusiness, price: '$49', period: `/ ${t.common.month}`,
+      name: l.priceBusiness, price: '$49.90', period: `/ ${t.common.month}`,
       ...pd.business, highlight: false, href: '/kayit?plan=business',
       cta: `Business ${pm.getStarted || 'Get Started'}`,
     },
@@ -333,6 +333,7 @@ export default function LandingPage() {
             <Link href="/gizlilik" className="hover:text-gray-700 transition">{t?.sidebar?.privacy || 'Gizlilik'}</Link>
             <Link href="/kullanim-sartlari" className="hover:text-gray-700 transition">{t?.sidebar?.terms || 'Kullanım Şartları'}</Link>
             <Link href="/mesafeli-satis" className="hover:text-gray-700 transition">{t?.sidebar?.distanceSales || 'Mesafeli Satış'}</Link>
+            <Link href="/iade-politikasi" className="hover:text-gray-700 transition">İade Politikası</Link>
           </div>
         </div>
       </footer>

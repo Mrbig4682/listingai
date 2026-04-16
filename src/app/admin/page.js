@@ -123,7 +123,7 @@ export default function AdminPage() {
         total: profileData.length,
         pro,
         business: biz,
-        revenue: (pro * 299) + (biz * 799),
+        revenue: (pro * 19.90) + (biz * 49.90),
         newToday,
         pendingPayments: pendingCount,
         activeSubscriptions
@@ -313,7 +313,7 @@ export default function AdminPage() {
               <span className="text-sm font-semibold text-gray-600">Aylık Gelir</span>
               <span className="text-2xl">💰</span>
             </div>
-            <div className="text-3xl font-bold text-purple-600 mb-1">₺{(stats.revenue / 1000).toFixed(1)}K</div>
+            <div className="text-3xl font-bold text-purple-600 mb-1">${(stats.revenue / 1000).toFixed(1)}K</div>
             <div className="text-xs text-gray-500">Toplam gelir</div>
           </div>
         </div>
@@ -344,7 +344,7 @@ export default function AdminPage() {
             },
             {
               label: 'Aylık Gelir',
-              value: `₺${stats.revenue.toLocaleString('tr-TR')}`,
+              value: `$${stats.revenue.toLocaleString('tr-TR')}`,
               gradient: 'from-green-500 to-green-600',
               icon: '💵',
               trend: '+8% artış'
@@ -376,7 +376,7 @@ export default function AdminPage() {
           </div>
           <MiniChart data={[1200, 1900, 1600, 2400, 1800, 2200, 2800]} />
           <div className="mt-4 text-sm text-gray-600">
-            Toplam: <span className="font-bold text-gray-900">₺14,040</span>
+            Toplam: <span className="font-bold text-gray-900">$14,040</span>
           </div>
         </div>
 
@@ -534,7 +534,7 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-gray-900">₺{req.amount.toLocaleString('tr-TR')}</div>
+                        <div className="text-2xl font-bold text-gray-900">${req.amount.toLocaleString('tr-TR')}</div>
                         <div className="text-xs text-gray-500">{new Date(req.created_at).toLocaleDateString('tr-TR')}</div>
                       </div>
                     </div>
@@ -638,7 +638,7 @@ export default function AdminPage() {
                       <div className="text-sm text-gray-500">{req.email}</div>
                     </div>
                     <div className="text-sm font-semibold text-gray-900">
-                      ₺{req.amount.toLocaleString('tr-TR')}
+                      ${req.amount.toLocaleString('tr-TR')}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">

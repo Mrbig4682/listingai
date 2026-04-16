@@ -1,0 +1,189 @@
+╔════════════════════════════════════════════════════════════════════╗
+║                   ListingAI Android TWA Kurulum                      ║
+║                      Hızlı Başlangıç Rehberi                        ║
+╚════════════════════════════════════════════════════════════════════╝
+
+AMAÇ:
+ListingAI web uygulamasını (https://listingai-gamma.vercel.app)
+native Android uygulamasına dönüştürüyoruz.
+
+════════════════════════════════════════════════════════════════════
+
+ADIM 1: ÖN GEREKSİNİMLER KONTROL ET (5 dakika)
+
+Terminal'de çalıştır:
+
+    java -version         → Java 17+ görmeli
+    node --version        → Node.js 18+ görmeli
+    npm --version         → npm 8+ görmeli
+
+Birisi eksikse:
+- Mac: "brew install openjdk@17" ve "brew install node"
+
+════════════════════════════════════════════════════════════════════
+
+ADIM 2: ANDROID STUDIO YÜKLESİ (15 dakika)
+
+1. İndir: https://developer.android.com/studio
+2. Yükle ve aç
+3. İlk kurulumu tamamla
+4. Android SDK indirmeye izin ver:
+   - Android 14 (API 34) - GEREKLİ
+   - Android 13 (API 33) - GEREKLİ
+   - Build Tools - GEREKLİ
+   - Platform Tools - GEREKLİ
+
+════════════════════════════════════════════════════════════════════
+
+ADIM 3: KURULUM BETIĞINI ÇAL (2 dakika)
+
+Terminal'de bu klasöre git ve çalıştır:
+
+    chmod +x QUICKSTART_MAC.sh
+    ./QUICKSTART_MAC.sh
+
+Bu betik:
+✓ Java'yı kurur
+✓ Node bağımlılıklarını yükler
+✓ SDK'yı kontrol eder
+
+════════════════════════════════════════════════════════════════════
+
+ADIM 4: DERLEME BETIĞINI ÇAL (10 dakika)
+
+Debug APK derlemek için:
+
+    ./build-apk.sh
+
+Program:
+1. Web uygulamasını derler
+2. Capacitor'ü senkronize eder
+3. Android APK oluşturur
+
+Çıktı: android/app/build/outputs/apk/debug/app-debug.apk
+
+════════════════════════════════════════════════════════════════════
+
+ADIM 5: TESTE HAZIR! (opsiyonel)
+
+Telefonda test etmek için:
+
+    ./build-apk.sh --install
+
+Bu:
+- Debug APK'yı derler
+- USB'den bağlı cihaza otomatik yükler
+- Uygulamayı başlatır
+
+NOT: Telefonda USB debugging'i etkinleştir:
+     Settings → Developer Options → USB Debugging = ON
+
+════════════════════════════════════════════════════════════════════
+
+DOSYALAR AÇIKLAMASI:
+
+📄 README_ANDROID.md (OKUMAYA BAŞLA!)
+   - Tüm sistem hakkında genel bilgi
+   - Hızlı referans
+
+📄 BUILD_ANDROID.md
+   - Kapsamlı kurulum rehberi
+   - Sorun giderme
+   - Play Store yayınlama
+
+📄 BUILD_APK_MAC.md
+   - Mac'e özel detaylı adımlar
+   - Environment variable ayarları
+   - Manual kurulum (istersen)
+
+📄 ANDROID_CONFIG.md
+   - Teknik yapılandırma referansı
+   - AndroidManifest.xml açıklaması
+   - Advanced settings
+
+🔧 build-apk.sh
+   - Ana derleme betiği
+   - Otomatik kurulum ve derleme
+
+🔧 QUICKSTART_MAC.sh
+   - İlk kurulum betiği
+   - Ön gereksinim kontrolü
+
+════════════════════════════════════════════════════════════════════
+
+HATA ÇÖZÜMÜ:
+
+❌ "Java bulunamadı"
+→ brew install openjdk@17
+
+❌ "Android SDK bulunamadı"
+→ Android Studio'yu aç ve SDK'yı kur
+
+❌ "ANDROID_SDK_ROOT not found"
+→ ~/.zshrc'ye ekle:
+   export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+   source ~/.zshrc
+
+❌ Gradle errors
+→ Çalıştır: cd android && ./gradlew clean && cd ..
+
+════════════════════════════════════════════════════════════════════
+
+PLAY STORE'A YAYINLAMA (sonra):
+
+1. İmzalama anahtarı oluştur:
+   keytool -genkey -v -keystore ~/listingai-release-key.keystore \
+     -keyalg RSA -keysize 2048 -validity 10000 -alias listingai
+
+2. Release derleme yap:
+   ./build-apk.sh --release
+
+3. Google Play Console'a yükle:
+   https://play.google.com/console
+
+════════════════════════════════════════════════════════════════════
+
+ÖNEMLI NOTLAR:
+
+✓ Web kodu değişirse (React/Next.js):
+  npm run build → ./build-apk.sh
+
+✓ Sürüm artırmak için:
+  android/app/build.gradle → versionCode artır
+
+✓ Test cihazı bağlı değilse emülatör kullan:
+  Android Studio → AVD Manager → Emülatör başlat
+
+✓ WiFi üzerinde de test edebilirsin:
+  adb connect 192.168.x.x:5037
+
+════════════════════════════════════════════════════════════════════
+
+BAŞARILI DERLEME SONRASI:
+
+✓ android/app/build/outputs/apk/debug/ klasörü
+✓ app-debug.apk dosyası (6-8 MB)
+✓ Cihazda uygulamayı aç ve test et
+✓ Simgenin göründüğünü doğrula
+✓ Web sitesinin yüklendi mi kontrol et
+
+════════════════════════════════════════════════════════════════════
+
+ÖNERİLER:
+
+1. Başla: ./build-apk.sh
+2. Başarısızsa: BUILD_ANDROID.md'deki sorun giderme
+3. Hala çalışmazsa: BUILD_APK_MAC.md'i adım adım izle
+
+════════════════════════════════════════════════════════════════════
+
+İNSAN ÖZETİ:
+
+Mac M4 Pro → Android Studio + JDK 17 → npm install → ./build-apk.sh
+→ android/app/build/outputs/apk/debug/app-debug.apk → Test!
+
+════════════════════════════════════════════════════════════════════
+
+İlk sorun çektiğinde README_ANDROID.md'yi oku!
+
+Son güncelleme: 4 Nisan 2026

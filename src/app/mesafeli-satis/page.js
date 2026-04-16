@@ -35,7 +35,7 @@ export default function MesafeliSatisPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-trust-dark">4. Hizmet Bedeli ve Ödeme</h2>
-            <p>Hizmet bedelleri, seçilen plan türüne göre belirlenir. Ödemeler iyzico güvenli ödeme altyapısı üzerinden işlenir. Ücretli planlara ait ödemeler aylık abonelik modeli ile tahsil edilir.</p>
+            <p>Hizmet bedelleri, seçilen plan türüne göre belirlenir. Ödemeler güvenli ödeme altyapısı üzerinden işlenir. Ücretli planlara ait ödemeler aylık abonelik modeli ile tahsil edilir.</p>
           </section>
 
           <section>

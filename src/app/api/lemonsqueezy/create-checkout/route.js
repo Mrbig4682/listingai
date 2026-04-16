@@ -15,9 +15,9 @@ const PLAN_VARIANTS = {
 }
 
 const PLANS = {
-  starter: { price: 1, limit: 2, duration: 0 },
-  pro: { price: 19, limit: 100, duration: 30 },
-  business: { price: 49, limit: 999999, duration: 30 },
+  starter: { price: 0, limit: 2, duration: 0 },
+  pro: { price: 19.90, limit: 100, duration: 30 },
+  business: { price: 49.90, limit: 999999, duration: 30 },
 }
 
 export async function POST(request) {

@@ -9,9 +9,9 @@ function getSupabase() {
 }
 
 const PLANS = {
-  starter: { name: 'ListingAI Starter', price: 100, limit: 2, duration: 0 },     // 1.00 USD = 100 kuruş
-  pro:     { name: 'ListingAI Pro', price: 1900, limit: 100, duration: 30 },      // 19.00 USD
-  business:{ name: 'ListingAI Business', price: 4900, limit: 999999, duration: 30 }, // 49.00 USD
+  starter: { name: 'ListingAI Starter', price: 0, limit: 2, duration: 0 },         // Free
+  pro:     { name: 'ListingAI Pro', price: 1990, limit: 100, duration: 30 },      // $19.90
+  business:{ name: 'ListingAI Business', price: 4990, limit: 999999, duration: 30 }, // $49.90
 }
 
 export async function POST(request) {
