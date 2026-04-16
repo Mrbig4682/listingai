@@ -109,20 +109,20 @@ export default function LandingPage() {
   const pm = t.payment || {}
   const plans = [
     {
-      name: pm.starterName || 'Starter', price: '0₺',
+      name: pm.starterName || 'Starter', price: 'Free',
       period: '',
       ...pd.free, highlight: false, href: '/kayit?plan=starter',
-      cta: pm.tryNow || 'Ücretsiz Dene',
+      cta: pm.tryNow || 'Try Free',
     },
     {
-      name: l.pricePro, price: '19.90₺', period: `/ ${t.common.month}`,
+      name: l.pricePro, price: '$1', period: `/ ${t.common.month}`,
       ...pd.pro, highlight: true, href: '/kayit?plan=pro',
-      cta: `Pro ${pm.getStarted || 'Başla'}`,
+      cta: `Pro ${pm.getStarted || 'Start'}`,
     },
     {
-      name: l.priceBusiness, price: '49.90₺', period: `/ ${t.common.month}`,
+      name: l.priceBusiness, price: '$2', period: `/ ${t.common.month}`,
       ...pd.business, highlight: false, href: '/kayit?plan=business',
-      cta: `Business ${pm.getStarted || 'Başla'}`,
+      cta: `Business ${pm.getStarted || 'Start'}`,
     },
   ]
 

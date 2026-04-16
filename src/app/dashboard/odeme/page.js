@@ -11,7 +11,7 @@ function usePlans() {
     starter: {
       name: p.starterName,
       price: 0,
-      currency: '₺',
+      currency: '$',
       description: p.starterDesc,
       icon: '🚀',
       features: [
@@ -24,8 +24,8 @@ function usePlans() {
     },
     pro: {
       name: p.proName,
-      price: 19.90,
-      currency: '₺',
+      price: 1,
+      currency: '$',
       description: p.proDesc,
       icon: '⚡',
       features: [
@@ -41,8 +41,8 @@ function usePlans() {
     },
     business: {
       name: p.businessName,
-      price: 49.90,
-      currency: '₺',
+      price: 2,
+      currency: '$',
       description: p.businessDesc,
       icon: '👑',
       features: [
@@ -147,9 +147,9 @@ export default function OdemePage() {
   }
 
   const CHECKOUT_LINKS = {
-    starter: 'https://listingaistore.lemonsqueezy.com/checkout/buy/3ff48e34-a644-48cd-8a1f-2044fe63a22d',
-    pro: 'https://listingaistore.lemonsqueezy.com/checkout/buy/7a571f87-5ac9-48cc-b18b-e7600d01f0ab',
-    business: 'https://listingaistore.lemonsqueezy.com/checkout/buy/6131781a-253f-49f2-8e61-ad13e0fa8920',
+    starter: null, // Free plan - no checkout
+    pro: 'https://listingaistore.lemonsqueezy.com/buy/listingai-pro-1',
+    business: 'https://listingaistore.lemonsqueezy.com/buy/listingai-business-1',
   }
 
   async function handlePayment(planKey) {
@@ -167,8 +167,8 @@ export default function OdemePage() {
       await supabase.from('shopier_payments').insert({
         user_id: user.id,
         plan: plan,
-        amount: plan === 'starter' ? 0 : plan === 'pro' ? 19.90 : 49.90,
-        currency: 'TRY',
+        amount: plan === 'starter' ? 0 : plan === 'pro' ? 1 : 2,
+        currency: 'USD',
         status: 'pending',
         platform_order_id: orderId,
         payment_method: 'lemonsqueezy',
@@ -221,7 +221,7 @@ export default function OdemePage() {
                 <div className="text-right">
                   <p className="text-white/70 text-xs">{currentPlan === 'starter' ? p.active.oneTimeLabel : p.active.monthlyLabel}</p>
                   <p className="text-3xl font-bold text-white mt-1">
-                    {activePlan?.price || '0'}₺<span className="text-lg font-medium">{currentPlan !== 'starter' ? '/ay' : ''}</span>
+                    ${activePlan?.price || '0'}<span className="text-lg font-medium">{currentPlan !== 'starter' ? '/mo' : ''}</span>
                   </p>
                 </div>
               </div>
@@ -337,11 +337,10 @@ export default function OdemePage() {
                     {/* Price */}
                     <div className="mb-6 pb-5 border-b border-gray-100">
                       <div className="flex items-end gap-0.5">
-                        <span className="text-4xl font-extrabold text-gray-900">{isStarter ? p.free || 'Ücretsiz' : plan.price}</span>
+                        <span className="text-4xl font-extrabold text-gray-900">{isStarter ? p.free || 'Free' : `$${plan.price}`}</span>
                         {!isStarter && (
                           <>
-                            <span className="text-lg font-bold text-gray-500 mb-1 ml-0.5">₺</span>
-                            <span className="text-sm text-gray-400 mb-1 ml-0.5">/ay</span>
+                            <span className="text-sm text-gray-400 mb-1 ml-1">/mo</span>
                           </>
                         )}
                       </div>
@@ -385,7 +384,7 @@ export default function OdemePage() {
                       ) : (
                         <>
                           <span>
-                            {isStarter ? p.tryNow : `${plan.price}₺${p.perMonth} — ${p.getStarted}`}
+                            {isStarter ? p.tryNow : `$${plan.price}${p.perMonth} — ${p.getStarted}`}
                           </span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
