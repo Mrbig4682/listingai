@@ -119,10 +119,20 @@ export default function OdemePage() {
   const [error, setError] = useState('')
   const [currentPlan, setCurrentPlan] = useState('free')
   const [showComparison, setShowComparison] = useState(false)
+  const [paymentSuccess, setPaymentSuccess] = useState(false)
   const { PLANS, COMPARISON_FEATURES, p } = usePlans()
 
   useEffect(() => {
     loadUserData()
+    // Check if payment was successful (redirect from Lemon Squeezy)
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('success') === 'true') {
+      setPaymentSuccess(true)
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname)
+      // Reload user data after a short delay (webhook may take a moment)
+      setTimeout(() => loadUserData(), 3000)
+    }
     // Check if user selected a plan from the landing page
     const savedPlan = localStorage.getItem('listingai_selected_plan')
     if (savedPlan && ['starter', 'pro', 'business'].includes(savedPlan)) {
@@ -190,6 +200,55 @@ export default function OdemePage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Payment success screen
+  if (paymentSuccess) {
+    return (
+      <div className="pb-10">
+        <div className="max-w-lg mx-auto text-center">
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-10 mt-8">
+            <div className="relative inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 mb-6 shadow-lg">
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+              <div className="absolute -top-1 -right-1 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-md">
+                <span className="text-lg">🎉</span>
+              </div>
+            </div>
+
+            <h1 className="text-3xl font-bold text-gray-900 mb-3">
+              {p.success?.title || 'Payment Successful!'}
+            </h1>
+            <p className="text-gray-500 text-base mb-8 max-w-sm mx-auto">
+              {p.success?.desc || 'Your plan is being activated. This may take a few seconds...'}
+            </p>
+
+            <div className="flex items-center justify-center gap-2 mb-8 px-4 py-3 bg-green-50 rounded-xl border border-green-200">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-sm font-medium text-green-700">
+                {p.success?.activating || 'Activating your plan...'}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => { setPaymentSuccess(false); loadUserData(); }}
+                className="w-full py-3 bg-gradient-to-r from-brand-500 to-purple-600 text-white text-sm font-semibold rounded-xl hover:shadow-md transition-all"
+              >
+                {p.success?.viewPlan || 'View My Plan'}
+              </button>
+              <a
+                href="/dashboard"
+                className="w-full py-3 bg-gray-100 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-200 transition-all inline-block text-center"
+              >
+                {p.success?.goDashboard || 'Go to Dashboard'}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   // Active plan screen
