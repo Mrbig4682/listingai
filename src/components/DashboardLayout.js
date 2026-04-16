@@ -152,10 +152,12 @@ export default function DashboardLayout({ children }) {
         </nav>
 
         <div className="p-3 pt-1">
-          <div className="bg-surface-50 rounded-xl p-3 border border-surface-200">
+          <Link href="/dashboard/profil" className="block bg-surface-50 rounded-xl p-3 border border-surface-200 hover:border-brand-300 hover:bg-brand-50/30 transition-all cursor-pointer">
             {plan === 'business' ? (
               <>
-                <div className="font-semibold text-xs text-brand-600">{t.plan.business}</div>
+                <div className="font-semibold text-xs text-brand-600 flex items-center gap-1">
+                  <span>👑</span> {t.plan.business}
+                </div>
                 <div className="text-xs text-trust-light mt-1">{t.plan.unlimitedListings}</div>
                 <div className="bg-surface-200 rounded-full h-1 mt-2 overflow-hidden">
                   <div className="bg-brand-500 h-full rounded-full w-full" />
@@ -163,7 +165,9 @@ export default function DashboardLayout({ children }) {
               </>
             ) : plan === 'pro' ? (
               <>
-                <div className="font-semibold text-xs text-brand-600">{t.plan.pro}</div>
+                <div className="font-semibold text-xs text-brand-600 flex items-center gap-1">
+                  <span>⚡</span> {t.plan.pro}
+                </div>
                 <div className="text-xs text-trust-light mt-1">{used}/{limit} {t.plan.listingsUsed}</div>
                 <div className="bg-surface-200 rounded-full h-1 mt-2 overflow-hidden">
                   <div className="bg-brand-500 h-full rounded-full" style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} />
@@ -171,17 +175,19 @@ export default function DashboardLayout({ children }) {
               </>
             ) : (
               <>
-                <div className="font-semibold text-xs text-trust-dark">{t.plan.free}</div>
+                <div className="font-semibold text-xs text-trust-dark flex items-center gap-1">
+                  <span>🚀</span> {t.plan.free}
+                </div>
                 <div className="text-xs text-trust-light mt-1">{used}/{limit} {t.plan.listingsUsed}</div>
                 <div className="bg-surface-200 rounded-full h-1 mt-2 overflow-hidden">
                   <div className="bg-brand-500 h-full rounded-full" style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} />
                 </div>
-                <Link href="/dashboard/odeme" className="block w-full mt-2 py-1.5 bg-trust-dark text-white text-xs font-semibold rounded-lg hover:bg-brand-600 transition text-center">
+                <span className="block w-full mt-2 py-1.5 bg-trust-dark text-white text-xs font-semibold rounded-lg hover:bg-brand-600 transition text-center">
                   {t.plan.upgradeToPro}
-                </Link>
+                </span>
               </>
             )}
-          </div>
+          </Link>
           <button onClick={handleLogout} className="w-full mt-2 py-1.5 text-xs text-trust-light hover:text-trust-dark transition font-medium">
             {t.nav.logout}
           </button>
