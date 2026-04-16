@@ -13,7 +13,7 @@ function MiniChart({ data = [65, 45, 75, 35, 85, 55, 90] }) {
         <div
           key={i}
           className="flex-1 bg-gradient-to-t from-purple-400 to-purple-300 rounded-t opacity-70 hover:opacity-100 transition"
-          style={{ height: `${(value / max) * 100}%` }}
+          style={{ height: `₺{(value / max) * 100}%` }}
         />
       ))}
     </div>
@@ -34,7 +34,7 @@ function Avatar({ name, className = '' }) {
   const color = colors[hash % colors.length]
 
   return (
-    <div className={`flex items-center justify-center rounded-full font-bold text-white text-sm ${color} ${className}`}>
+    <div className={`flex items-center justify-center rounded-full font-bold text-white text-sm ₺{color} ₺{className}`}>
       {initials}
     </div>
   )
@@ -313,7 +313,7 @@ export default function AdminPage() {
               <span className="text-sm font-semibold text-gray-600">Aylık Gelir</span>
               <span className="text-2xl">💰</span>
             </div>
-            <div className="text-3xl font-bold text-purple-600 mb-1">${(stats.revenue / 1000).toFixed(1)}K</div>
+            <div className="text-3xl font-bold text-purple-600 mb-1">₺{(stats.revenue / 1000).toFixed(1)}K</div>
             <div className="text-xs text-gray-500">Toplam gelir</div>
           </div>
         </div>
@@ -344,14 +344,14 @@ export default function AdminPage() {
             },
             {
               label: 'Aylık Gelir',
-              value: `$${stats.revenue.toLocaleString('tr-TR')}`,
+              value: `₺₺{stats.revenue.toLocaleString('tr-TR')}`,
               gradient: 'from-green-500 to-green-600',
               icon: '💵',
               trend: '+8% artış'
             },
           ].map((stat, i) => (
             <div key={i} className="bg-white rounded-xl overflow-hidden border border-surface-200 shadow-sm hover:shadow-lg transition group">
-              <div className={`bg-gradient-to-br ${stat.gradient} p-4 text-white relative overflow-hidden`}>
+              <div className={`bg-gradient-to-br ₺{stat.gradient} p-4 text-white relative overflow-hidden`}>
                 <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-5 rounded-full -mr-10 -mt-10" />
                 <div className="flex justify-between items-start relative z-10">
                   <span className="text-2xl">{stat.icon}</span>
@@ -376,7 +376,7 @@ export default function AdminPage() {
           </div>
           <MiniChart data={[1200, 1900, 1600, 2400, 1800, 2200, 2800]} />
           <div className="mt-4 text-sm text-gray-600">
-            Toplam: <span className="font-bold text-gray-900">$14,040</span>
+            Toplam: <span className="font-bold text-gray-900">₺14,040</span>
           </div>
         </div>
 
@@ -408,7 +408,7 @@ export default function AdminPage() {
                 <div className="w-full bg-surface-200 rounded-full h-2">
                   <div
                     className="bg-gradient-to-r from-purple-400 to-purple-600 h-2 rounded-full"
-                    style={{ width: `${(stats.pro / stats.total) * 100}%` }}
+                    style={{ width: `₺{(stats.pro / stats.total) * 100}%` }}
                   />
                 </div>
               </div>
@@ -420,7 +420,7 @@ export default function AdminPage() {
                 <div className="w-full bg-surface-200 rounded-full h-2">
                   <div
                     className="bg-gradient-to-r from-amber-400 to-amber-600 h-2 rounded-full"
-                    style={{ width: `${(stats.business / stats.total) * 100}%` }}
+                    style={{ width: `₺{(stats.business / stats.total) * 100}%` }}
                   />
                 </div>
               </div>
@@ -432,7 +432,7 @@ export default function AdminPage() {
                 <div className="w-full bg-surface-200 rounded-full h-2">
                   <div
                     className="bg-gradient-to-r from-gray-400 to-gray-600 h-2 rounded-full"
-                    style={{ width: `${((stats.total - stats.pro - stats.business) / stats.total) * 100}%` }}
+                    style={{ width: `₺{((stats.total - stats.pro - stats.business) / stats.total) * 100}%` }}
                   />
                 </div>
               </div>
@@ -477,14 +477,14 @@ export default function AdminPage() {
         <div className="mb-8">
           <div className="flex gap-0 border-b-2 border-surface-200">
             {[
-              { id: 'pending', label: `Beklenen Ödemeler (${pendingRequests.length})`, icon: '⏳' },
-              { id: 'all', label: `Tüm Talepler (${allRequests.length})`, icon: '📋' },
-              { id: 'users', label: `Kullanıcılar (${filteredUsers.length})`, icon: '👥' },
+              { id: 'pending', label: `Beklenen Ödemeler (₺{pendingRequests.length})`, icon: '⏳' },
+              { id: 'all', label: `Tüm Talepler (₺{allRequests.length})`, icon: '📋' },
+              { id: 'users', label: `Kullanıcılar (₺{filteredUsers.length})`, icon: '👥' },
             ].map(t => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`px-6 py-4 text-sm font-semibold transition relative ${
+                className={`px-6 py-4 text-sm font-semibold transition relative ₺{
                   tab === t.id
                     ? 'text-purple-600'
                     : 'text-gray-600 hover:text-gray-900'
@@ -522,7 +522,7 @@ export default function AdminPage() {
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-bold text-gray-900 text-lg">{req.sender_name}</span>
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold ₺{
                               req.plan === 'pro'
                                 ? 'bg-purple-100 text-purple-700'
                                 : 'bg-amber-100 text-amber-700'
@@ -534,7 +534,7 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-gray-900">${req.amount.toLocaleString('tr-TR')}</div>
+                        <div className="text-2xl font-bold text-gray-900">₺{req.amount.toLocaleString('tr-TR')}</div>
                         <div className="text-xs text-gray-500">{new Date(req.created_at).toLocaleDateString('tr-TR')}</div>
                       </div>
                     </div>
@@ -638,16 +638,16 @@ export default function AdminPage() {
                       <div className="text-sm text-gray-500">{req.email}</div>
                     </div>
                     <div className="text-sm font-semibold text-gray-900">
-                      ${req.amount.toLocaleString('tr-TR')}
+                      ₺{req.amount.toLocaleString('tr-TR')}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold ₺{
                       req.plan === 'pro' ? 'bg-purple-100 text-purple-700' : 'bg-amber-100 text-amber-700'
                     }`}>
                       {req.plan === 'pro' ? 'Pro' : 'Business'}
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold ₺{
                       req.status === 'approved' ? 'bg-green-100 text-green-700' :
                       req.status === 'rejected' ? 'bg-red-100 text-red-700' :
                       'bg-amber-100 text-amber-700'
@@ -722,13 +722,13 @@ export default function AdminPage() {
                               <div className="w-24 bg-surface-200 rounded-full h-2">
                                 <div
                                   className="bg-gradient-to-r from-purple-400 to-purple-600 h-2 rounded-full"
-                                  style={{ width: `${Math.min(((u.listings_used || 0) / (u.listings_limit || 5)) * 100, 100)}%` }}
+                                  style={{ width: `₺{Math.min(((u.listings_used || 0) / (u.listings_limit || 5)) * 100, 100)}%` }}
                                 />
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold ₺{
                               u.plan === 'pro' ? 'bg-purple-100 text-purple-700' :
                               u.plan === 'business' ? 'bg-amber-100 text-amber-700' :
                               'bg-gray-100 text-gray-700'

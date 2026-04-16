@@ -11,7 +11,7 @@ function usePlans() {
     starter: {
       name: p.starterName,
       price: 0,
-      currency: '$',
+      currency: '₺',
       description: p.starterDesc,
       icon: '🚀',
       features: [
@@ -25,7 +25,7 @@ function usePlans() {
     pro: {
       name: p.proName,
       price: 19.90,
-      currency: '$',
+      currency: '₺',
       description: p.proDesc,
       icon: '⚡',
       features: [
@@ -42,7 +42,7 @@ function usePlans() {
     business: {
       name: p.businessName,
       price: 49.90,
-      currency: '$',
+      currency: '₺',
       description: p.businessDesc,
       icon: '👑',
       features: [
@@ -168,7 +168,7 @@ export default function OdemePage() {
         user_id: user.id,
         plan: plan,
         amount: plan === 'starter' ? 0 : plan === 'pro' ? 19.90 : 49.90,
-        currency: 'USD',
+        currency: 'TRY',
         status: 'pending',
         platform_order_id: orderId,
         payment_method: 'lemonsqueezy',
@@ -221,7 +221,7 @@ export default function OdemePage() {
                 <div className="text-right">
                   <p className="text-white/70 text-xs">{currentPlan === 'starter' ? p.active.oneTimeLabel : p.active.monthlyLabel}</p>
                   <p className="text-3xl font-bold text-white mt-1">
-                    ${activePlan?.price || '0'}<span className="text-lg font-medium">{currentPlan !== 'starter' ? '/mo' : ''}</span>
+                    {activePlan?.price || '0'}₺<span className="text-lg font-medium">{currentPlan !== 'starter' ? '/ay' : ''}</span>
                   </p>
                 </div>
               </div>
@@ -337,10 +337,12 @@ export default function OdemePage() {
                     {/* Price */}
                     <div className="mb-6 pb-5 border-b border-gray-100">
                       <div className="flex items-end gap-0.5">
-                        <span className="text-lg font-bold text-gray-500 mb-1 mr-0.5">$</span>
-                        <span className="text-4xl font-extrabold text-gray-900">{isStarter ? 'Free' : plan.price}</span>
+                        <span className="text-4xl font-extrabold text-gray-900">{isStarter ? p.free || 'Ücretsiz' : plan.price}</span>
                         {!isStarter && (
-                          <span className="text-sm text-gray-400 mb-1 ml-0.5">/mo</span>
+                          <>
+                            <span className="text-lg font-bold text-gray-500 mb-1 ml-0.5">₺</span>
+                            <span className="text-sm text-gray-400 mb-1 ml-0.5">/ay</span>
+                          </>
                         )}
                       </div>
                       <p className="text-xs text-gray-400 mt-1.5">
@@ -383,7 +385,7 @@ export default function OdemePage() {
                       ) : (
                         <>
                           <span>
-                            {isStarter ? p.tryNow : `$${plan.price}${p.perMonth} — ${p.getStarted}`}
+                            {isStarter ? p.tryNow : `${plan.price}₺${p.perMonth} — ${p.getStarted}`}
                           </span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />

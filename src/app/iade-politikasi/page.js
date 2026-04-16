@@ -26,8 +26,8 @@ export default function IadePolitikasiPage() {
             <h2 className="text-lg font-semibold text-trust-dark">3. Ücretli Abonelikler</h2>
             <p>Pro ve Business planları aylık abonelik modeli ile çalışır. Abonelik bedeli, her dönem başında tahsil edilir.</p>
             <ul className="list-disc pl-5 space-y-1">
-              <li><strong>Pro Plan:</strong> $19.90/month</li>
-              <li><strong>Business Plan:</strong> $49.90/month</li>
+              <li><strong>Pro Plan:</strong> Aylık 19,90₺</li>
+              <li><strong>Business Plan:</strong> Aylık 49,90₺</li>
             </ul>
           </section>
 

@@ -33,9 +33,9 @@ function formatPrice(price) {
 }
 
 const PLANS = {
-  starter: { name: 'ListingAI Starter', price: '0.00', limit: 2, duration: 0 },
-  pro: { name: 'ListingAI Pro', price: '19.90', limit: 100, duration: 30 },
-  business: { name: 'ListingAI Business', price: '49.90', limit: 999999, duration: 30 },
+  starter: { name: 'ListingAI Starter', price: '0.00', limit: 2, duration: 0 },       // Ücretsiz
+  pro: { name: 'ListingAI Pro', price: '19.90', limit: 100, duration: 30 },          // 19.90 TL
+  business: { name: 'ListingAI Business', price: '49.90', limit: 999999, duration: 30 }, // 49.90 TL
 }
 
 export async function POST(request) {
