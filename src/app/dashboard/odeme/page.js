@@ -181,6 +181,7 @@ export default function OdemePage() {
         'checkout[custom][plan]': plan,
         'checkout[custom][order_id]': orderId,
         'checkout[email]': user.email,
+        'checkout[success_url]': `${window.location.origin}/dashboard/odeme?success=true`,
       })
 
       window.location.href = `${checkoutBase}?${params.toString()}`
