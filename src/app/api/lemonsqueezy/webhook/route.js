@@ -46,7 +46,7 @@ export async function POST(request) {
 
     // order_completed — tek seferlik ödeme başarılı
     // subscription_payment_success — abonelik ödemesi başarılı
-    if (eventName === 'order_completed' || eventName === 'subscription_payment_success') {
+    if (eventName === 'order_created' || eventName === 'subscription_payment_success') {
       const customData = event.meta?.custom_data || {}
       const userId = customData.user_id
       const plan = customData.plan
