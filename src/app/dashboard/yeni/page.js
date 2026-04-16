@@ -336,7 +336,7 @@ export default function YeniListingPage() {
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.newListing?.productName || 'Ürün Adı'} *</label>
           <input className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-            placeholder="örn: Samsung Galaxy Buds2 Pro"
+            placeholder={t?.newListing?.titlePlaceholder}
             value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
         </div>
 
@@ -344,7 +344,7 @@ export default function YeniListingPage() {
           <div>
             <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.newListing?.brand || 'Marka'}</label>
             <input className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-              placeholder="örn: Samsung"
+              placeholder={t?.newListing?.brandPlaceholder}
               value={form.brand} onChange={e => setForm({ ...form, brand: e.target.value })} />
           </div>
           <div>

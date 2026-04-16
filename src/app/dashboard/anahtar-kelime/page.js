@@ -193,7 +193,7 @@ export default function AnahtarKelimePage() {
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.keywords?.product} *</label>
           <input className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-            placeholder="örn: kablosuz kulaklık, yoga matı, protein tozu..."
+            placeholder={t?.keywords?.searchPlaceholder}
             value={product} onChange={e => setProduct(e.target.value)} />
         </div>
 

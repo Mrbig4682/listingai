@@ -7,7 +7,7 @@ export default function ProfilPage() {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
 
   useEffect(() => {
     loadProfile()
@@ -58,14 +58,14 @@ export default function ProfilPage() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Profil & Üyelik</h1>
-          <p className="text-sm text-gray-500 mt-1">Hesap bilgilerin ve üyelik durumun</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t?.profile?.title}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t?.profile?.subtitle}</p>
         </div>
 
         {/* Account Info Card */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-6">
           <div className="px-6 py-5 border-b border-gray-100">
-            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Hesap Bilgileri</h2>
+            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">{t?.profile?.accountInfo}</h2>
           </div>
           <div className="px-6 py-5 space-y-4">
             <div className="flex items-center justify-between">
@@ -84,13 +84,13 @@ export default function ProfilPage() {
             </div>
             <div className="grid grid-cols-2 gap-4 pt-2">
               <div className="bg-gray-50 rounded-xl p-3">
-                <p className="text-xs text-gray-400 font-medium">Kayıt Tarihi</p>
+                <p className="text-xs text-gray-400 font-medium">{t?.profile?.registrationDate}</p>
                 <p className="text-sm font-semibold text-gray-800 mt-0.5">
-                  {user?.created_at ? new Date(user.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
+                  {user?.created_at ? new Date(user.created_at).toLocaleDateString(locale === 'tr' ? 'tr-TR' : locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : locale === 'pt' ? 'pt-BR' : locale === 'de' ? 'de-DE' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
                 </p>
               </div>
               <div className="bg-gray-50 rounded-xl p-3">
-                <p className="text-xs text-gray-400 font-medium">Giriş Yöntemi</p>
+                <p className="text-xs text-gray-400 font-medium">{t?.profile?.loginMethod}</p>
                 <p className="text-sm font-semibold text-gray-800 mt-0.5">
                   {user?.app_metadata?.provider === 'google' ? '🔵 Google' : user?.app_metadata?.provider === 'apple' ? '⚫ Apple' : '📧 E-posta'}
                 </p>
@@ -104,7 +104,7 @@ export default function ProfilPage() {
           <div className={`bg-gradient-to-r ${current.color} px-6 py-6`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/70 text-xs font-medium uppercase tracking-wider">Aktif Plan</p>
+                <p className="text-white/70 text-xs font-medium uppercase tracking-wider">{t?.profile?.activePlan}</p>
                 <h2 className="text-2xl font-bold text-white mt-1 flex items-center gap-2">
                   <span className="text-2xl">{current.icon}</span>
                   {current.name}
@@ -120,7 +120,7 @@ export default function ProfilPage() {
             {/* Usage */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-medium text-gray-700">İlan Kullanımı</p>
+                <p className="text-sm font-medium text-gray-700">{t?.profile?.usage}</p>
                 <p className="text-sm font-bold text-gray-900">
                   {used} / {limit >= 999999 ? '∞' : limit}
                 </p>
@@ -132,7 +132,7 @@ export default function ProfilPage() {
                 />
               </div>
               <p className="text-xs text-gray-400 mt-1.5">
-                {limit >= 999999 ? 'Sınırsız ilan hakkı' : `${Math.max(0, limit - used)} ilan hakkı kaldı`}
+                {limit >= 999999 ? t?.profile?.unlimitedListings : `${Math.max(0, limit - used)} ${t?.profile?.listingsLeft}`}
               </p>
             </div>
 
@@ -140,15 +140,15 @@ export default function ProfilPage() {
             {plan !== 'free' && (
               <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100">
                 <div className="bg-gray-50 rounded-xl p-3">
-                  <p className="text-xs text-gray-400 font-medium">Başlangıç Tarihi</p>
+                  <p className="text-xs text-gray-400 font-medium">{t?.profile?.startDate}</p>
                   <p className="text-sm font-semibold text-gray-800 mt-0.5">
-                    {planStarted ? planStarted.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
+                    {planStarted ? planStarted.toLocaleDateString(locale === 'tr' ? 'tr-TR' : locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : locale === 'pt' ? 'pt-BR' : locale === 'de' ? 'de-DE' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
                   </p>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-3">
-                  <p className="text-xs text-gray-400 font-medium">Bitiş Tarihi</p>
+                  <p className="text-xs text-gray-400 font-medium">{t?.profile?.endDate}</p>
                   <p className="text-sm font-semibold text-gray-800 mt-0.5">
-                    {planExpires ? planExpires.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
+                    {planExpires ? planExpires.toLocaleDateString(locale === 'tr' ? 'tr-TR' : locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : locale === 'pt' ? 'pt-BR' : locale === 'de' ? 'de-DE' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
                   </p>
                 </div>
                 {daysLeft !== null && (
@@ -156,7 +156,7 @@ export default function ProfilPage() {
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                       <p className="text-sm font-medium text-green-700">
-                        Üyeliğiniz aktif — {daysLeft} gün kaldı
+                        {t?.profile?.membershipActive} — {daysLeft} {t?.profile?.daysLeft}
                       </p>
                     </div>
                   </div>
@@ -171,21 +171,21 @@ export default function ProfilPage() {
                   href="/dashboard/odeme"
                   className="flex-1 py-3 bg-gradient-to-r from-brand-500 to-purple-600 text-white text-sm font-semibold rounded-xl hover:shadow-md transition-all text-center"
                 >
-                  Planı Yükselt
+                  {t?.profile?.upgradePlan}
                 </a>
               ) : plan !== 'business' ? (
                 <a
                   href="/dashboard/odeme"
                   className="flex-1 py-3 bg-gradient-to-r from-brand-500 to-purple-600 text-white text-sm font-semibold rounded-xl hover:shadow-md transition-all text-center"
                 >
-                  Business'a Yükselt
+                  {t?.profile?.upgradeToBusiness}
                 </a>
               ) : null}
               <a
                 href="mailto:listingai.official@gmail.com"
                 className="flex-1 py-3 bg-gray-100 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-200 transition-all text-center"
               >
-                Destek Al
+                {t?.profile?.getSupport}
               </a>
             </div>
           </div>
@@ -199,6 +199,7 @@ export default function ProfilPage() {
 }
 
 function PaymentHistory({ userId }) {
+  const { t, locale } = useI18n()
   const [payments, setPayments] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -219,9 +220,9 @@ function PaymentHistory({ userId }) {
   if (loading) return null
 
   const statusMap = {
-    completed: { label: 'Tamamlandı', class: 'bg-green-100 text-green-700' },
-    pending: { label: 'Beklemede', class: 'bg-yellow-100 text-yellow-700' },
-    failed: { label: 'Başarısız', class: 'bg-red-100 text-red-700' },
+    completed: { label: t?.profile?.completed, class: 'bg-green-100 text-green-700' },
+    pending: { label: t?.profile?.pending, class: 'bg-yellow-100 text-yellow-700' },
+    failed: { label: t?.profile?.failed, class: 'bg-red-100 text-red-700' },
   }
 
   const planLabels = { starter: 'Starter', pro: 'Pro', business: 'Business' }
@@ -229,11 +230,11 @@ function PaymentHistory({ userId }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
       <div className="px-6 py-5 border-b border-gray-100">
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Ödeme Geçmişi</h2>
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">{t?.profile?.paymentHistory}</h2>
       </div>
       {payments.length === 0 ? (
         <div className="px-6 py-8 text-center">
-          <p className="text-sm text-gray-400">Henüz ödeme kaydı yok</p>
+          <p className="text-sm text-gray-400">{t?.profile?.noPayments}</p>
         </div>
       ) : (
         <div className="divide-y divide-gray-100">
@@ -248,7 +249,7 @@ function PaymentHistory({ userId }) {
                   <div>
                     <p className="text-sm font-semibold text-gray-900">{planLabels[p.plan] || p.plan} Plan</p>
                     <p className="text-xs text-gray-400">
-                      {new Date(p.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(p.created_at).toLocaleDateString(locale === 'tr' ? 'tr-TR' : locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : locale === 'pt' ? 'pt-BR' : locale === 'de' ? 'de-DE' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
                 </div>

@@ -182,21 +182,21 @@ export default function OptimizerPage() {
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">{t.optimizer.currentTitle}</label>
           <input className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-            placeholder="Mevcut ürün başlığını yapıştırın..."
+            placeholder={t.optimizer.titlePlaceholder}
             value={title} onChange={e => setTitle(e.target.value)} />
         </div>
 
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">{t.optimizer.currentBullets}</label>
           <textarea className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 min-h-[80px] resize-y"
-            placeholder="Her özelliği yeni satıra yazın..."
+            placeholder={t.optimizer.bulletsPlaceholder}
             value={bullets} onChange={e => setBullets(e.target.value)} />
         </div>
 
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">{t.optimizer.currentDesc}</label>
           <textarea className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 min-h-[100px] resize-y"
-            placeholder="Mevcut ürün açıklamasını yapıştırın..."
+            placeholder={t.optimizer.descPlaceholder}
             value={description} onChange={e => setDescription(e.target.value)} />
         </div>
       </div>
