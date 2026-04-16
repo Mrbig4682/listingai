@@ -148,8 +148,8 @@ export default function OdemePage() {
 
   const CHECKOUT_LINKS = {
     starter: null, // Free plan - no checkout
-    pro: 'https://listingaistore.lemonsqueezy.com/buy/listingai-pro-1',
-    business: 'https://listingaistore.lemonsqueezy.com/buy/listingai-business-1',
+    pro: 'https://listingaistore.lemonsqueezy.com/checkout/buy/c482e1ae-e143-4e81-9aec-06e73b5680e6',
+    business: 'https://listingaistore.lemonsqueezy.com/checkout/buy/bfdda578-2c6f-44ef-b396-2d419792f327',
   }
 
   async function handlePayment(planKey) {
