@@ -27,14 +27,14 @@ export default function PWAInstallBanner() {
 
     if (isIOSDevice) {
       // Show iOS banner after 3 seconds
-      setTimeout(() => setShowBanner(true), 3000)
+      setTimeout(() => setShowBanner(true), 25000)
     }
 
     // Listen for beforeinstallprompt (Android/Chrome)
     const handler = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      setTimeout(() => setShowBanner(true), 3000)
+      setTimeout(() => setShowBanner(true), 25000)
     }
 
     window.addEventListener('beforeinstallprompt', handler)
