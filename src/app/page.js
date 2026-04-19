@@ -337,7 +337,7 @@ export default function LandingPage() {
             <span>© 2026 ListingAI</span>
             <Link href="/gizlilik" className="hover:text-gray-700 transition">{t?.sidebar?.privacy || 'Gizlilik'}</Link>
             <Link href="/kullanim-sartlari" className="hover:text-gray-700 transition">{t?.sidebar?.terms || 'Kullanım Şartları'}</Link>
-            <Link href="/mesafeli-satis" className="hover:text-gray-700 transition">{t?.sidebar?.distanceSales || 'Mesafeli Satıły�</Link>
+            <Link href="/mesafeli-satis" className="hover:text-gray-700 transition">{t?.sidebar?.distanceSales || 'Mesafeli Satış'}</Link>
             <Link href="/iade-politikasi" className="hover:text-gray-700 transition">İade Politikası</Link>
           </div>
         </div>
