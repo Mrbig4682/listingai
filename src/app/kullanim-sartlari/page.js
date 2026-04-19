@@ -57,7 +57,7 @@ export default function KullanimSartlariPage() {
             </ul>
             <p><strong>4.2</strong> Tüm fiyatlar Türk Lirası (TRY) cinsinden olup KDV dahildir.</p>
             <p><strong>4.3</strong> Ücretli abonelikler aylık olarak otomatik yenilenir. Ödeme, her dönem başında kredi kartı veya banka kartı ile tahsil edilir.</p>
-            <p><strong>4.4</strong> Ödemeler PayTR güvenli sanal POS altyapısı üzerinden işlenir. Kredi kartı bilgileri ListingAI sunucularında saklanmaz.</p>
+            <p><strong>4.4</strong> Ödemeler Lemon Squeezy (Merchant of Record) güvenli altyapısı üzerinden işlenir. Kredi kartı bilgileri ListingAI sunucularında saklanmaz.</p>
             <p><strong>4.5</strong> ListingAI, fiyatlandırmada değişiklik yapma hakkını saklı tutar. Değişiklikler mevcut abonelik döneminin bitiminden itibaren uygulanır ve önceden bildirilir.</p>
           </section>
 

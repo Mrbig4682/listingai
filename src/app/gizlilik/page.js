@@ -87,7 +87,7 @@ export default function GizlilikPage() {
             <ul className="list-disc pl-5 space-y-1">
               <li>Tüm iletişimler SSL/TLS (256-bit) şifreleme ile korunur</li>
               <li>Veritabanı şifrelemesi (Supabase AES-256 encryption at rest)</li>
-              <li>Ödeme işlemleri PCI DSS uyumlu PayTR altyapısında gerçekleştirilir</li>
+              <li>Ödeme işlemleri PCI DSS uyumlu Lemon Squeezy altyapısında gerçekleştirilir</li>
               <li>Kullanıcı şifreleri bcrypt algoritmasıyla hashlenir</li>
               <li>Row Level Security (RLS) ile veritabanı erişim kontrolü</li>
               <li>API istekleri rate limiting ile korunur</li>
@@ -126,9 +126,9 @@ export default function GizlilikPage() {
                     <td className="border border-gray-200 px-4 py-2">Ürün bilgileri (anonim)</td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-200 px-4 py-2">PayTR</td>
-                    <td className="border border-gray-200 px-4 py-2">Ödeme işlemleri</td>
-                    <td className="border border-gray-200 px-4 py-2">E-posta, ödeme tutarı</td>
+                    <td className="border border-gray-200 px-4 py-2">Lemon Squeezy</td>
+                    <td className="border border-gray-200 px-4 py-2">Ödeme işlemleri (Merchant of Record)</td>
+                    <td className="border border-gray-200 px-4 py-2">E-posta, ödeme tutarı, fatura bilgileri</td>
                   </tr>
                   <tr className="bg-gray-50">
                     <td className="border border-gray-200 px-4 py-2">Vercel</td>

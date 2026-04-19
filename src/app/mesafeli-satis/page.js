@@ -88,7 +88,7 @@ export default function MesafeliSatisPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-trust-dark">Madde 4 — Ödeme Şekli ve Koşulları</h2>
-            <p><strong>4.1</strong> Hizmet bedeli, Alıcı tarafından kredi kartı veya banka kartı ile ödenir. Ödemeler, PayTR güvenli sanal POS altyapısı üzerinden işlenir.</p>
+            <p><strong>4.1</strong> Hizmet bedeli, Alıcı tarafından kredi kartı veya banka kartı ile ödenir. Ödemeler, Lemon Squeezy (Merchant of Record) güvenli altyapısı üzerinden işlenir.</p>
             <p><strong>4.2</strong> Kredi kartı bilgileri Satıcı&apos;nın sunucularında saklanmaz. Tüm ödeme işlemleri PCI DSS uyumlu altyapıda SSL/TLS şifreleme ile korunarak gerçekleştirilir.</p>
             <p><strong>4.3</strong> Ücretli abonelikler her ay otomatik olarak yenilenir. Abonelik bedeli, her dönem başında tahsil edilir.</p>
             <p><strong>4.4</strong> Ödeme başarısız olması durumunda hizmet erişimi askıya alınabilir. Kullanıcı, ödeme yöntemini güncelleyerek hizmetine devam edebilir.</p>

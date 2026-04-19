@@ -131,7 +131,7 @@ export default function IadePolitikasiPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-trust-dark">7. Ödeme Güvenliği</h2>
-            <p><strong>7.1</strong> Tüm ödemeler, PCI DSS (Payment Card Industry Data Security Standard) uyumlu PayTR güvenli sanal POS altyapısı üzerinden işlenir.</p>
+            <p><strong>7.1</strong> Tüm ödemeler, PCI DSS (Payment Card Industry Data Security Standard) uyumlu Lemon Squeezy (Merchant of Record) güvenli altyapısı üzerinden işlenir.</p>
             <p><strong>7.2</strong> Kredi kartı ve banka kartı bilgileri ListingAI sunucularında <strong>hiçbir şekilde saklanmaz.</strong></p>
             <p><strong>7.3</strong> Ödeme işlemleri SSL/TLS şifreleme ile korunur.</p>
             <p><strong>7.4</strong> 3D Secure doğrulama desteklenir.</p>
