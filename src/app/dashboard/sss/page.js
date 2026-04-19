@@ -11,7 +11,7 @@ const faqData = {
     { q: 'Rakip analizi ne işe yarar?', a: 'Ürününüzün bulunduğu pazardaki rakipleri, fiyat aralıklarını, anahtar kelime boşluklarını ve farklılaşma fırsatlarını keşfetmenizi sağlar.' },
     { q: 'A/B testi nasıl yapılır?', a: 'İki farklı ilan versiyonunuzu yapıştırın, AI her iki versiyonu SEO, okunabilirlik, dönüşüm ve anahtar kelime açısından karşılaştırır ve en iyi birleştirilmiş versiyonu oluşturur.' },
     { q: 'Aboneliğimi nasıl iptal edebilirim?', a: 'Aboneliğinizi istediğiniz zaman hesap ayarlarından iptal edebilirsiniz. Mevcut dönemin sonuna kadar hizmet almaya devam edersiniz.' },
-    { q: 'Verilerim güvende mi?', a: 'Evet. Tüm verileriniz SSL şifreleme ile korunur. Ödeme bilgileri PCI DSS uyumlu iyzico altyapısında güvenle işlenir, tarafımızca saklanmaz.' },
+    { q: 'Verilerim güvende mi?', a: 'Evet. Tüm verileriniz SSL şifreleme ile korunur. Ödeme bilgileri PCI DSS uyumlu Lemon Squeezy altyapısında güvenle işlenir, tarafımızca saklanmaz.' },
   ],
   en: [
     { q: 'What is ListingAI?', a: 'ListingAI is an AI-powered e-commerce listing optimization platform. It helps you create SEO-optimized product listings for Amazon, eBay, Etsy, Trendyol and many more platforms.' },
@@ -21,7 +21,7 @@ const faqData = {
     { q: 'What is competitor analysis for?', a: 'It helps you discover competitors, price ranges, keyword gaps and differentiation opportunities in your product\'s market.' },
     { q: 'How does A/B testing work?', a: 'Paste two different listing versions, and AI compares both in terms of SEO, readability, conversion and keywords, then creates the best merged version.' },
     { q: 'How can I cancel my subscription?', a: 'You can cancel your subscription anytime from account settings. You continue to receive service until the end of the current period.' },
-    { q: 'Is my data secure?', a: 'Yes. All data is protected with SSL encryption. Payment information is securely processed via PCI DSS compliant iyzico infrastructure.' },
+    { q: 'Is my data secure?', a: 'Yes. All data is protected with SSL encryption. Payment information is securely processed via PCI DSS compliant Lemon Squeezy infrastructure.' },
   ],
 }
 
