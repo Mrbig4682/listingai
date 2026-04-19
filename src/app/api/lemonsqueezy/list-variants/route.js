@@ -1,21 +1,12 @@
-// GECICI DEBUG ROUTE — monthly variant ID'lerini almak icin
-// Bu route'u kullanimdan sonra SILMEK GEREKLI
-export async function GET(request) {
-  const url = new URL(request.url)
-  const token = url.searchParams.get('token')
-
-  // Basit koruma — token eslesmeli
-  if (token !== process.env.LEMONSQUEEZY_WEBHOOK_SECRET) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
+// GECICI DEBUG ROUTE — monthly variant ID'lerini almak icin. BU DOSYA KULLANILDIKTAN SONRA SILINECEK.
+export async function GET() {
   const apiKey = process.env.LEMONSQUEEZY_API_KEY
   if (!apiKey) {
     return Response.json({ error: 'No API key' }, { status: 500 })
   }
 
   try {
-    const response = await fetch('https://api.lemonsqueezy.com/v1/variants?include=product', {
+    const response = await fetch('https://api.lemonsqueezy.com/v1/variants', {
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
