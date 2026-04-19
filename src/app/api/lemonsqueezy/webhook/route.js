@@ -13,8 +13,17 @@ function getPlanDetails(planName) {
     starter: { limit: 2, duration: 365 },
     pro: { limit: 100, duration: 30 },
     business: { limit: 999999, duration: 30 },
+    pro_annual: { limit: 100, duration: 365 },
+    business_annual: { limit: 999999, duration: 365 },
   }
   return plans[planName] || null
+}
+
+// user_profiles.plan kolonu sadece base plan ismi tutar, yıllık bilgi duration'da
+function normalizePlanName(planName) {
+  if (planName === 'pro_annual') return 'pro'
+  if (planName === 'business_annual') return 'business'
+  return planName
 }
 
 export async function POST(request) {
@@ -91,11 +100,12 @@ export async function POST(request) {
       const expiry = new Date()
       expiry.setDate(expiry.getDate() + planDetails.duration)
 
-      // User profile güncelle
+      // User profile güncelle — yıllık plan base ismle kaydedilir (pro_annual → pro)
+      const normalizedPlan = normalizePlanName(plan)
       const { error: updateError } = await supabase
         .from('user_profiles')
         .update({
-          plan: plan,
+          plan: normalizedPlan,
           listings_limit: planDetails.limit,
           listings_used: 0,
           plan_started_at: new Date().toISOString(),
