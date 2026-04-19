@@ -172,19 +172,24 @@ export default function LandingPage() {
             </Link>
             <span className="text-sm text-gray-400">{l.ctaSub}</span>
           </div>
+          <p className="mt-3 text-xs text-gray-500 font-medium">
+            {locale === 'tr' ? 'Ücretsiz başla • Pro sadece $1/ay' : locale === 'es' ? 'Empieza gratis • Pro solo $1/mes' : locale === 'pt' ? 'Comece grátis • Pro só $1/mês' : locale === 'de' ? 'Kostenlos starten • Pro nur $1/Monat' : locale === 'fr' ? 'Démarrez gratuit • Pro à $1/mois' : 'Start free • Pro just $1/month'}
+          </p>
 
-          {/* Stats */}
-          <div className="flex justify-center gap-8 md:gap-16 mt-14 flex-wrap">
-            {[
-              { num: '50K+', label: 'Listings', color: 'text-brand-600' },
-              { num: '3.2K+', label: 'Sellers', color: 'text-emerald-600' },
-              { num: '34%', label: 'Avg. Sales Lift', color: 'text-fuchsia-600' }
-            ].map(s => (
-              <div key={s.label} className="text-center">
-                <div className={`text-2xl md:text-3xl font-extrabold ${s.color}`}>{s.num}</div>
-                <div className="text-xs text-gray-400 font-medium mt-1">{s.label}</div>
-              </div>
-            ))}
+          {/* Trust badges — real, not inflated */}
+          <div className="flex justify-center items-center gap-6 md:gap-10 mt-12 flex-wrap">
+            <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+              <span className="w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-[11px] font-bold">⚡</span>
+              <span className="font-semibold">{locale === 'tr' ? '~30 sn. işlem' : locale === 'es' ? '~30 s. por listing' : locale === 'pt' ? '~30 s. por listing' : locale === 'de' ? '~30 Sek. pro Listing' : locale === 'fr' ? '~30 s. par listing' : '~30s per listing'}</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+              <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[11px] font-bold">✦</span>
+              <span className="font-semibold">{locale === 'tr' ? '11 platform' : '11 platforms'}</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+              <span className="w-6 h-6 rounded-full bg-fuchsia-100 text-fuchsia-600 flex items-center justify-center text-[11px] font-bold">★</span>
+              <span className="font-semibold">Claude Opus 4.6</span>
+            </div>
           </div>
 
           {/* Platform logos */}
@@ -332,7 +337,7 @@ export default function LandingPage() {
             <span>© 2026 ListingAI</span>
             <Link href="/gizlilik" className="hover:text-gray-700 transition">{t?.sidebar?.privacy || 'Gizlilik'}</Link>
             <Link href="/kullanim-sartlari" className="hover:text-gray-700 transition">{t?.sidebar?.terms || 'Kullanım Şartları'}</Link>
-            <Link href="/mesafeli-satis" className="hover:text-gray-700 transition">{t?.sidebar?.distanceSales || 'Mesafeli Satış'}</Link>
+            <Link href="/mesafeli-satis" className="hover:text-gray-700 transition">{t?.sidebar?.distanceSales || 'Mesafeli Satıły�</Link>
             <Link href="/iade-politikasi" className="hover:text-gray-700 transition">İade Politikası</Link>
           </div>
         </div>
