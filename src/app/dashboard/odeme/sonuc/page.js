@@ -78,6 +78,8 @@ function SuccessScreen({ planName, message }) {
     starter: { duration: 'Tek Seferlik', features: ['2 Ilan Optimizasyonu', 'SEO Baslik & Aciklama', '10+ Platform Destegi'] },
     pro: { duration: '30 gun', features: ['100 Ilan/Ay', 'Toplu Ilan Uretimi', 'Oncelikli Destek'] },
     business: { duration: '30 gun', features: ['Sinirsiz Ilan', '7/24 VIP Destek', 'AI E-Ticaret Asistani'] },
+    pro_annual: { duration: '365 gun (1 Yil)', features: ['100 Ilan/Ay', 'Toplu Ilan Uretimi', 'Oncelikli Destek', 'Yillik %30 Tasarruf'] },
+    business_annual: { duration: '365 gun (1 Yil)', features: ['Sinirsiz Ilan', '7/24 VIP Destek', 'AI E-Ticaret Asistani', 'Yillik %30 Tasarruf'] },
   }
   const config = planConfig[message] || planConfig.pro
   const planDuration = config.duration
@@ -296,7 +298,13 @@ function SonucContent() {
   const message = searchParams.get('message')
 
   if (status === 'success') {
-    const planNames = { starter: 'Starter', pro: 'Pro', business: 'Business' }
+    const planNames = {
+      starter: 'Starter',
+      pro: 'Pro',
+      business: 'Business',
+      pro_annual: 'Pro Yillik',
+      business_annual: 'Business Yillik',
+    }
     const planName = planNames[message] || message || 'Pro'
     return <SuccessScreen planName={planName} message={message} />
   }
