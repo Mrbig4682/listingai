@@ -25,9 +25,11 @@ function usePlans() {
     pro: {
       name: p.proName,
       price: 1,
+      annualPrice: 8.4,
       currency: '$',
       description: p.proDesc,
       icon: '⚡',
+      hasAnnual: true,
       features: [
         p.features.listingOpt100,
         p.features.aiSeo,
@@ -42,9 +44,11 @@ function usePlans() {
     business: {
       name: p.businessName,
       price: 2,
+      annualPrice: 16.8,
       currency: '$',
       description: p.businessDesc,
       icon: '👑',
+      hasAnnual: true,
       features: [
         p.features.listingOptUnlimited,
         p.features.aiSeo,
@@ -115,6 +119,7 @@ function TrustBadge({ trust }) {
 
 export default function OdemePage() {
   const [selectedPlan, setSelectedPlan] = useState('pro')
+  const [billingCycle, setBillingCycle] = useState('monthly') // 'monthly' | 'yearly'
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [currentPlan, setCurrentPlan] = useState('free')
@@ -156,15 +161,9 @@ export default function OdemePage() {
     }
   }
 
-  const CHECKOUT_LINKS = {
-    starter: null, // Free plan - no checkout
-    pro: 'https://listingaistore.lemonsqueezy.com/checkout/buy/c482e1ae-e143-4e81-9aec-06e73b5680e6',
-    business: 'https://listingaistore.lemonsqueezy.com/checkout/buy/bfdda578-2c6f-44ef-b396-2d419792f327',
-  }
-
   async function handlePayment(planKey) {
-    const plan = planKey || selectedPlan
-    setSelectedPlan(plan)
+    const basePlan = planKey || selectedPlan
+    setSelectedPlan(basePlan)
     setLoading(true)
     setError('')
 
@@ -172,29 +171,35 @@ export default function OdemePage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Session not found. Please sign in.')
 
-      // Supabase'e pending ödeme kaydet
-      const orderId = `${user.id.substring(0, 8)}_${plan}_${Date.now()}`
-      await supabase.from('shopier_payments').insert({
-        user_id: user.id,
-        plan: plan,
-        amount: plan === 'starter' ? 0 : plan === 'pro' ? 1 : 2,
-        currency: 'USD',
-        status: 'pending',
-        platform_order_id: orderId,
-        payment_method: 'lemonsqueezy',
+      // Yıllık seçiliyse ve bu plan için annual variant varsa, annual key kullan
+      const planDef = PLANS[basePlan]
+      const useAnnual = billingCycle === 'yearly' && planDef?.hasAnnual
+      const finalPlan = useAnnual ? `${basePlan}_annual` : basePlan
+
+      // Starter için ödeme yok
+      if (basePlan === 'starter') {
+        window.location.href = '/dashboard'
+        return
+      }
+
+      // create-checkout API'sine POST at
+      const res = await fetch('/api/lemonsqueezy/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: finalPlan,
+          userId: user.id,
+          userEmail: user.email,
+          userName: user.user_metadata?.full_name || user.email.split('@')[0],
+        }),
       })
 
-      // Lemon Squeezy checkout URL'ine custom parametreler ekle
-      const checkoutBase = CHECKOUT_LINKS[plan]
-      const params = new URLSearchParams({
-        'checkout[custom][user_id]': user.id,
-        'checkout[custom][plan]': plan,
-        'checkout[custom][order_id]': orderId,
-        'checkout[email]': user.email,
-        'checkout[success_url]': `${window.location.origin}/dashboard/odeme?success=true`,
-      })
+      const data = await res.json()
+      if (!res.ok || !data.checkoutUrl) {
+        throw new Error(data.error || 'Checkout could not be created.')
+      }
 
-      window.location.href = `${checkoutBase}?${params.toString()}`
+      window.location.href = data.checkoutUrl
     } catch (err) {
       setError(err.message || 'An error occurred.')
     } finally {
@@ -351,12 +356,45 @@ export default function OdemePage() {
           </p>
         </div>
 
+        {/* Billing cycle toggle */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex items-center gap-1 p-1 bg-gray-100 rounded-full">
+            <button
+              onClick={() => setBillingCycle('monthly')}
+              className={`px-5 py-2 text-sm font-semibold rounded-full transition-all ${
+                billingCycle === 'monthly'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingCycle('yearly')}
+              className={`px-5 py-2 text-sm font-semibold rounded-full transition-all flex items-center gap-2 ${
+                billingCycle === 'yearly'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Yearly
+              <span className="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wide">
+                Save 30%
+              </span>
+            </button>
+          </div>
+        </div>
+
         {/* Plan Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
           {Object.entries(PLANS).map(([key, plan]) => {
             const isSelected = selectedPlan === key
             const isBusiness = key === 'business'
             const isStarter = key === 'starter'
+            const showYearly = billingCycle === 'yearly' && plan.hasAnnual
+            const displayPrice = isStarter ? 0 : (showYearly ? plan.annualPrice : plan.price)
+            const cycleLabel = showYearly ? '/yr' : '/mo'
+            const monthlyEquiv = showYearly ? (plan.annualPrice / 12).toFixed(2) : null
 
             return (
               <div
@@ -397,16 +435,21 @@ export default function OdemePage() {
                     {/* Price */}
                     <div className="mb-6 pb-5 border-b border-gray-100">
                       <div className="flex items-end gap-0.5">
-                        <span className="text-4xl font-extrabold text-gray-900">{isStarter ? p.free || 'Free' : `$${plan.price}`}</span>
+                        <span className="text-4xl font-extrabold text-gray-900">{isStarter ? p.free || 'Free' : `$${displayPrice}`}</span>
                         {!isStarter && (
-                          <>
-                            <span className="text-sm text-gray-400 mb-1 ml-1">/mo</span>
-                          </>
+                          <span className="text-sm text-gray-400 mb-1 ml-1">{cycleLabel}</span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-400 mt-1.5">
-                        {isStarter ? p.oneTime : p.allTaxes}
-                      </p>
+                      {!isStarter && showYearly && (
+                        <p className="text-xs text-green-600 font-semibold mt-1.5">
+                          ~${monthlyEquiv}/mo · Save 30%
+                        </p>
+                      )}
+                      {!(showYearly && !isStarter) && (
+                        <p className="text-xs text-gray-400 mt-1.5">
+                          {isStarter ? p.oneTime : p.allTaxes}
+                        </p>
+                      )}
                     </div>
 
                     {/* Feature List */}
@@ -444,7 +487,7 @@ export default function OdemePage() {
                       ) : (
                         <>
                           <span>
-                            {isStarter ? p.tryNow : `$${plan.price}${p.perMonth} — ${p.getStarted}`}
+                            {isStarter ? p.tryNow : `$${displayPrice}${cycleLabel} — ${p.getStarted}`}
                           </span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
