@@ -12,12 +12,16 @@ const PLAN_VARIANTS = {
   starter: process.env.LS_VARIANT_STARTER,
   pro: process.env.LS_VARIANT_PRO,
   business: process.env.LS_VARIANT_BUSINESS,
+  pro_annual: process.env.LS_VARIANT_PRO_ANNUAL,
+  business_annual: process.env.LS_VARIANT_BUSINESS_ANNUAL,
 }
 
 const PLANS = {
-  starter: { price: 0, limit: 2, duration: 0 },        // Free
-  pro: { price: 1, limit: 100, duration: 30 },          // $1/mo
-  business: { price: 2, limit: 999999, duration: 30 },  // $2/mo
+  starter: { price: 0, limit: 2, duration: 0 },                   // Free
+  pro: { price: 1, limit: 100, duration: 30 },                    // $1/mo
+  business: { price: 2, limit: 999999, duration: 30 },            // $2/mo
+  pro_annual: { price: 8.4, limit: 100, duration: 365 },          // $8.40/yr (Save 30%)
+  business_annual: { price: 16.8, limit: 999999, duration: 365 },// $16.80/yr (Save 30%)
 }
 
 export async function POST(request) {
