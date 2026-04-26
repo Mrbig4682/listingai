@@ -7,9 +7,9 @@ import { useI18n } from '@/lib/i18n/context'
 function SeoScoreCircle({ score, t }) {
   const color = score >= 80 ? '#10b981' : score >= 60 ? '#f59e0b' : '#ef4444'
   const labelMap = {
-    perfect: t?.newListing?.seoScore?.perfect || 'Mükemmel',
-    good: t?.newListing?.seoScore?.good || 'İyi',
-    low: t?.newListing?.seoScore?.low || 'Düşük'
+    perfect: t?.newListing?.seoScorePerfect || 'Mükemmel',
+    good: t?.newListing?.seoScoreGood || 'İyi',
+    low: t?.newListing?.seoScoreLow || 'Düşük'
   }
   const label = score >= 80 ? labelMap.perfect : score >= 60 ? labelMap.good : labelMap.low
   return (
@@ -110,10 +110,10 @@ export default function YeniListingPage() {
   const categories = t?.categories || []
 
   const marketplaceGroups = {
-    tr: { label: '🇹🇷 Türkiye', platforms: ['trendyol', 'hepsiburada', 'n11'] },
-    us: { label: '🇺🇸 ABD / Global', platforms: ['amazon', 'ebay', 'etsy', 'shopify', 'walmart'] },
-    eu: { label: '🇪🇺 Avrupa', platforms: ['otto', 'cdiscount'] },
-    latam: { label: '🌎 Latin Amerika', platforms: ['mercadolibre'] },
+    tr: { label: t?.newListing?.marketTurkey || '🇹🇷 Türkiye', platforms: ['trendyol', 'hepsiburada', 'n11'] },
+    us: { label: t?.newListing?.marketUS || '🇺🇸 ABD / Global', platforms: ['amazon', 'ebay', 'etsy', 'shopify', 'walmart'] },
+    eu: { label: t?.newListing?.marketEU || '🇪🇺 Avrupa', platforms: ['otto', 'cdiscount'] },
+    latam: { label: t?.newListing?.marketLatam || '🌎 Latin Amerika', platforms: ['mercadolibre'] },
   }
 
   const languageOptions = [
@@ -364,9 +364,9 @@ export default function YeniListingPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.newListing?.targetKeywords || 'Hedef Anahtar Kelimeler'} (opsiyonel)</label>
+          <label className="block text-xs font-semibold text-gray-700 mb-1">{t?.newListing?.targetKeywords || 'Hedef Anahtar Kelimeler'} ({t?.newListing?.optional || 'opsiyonel'})</label>
           <input className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-            placeholder="örn: kablosuz kulaklık, bluetooth kulaklık"
+            placeholder={t?.newListing?.keywordsPlaceholder || 'örn: kablosuz kulaklık, bluetooth kulaklık'}
             value={form.keywords} onChange={e => setForm({ ...form, keywords: e.target.value })} />
         </div>
 
