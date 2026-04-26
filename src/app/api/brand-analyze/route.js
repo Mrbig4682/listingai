@@ -1,7 +1,14 @@
 import Anthropic from '@anthropic-ai/sdk'
 
+// Next.js App Router route segment config — Vercel Hobby allows up to 60s
+export const maxDuration = 60
+
 function getAnthropic() {
-  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  const key = process.env.ANTHROPIC_API_KEY
+  if (!key) {
+    throw new Error('ANTHROPIC_API_KEY is not configured')
+  }
+  return new Anthropic({ apiKey: key })
 }
 
 export async function POST(request) {
